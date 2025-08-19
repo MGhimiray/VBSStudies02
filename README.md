@@ -1,11 +1,7 @@
-<<<<<<< HEAD
 # VBSStudies
 =======
 # VBSStudies02
 The VBSStudies01 consists of initial checks whereas this repo is for full analysis
-<<<<<<< HEAD
->>>>>>> 3402d9045d03499789d2cd396b7325d98346a01b
-=======
 
 To run it in CIS:
 
@@ -19,4 +15,3 @@ To run it in CIS:
     conda install -c conda-forge boost boost-cpp
     eval "$(/mnt/home/mghimiray/miniforge3/bin/conda shell.bash hook)"
     conda activate myenv
->>>>>>> a45e8918ab1fbf5c0de63ada27d24ea1b871c4b3
