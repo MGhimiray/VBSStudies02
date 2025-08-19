@@ -18,7 +18,7 @@ for year in "${!year_process_map[@]}"; do
         for jobs in $which_job; do
         echo "Submitting: Year=$year, Process=$process", "Job=$jobs"
         sbatch -p INTEL_HASWELL --time=70:00:00 --cpus-per-task=1 --nodes=1 \
-               --job-name="vbsTT_${year}_${process}_${jobs}" \
+               --job-name="vbsmatrixmethod_${year}_${process}_${jobs}" \
                --output="log/vbs__${year}_${process}_${jobs}.out" \
                --error="log/vbs__${year}_${process}_${jobs}.err" \
                submit_cis_analysis.sh "$year" "$process" "$jobs"

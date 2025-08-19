@@ -2508,8 +2508,7 @@ float compute_ptww_weight(const Vec_f& GenDressedLepton_pt, const Vec_f& GenDres
 
 // compute category
 int compute_category(const int mc, const int typeFake, const int typeWS, const int nFake, const int nTight, const int nWS){
-  if     (nFake > nTight) return typeFake;
-  else if(nFake < nTight) {printf("IMPOSSIBLE compute_category\n"); return -1;}
+  return typeFake;
   if(nWS > 0) return typeWS;
   return mc;
 }
