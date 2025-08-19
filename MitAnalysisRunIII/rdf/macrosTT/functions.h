@@ -49,6 +49,8 @@ TH2D histoFakeEtaPt_mu[9];
 TH2D histoFakeEtaPt_el[9];
 TH2D histoLepSFEtaPt_mu;
 TH2D histoLepSFEtaPt_el;
+TH2D histoPromptRateEtaPt_el[4];
+TH2D histoPromptRateEtaPt_mu[4];
 TH2D histoTriggerSFEtaPt_0_0;
 TH2D histoTriggerSFEtaPt_0_1;
 TH2D histoTriggerSFEtaPt_0_2;
@@ -146,6 +148,14 @@ void initHisto2D(TH2D h, int nsel){
   else if(nsel == 57) histoTriggerMCEtaPt[7] = h;
   else if(nsel == 58) histoTriggerMCEtaPt[8] = h;
   else if(nsel == 59) histoTriggerMCEtaPt[9] = h;
+  else if(nsel == 60) histoPromptRateEtaPt_el[0] = h;
+  else if(nsel == 61) histoPromptRateEtaPt_el[1] = h;
+  else if(nsel == 62) histoPromptRateEtaPt_el[2] = h;
+  else if(nsel == 63) histoPromptRateEtaPt_el[3] = h;
+  else if(nsel == 64) histoPromptRateEtaPt_mu[0] = h;
+  else if(nsel == 65) histoPromptRateEtaPt_mu[1] = h;
+  else if(nsel == 66) histoPromptRateEtaPt_mu[2] = h;
+  else if(nsel == 67) histoPromptRateEtaPt_mu[3] = h;
 }
 
 void initHisto1D(TH1D h, int nsel){
@@ -916,6 +926,155 @@ float compute_fakeRate(const bool isData,
   if(sfTot != 1 && isData) sfTot = -sfTot;
   return sfTot;
 }
+
+//////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+float compute_matrixWeight(const bool isData,
+                           const Vec_f& mu_pt, const Vec_f& mu_eta, const Vec_i& tight_mu, const int mType,
+                           const Vec_f& el_pt, const Vec_f& el_eta, const Vec_i& tight_el, const int eType,
+                           const int whichAna, const int nummu, const int numel) {
+
+  if (isData == false) {
+    return 0; // No matrix weight for mc
+  }
+
+
+ // double addSF[2] {1.0, 1.0};
+ // if(whichAna == 1) { addSF[0] = 1.25; addSF[1] = 1.25; }
+ 
+ // if(mu_pt.size() != tight_mu.size() || el_pt.size() != tight_el.size()) {
+ //   printf("PROBLEM in compute_matrixWeight (%zu/%zu) (%zu/%zu)!\n", mu_pt.size(), tight_mu.size(), el_pt.size(), tight_el.size());
+ //   return 0;
+ // }
+ // if tight[i] == 1, then the lepton is tight, otherwise it is loose
+
+  double sfTot = 1.0;
+
+  for(unsigned int i=0;i<mu_pt.size();i++) {
+    if(tight_mu[i] == 1) {
+          const TH2D& hcorr = histoFakeEtaPt_mu[mType];
+          const TH2D& hcorr2 = histoPromptRateEtaPt_mu[nummu];
+          double sf1 = getValFromTH2(hcorr, fabs(mu_eta[i]),mu_pt[i]);
+          double delta1 = getValFromTH2(hcorr2, fabs(mu_eta[i]),mu_pt[i]);
+          std::cout << "Tight: sf1=" << sf1 << ", delta1=" << delta1 << std::endl;
+          sfTot *= ((1 - sf1) * (1 - delta1)) / (1 - sf1 - delta1);
+    }
+    else{
+      const TH2D& hcorr = histoFakeEtaPt_mu[mType];
+      const TH2D& hcorr2 = histoPromptRateEtaPt_mu[nummu];
+      double sf2 = getValFromTH2(hcorr, fabs(mu_eta[i]),mu_pt[i]);
+      double delta2 = getValFromTH2(hcorr2, fabs(mu_eta[i]),mu_pt[i]);
+      std::cout << "Fake: sf2=" << sf2 << ", delta2=" << delta2 << std::endl;
+      sfTot *= (-sf2*(1-delta2)) / (1 - sf2 - delta2);
+    }
+  }
+
+  for(unsigned int i=0;i<el_pt.size();i++) {
+    if(tight_el[i] == 1) {
+          const TH2D& hcorr = histoFakeEtaPt_el[eType];
+          const TH2D& hcorr2 = histoPromptRateEtaPt_el[numel];
+          double sf1 = getValFromTH2(hcorr, fabs(el_eta[i]),el_pt[i]);
+          double delta1 = getValFromTH2(hcorr2, fabs(el_eta[i]),el_pt[i]);
+          sfTot *= ((1 - sf1) * (1 - delta1)) / (1 - sf1 - delta1);
+    }
+    else{
+      const TH2D& hcorr = histoFakeEtaPt_el[eType];
+      const TH2D& hcorr2 = histoPromptRateEtaPt_el[numel];
+      double sf2 = getValFromTH2(hcorr, fabs(el_eta[i]),el_pt[i]);
+      double delta2 = getValFromTH2(hcorr2, fabs(el_eta[i]),el_pt[i]);
+      sfTot *= (-sf2*(1-delta2)) / (1 - sf2 - delta2);
+    }
+  }
+
+static int count_TT = 0, count_TF = 0, count_FT = 0, count_FF = 0;
+    static float sumW_TT = 0.0, sumW_TF = 0.0, sumW_FT = 0.0, sumW_FF = 0.0;
+    static double total_sfTot = 0.0;
+
+    // Check for available leptons
+    if (!tight_mu.empty() || !tight_el.empty()) {
+        // Muon-Muon pairs
+        for (size_t i = 0; i < tight_mu.size(); ++i) {
+            for (size_t j = i + 1; j < tight_mu.size(); ++j) { // Avoid self-pairs and duplicates
+                int mu1_tight = tight_mu[i];
+                int mu2_tight = tight_mu[j];
+                if (mu1_tight == 1 && mu2_tight == 1) {
+                    count_TT++;
+                    sumW_TT += sfTot;
+                } else if (mu1_tight == 1 && mu2_tight == 0) {
+                    count_TF++;
+                    sumW_TF += sfTot;
+                } else if (mu1_tight == 0 && mu2_tight == 1) {
+                    count_FT++;
+                    sumW_FT += sfTot;
+                } else if (mu1_tight == 0 && mu2_tight == 0) {
+                    count_FF++;
+                    sumW_FF += sfTot;
+                }
+            }
+        }
+
+        // Electron-Electron pairs
+        for (size_t i = 0; i < tight_el.size(); ++i) {
+            for (size_t j = i + 1; j < tight_el.size(); ++j) { // Avoid self-pairs and duplicates
+                int el1_tight = tight_el[i];
+                int el2_tight = tight_el[j];
+                if (el1_tight == 1 && el2_tight == 1) {
+                    count_TT++;
+                    sumW_TT += sfTot;
+                } else if (el1_tight == 1 && el2_tight == 0) {
+                    count_TF++;
+                    sumW_TF += sfTot;
+                } else if (el1_tight == 0 && el2_tight == 1) {
+                    count_FT++;
+                    sumW_FT += sfTot;
+                } else if (el1_tight == 0 && el2_tight == 0) {
+                    count_FF++;
+                    sumW_FF += sfTot;
+                }
+            }
+        }
+
+        // Muon-Electron pairs
+        for (size_t i = 0; i < tight_mu.size(); ++i) {
+            for (size_t j = 0; j < tight_el.size(); ++j) {
+                int mu_tight = tight_mu[i];
+                int el_tight = tight_el[j];
+                if (mu_tight == 1 && el_tight == 1) {
+                    count_TT++;
+                    sumW_TT += sfTot;
+                } else if (mu_tight == 1 && el_tight == 0) {
+                    count_TF++;
+                    sumW_TF += sfTot;
+                } else if (mu_tight == 0 && el_tight == 1) {
+                    count_FT++;
+                    sumW_FT += sfTot;
+                } else if (mu_tight == 0 && el_tight == 0) {
+                    count_FF++;
+                    sumW_FF += sfTot;
+                }
+            }
+        }
+    }
+    total_sfTot += sfTot;
+
+    std::cout << "[Counts & Weights] "
+              << "TT: " << count_TT << " (sumW=" << sumW_TT << "), "
+              << "TF: " << count_TF << " (sumW=" << sumW_TF << "), "
+              << "FT: " << count_FT << " (sumW=" << sumW_FT << "), "
+              << "FF: " << count_FF << " (sumW=" << sumW_FF << ")"
+              << std::endl;
+             
+              
+    std::cout << "Total sfTot: " << total_sfTot << std::endl;
+    
+
+  return sfTot;
+      }
+
+
+//////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
 
 float compute_MuonSF(const Vec_f& mu_pt, const Vec_f& mu_eta){
 
