@@ -1,0 +1,6 @@
+*_cc*
+*_C*
+*.pyc
+log*
+.root_hist
+fillhisto*.root
