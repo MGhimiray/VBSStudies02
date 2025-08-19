@@ -187,7 +187,7 @@ def getDATAlist(type, year, skimType):
 
     #dirT2 = "/mnt/T2_US_MIT/hadoop/cms/store/user/paus/nanohr/D00/"
     #dirT2 = "/mnt/T3_US_MIT/hadoop/scratch/ceballos/nanoaod/skims_submit/" + skimType
-    dirT2 = "/ceph/submit/data/group/cms/store/user/ceballos/nanoaod/skims_submit/" + skimType
+    dirT2 = "/mnt/home/mghimiray/VBSStudies/DATA2023/"
     dirTest = "/ceph/submit/data/group/cms/store/user/ceballos/test/test/"
 
     jsnName = ""

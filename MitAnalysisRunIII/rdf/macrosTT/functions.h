@@ -1075,6 +1075,32 @@ static int count_TT = 0, count_TF = 0, count_FT = 0, count_FF = 0;
 
 //////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////
+///////////finding the TT without fake weight////////
+float compute_TT(const bool isData,
+                const Vec_f& mu_pt, const Vec_f& mu_eta, const Vec_i& tight_mu, const int mType,
+                const Vec_f& el_pt, const Vec_f& el_eta, const Vec_i& tight_el, const int eType,
+                const int whichAna) {
+    // Count tight muons
+    int n_tight_mu = 0;
+    for (size_t i = 0; i < tight_mu.size(); i++) {
+        if (tight_mu[i]) n_tight_mu++;
+    }
+    // Count tight electrons
+    int n_tight_el = 0;
+    for (size_t i = 0; i < tight_el.size(); i++) {
+        if (tight_el[i]) n_tight_el++;
+    }
+    // Check if total tight leptons is exactly 2
+    if (n_tight_mu + n_tight_el == 2) {
+        return 1.0;
+    }
+    return 0.0;
+}
+
+
+///////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+
 
 float compute_MuonSF(const Vec_f& mu_pt, const Vec_f& mu_eta){
 

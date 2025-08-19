@@ -4,7 +4,7 @@ import os, sys, getopt, json
 ROOT.ROOT.EnableImplicitMT(10)
 from utilsCategory import plotCategory
 from utilsAna import getMClist, getDATAlist
-from utilsAna import SwitchSample, groupFiles, getTriggerFromJson, getLumi
+from utilsAna import SwitchSample, groupFiles, getTriggerFromJson, getLeptomSelFromJson, getLumi
 from utilsSelection import selectionTauVeto, selectionPhoton, selectionJetMet, selection2LVar, selectionTrigger2L, selectionElMu, selectionWeigths, selectionGenLepJet, makeFinalVariable2D
 import tmva_helper_xml
 #ROOT.gSystem.Load("libTMVA")
@@ -56,16 +56,10 @@ altMass = "Def"
 jetEtaCut = 4.9
 metCut = 30.0
 
-# which muon selection
 muSelChoice = 8
-FAKE_MU   = jsonObject['FAKE_MU']
-TIGHT_MU = jsonObject['TIGHT_MU{0}'.format(muSelChoice)]
 MUOWP = "Medium"
 
-# which electron selection
 elSelChoice = 7
-FAKE_EL   = jsonObject['FAKE_EL']
-TIGHT_EL = jsonObject['TIGHT_EL{0}'.format(elSelChoice)]
 ELEWP = "DUMMY"
 if(elSelChoice == 0):
     ELEWP = "Medium"
@@ -101,6 +95,14 @@ def selectionLL(df,year,PDType,isData,count):
     TRIGGERSEL  = getTriggerFromJson(overallTriggers, "TRIGGERSEL", year)
 
     dftag = selectionTrigger2L(df,year,PDType,JSON,isData,TRIGGERSEL,TRIGGERDEL,TRIGGERSMU,TRIGGERDMU,TRIGGERMUEG)
+    
+    overallLeptonSel = jsonObject['leptonSel']
+    FAKE_MU   = getLeptomSelFromJson(overallLeptonSel, "FAKE_MU",   year)
+    TIGHT_MU  = getLeptomSelFromJson(overallLeptonSel, "TIGHT_MU{0}".format(muSelChoice),  year, 1)
+
+    FAKE_EL   = getLeptomSelFromJson(overallLeptonSel, "FAKE_EL",   year)
+    TIGHT_EL  = getLeptomSelFromJson(overallLeptonSel, "TIGHT_EL{0}".format(elSelChoice),  year, 1)
+
 
     dftag = selectionElMu(dftag,year,FAKE_MU,TIGHT_MU,FAKE_EL,TIGHT_EL)
 
@@ -1216,7 +1218,6 @@ if __name__ == "__main__":
     
     histoPromptRateEtaPt_mu = []
     histoPromptRateEtaPt_el = []
-
     prompratepath = "data/histoDeltaEtaPt_{0}.root".format(year)
     fPromptRateFile = ROOT.TFile(prompratepath)
 
@@ -1229,10 +1230,14 @@ if __name__ == "__main__":
     histoPromptRateEtaPt_el.append(fPromptRateFile.Get("histodeltaEtaPt_el_2_{0}".format(elSelChoice)))
     histoPromptRateEtaPt_el.append(fPromptRateFile.Get("histodeltaEtaPt_el_3_{0}".format(elSelChoice)))
     for x in range(4):
-        histoPromptRateEtaPt_mu[x].SetDirectory(0)
-        histoPromptRateEtaPt_el[x].SetDirectory(0)
-    fPromptRateFile.Close()
-
+        if histoPromptRateEtaPt_mu[x]:
+            histoPromptRateEtaPt_mu[x].SetDirectory(0)
+        else:
+            print(f"Warning: histoPromptRateEtaPt_mu[{x}] not found!")
+        if histoPromptRateEtaPt_el[x]:
+            histoPromptRateEtaPt_el[x].SetDirectory(0)
+        else:
+            print(f"Warning: histoPromptRateEtaPt_el[{x}] not found!")
 # lepton SF
     lepSFPath = "data/histoLepSFEtaPt_{0}{1}.root".format(year,correctionString)
     fLepSFFile = ROOT.TFile(lepSFPath)
