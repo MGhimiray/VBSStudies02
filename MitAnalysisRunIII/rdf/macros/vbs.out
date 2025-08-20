@@ -6626,3 +6626,633 @@ doNtuples=False, x=23, theCat=13
 doNtuples=False, x=24, theCat=13
 doNtuples=False, x=25, theCat=13
 ---------------- SUMMARY 13 -------------
+pass JSON : pass=4148000    all=4148000    -- eff=100.00 % cumulative eff=100.00 %
+Passed trigger: pass=2027454    all=4148000    -- eff=48.88 % cumulative eff=48.88 %
+Only two loose leptons: pass=759489     all=2027454    -- eff=37.46 % cumulative eff=18.31 %
+Two fake leptons: pass=381293     all=759489     -- eff=50.20 % cumulative eff=9.19 %
+Sign-sign leptons: pass=128407     all=381293     -- eff=33.68 % cumulative eff=3.10 %
+No selected hadronic taus: pass=122473     all=128407     -- eff=95.38 % cumulative eff=2.95 %
+ptl1 > 25 && ptl2 > 20: pass=100795     all=122473     -- eff=82.30 % cumulative eff=2.43 %
+mll > 20 GeV: pass=100235     all=100795     -- eff=99.44 % cumulative eff=2.42 %
+MC weight : pass=96192      all=100235     -- eff=95.97 % cumulative eff=2.32 %
+weightPhoSFJSON > 0: pass=96192      all=96192      -- eff=100.00 % cumulative eff=2.32 %
+weightTauSFJSON > 0: pass=96192      all=96192      -- eff=100.00 % cumulative eff=2.32 %
+correct category (13): pass=78257      all=96192      -- eff=81.35 % cumulative eff=1.89 %
+Z veto    : pass=75693      all=78257      -- eff=96.72 % cumulative eff=1.82 %
+no good b-jets: pass=3768       all=75693      -- eff=4.98 % cumulative eff=0.09 %
+At least two VBS jets: pass=1607       all=3768       -- eff=42.65 % cumulative eff=0.04 %
+VBS selection: pass=200        all=1607       -- eff=12.45 % cumulative eff=0.00 %
+thePuppiMET_pt > 30.0: pass=191        all=200        -- eff=95.50 % cumulative eff=0.00 %
+/mnt/home/mghimiray/VBSStudies/DATAMC//2023/ttWW/2023C/
+Total files: 151
+Number of Theory replicas: 103 / 9 / 4
+genEventSumLHEScaleRenorm:  [1, 1, 1, 1, 1, 1]
+genEventSumPSRenorm:  [1, 1, 1, 1]
+lumi(20230/5) = 18.1
+lumi(20230/5) = 18.1
+Used files: 37
+genEventSum(151): 14912000.0 / Events(total/ntuple): 14912000.0 / 4148000
+WeightExact/Approx 0.000010 / 0.000010 / Cross section: 8.165100
+starting 319 / 13 / 9.910696754291844e-06 / 20230 /  / false / 3
+['ngood_jets', 'vbs_mjj', 'vbs_ptjj', 'vbs_detajj', 'vbs_dphijj', 'vbs_ptj1', 'vbs_ptj2', 'vbs_etaj1', 'vbs_etaj2', 'vbs_zepvv', 'vbs_sumHT', 'vbs_pttot', 'vbs_detavvj1', 'vbs_detavvj2', 'vbs_ptbalance']
+triggerLEP: (HLT_Ele30_WPTight_Gsf||HLT_Ele32_WPTight_Gsf||HLT_Ele32_WPTight_Gsf_L1DoubleEG||HLT_Ele35_WPTight_Gsf||HLT_Ele115_CaloIdVT_GsfTrkIdT) or (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ||HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL||HLT_DoubleEle25_CaloIdL_MW||HLT_DoublePhoton70) or (HLT_IsoMu24||HLT_IsoMu27||HLT_Mu50) or (HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8||HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8) or (HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ||HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL||HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ||HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ)
+TIGHT_MU8(12): (fakeable_mu && fake_Muon_mediumPromptId == true && fake_Muon_promptMVA > 0.7)
+TIGHT_EL7(12): (fakeable_el && fake_Electron_promptMVA > 0.3 && fake_Electron_tightCharge == 2)
+jetTypeCorr: -1
+MUOYEAR/ELEYEAR/PHOYEAR/MUOWP/ELEWP/whichAna: 20230/2023PromptC/2023PromptC/Medium/Medium/2
+BtagCorr/AddCorr: 1/1
+ROOT::VecOps::RVec<float>
+doNtuples=False, x=0, theCat=13
+doNtuples=False, x=1, theCat=13
+doNtuples=False, x=2, theCat=13
+doNtuples=False, x=3, theCat=13
+doNtuples=False, x=4, theCat=13
+doNtuples=False, x=5, theCat=13
+doNtuples=False, x=6, theCat=13
+doNtuples=False, x=7, theCat=13
+doNtuples=False, x=8, theCat=13
+doNtuples=False, x=9, theCat=13
+doNtuples=False, x=10, theCat=13
+doNtuples=False, x=11, theCat=13
+doNtuples=False, x=12, theCat=13
+doNtuples=False, x=13, theCat=13
+doNtuples=False, x=14, theCat=13
+doNtuples=False, x=15, theCat=13
+doNtuples=False, x=16, theCat=13
+doNtuples=False, x=17, theCat=13
+doNtuples=False, x=18, theCat=13
+doNtuples=False, x=19, theCat=13
+doNtuples=False, x=20, theCat=13
+doNtuples=False, x=21, theCat=13
+doNtuples=False, x=22, theCat=13
+doNtuples=False, x=23, theCat=13
+doNtuples=False, x=24, theCat=13
+doNtuples=False, x=25, theCat=13
+---------------- SUMMARY 13 -------------
+pass JSON : pass=4336000    all=4336000    -- eff=100.00 % cumulative eff=100.00 %
+Passed trigger: pass=2122674    all=4336000    -- eff=48.95 % cumulative eff=48.95 %
+Only two loose leptons: pass=795426     all=2122674    -- eff=37.47 % cumulative eff=18.34 %
+Two fake leptons: pass=399575     all=795426     -- eff=50.23 % cumulative eff=9.22 %
+Sign-sign leptons: pass=134439     all=399575     -- eff=33.65 % cumulative eff=3.10 %
+No selected hadronic taus: pass=128384     all=134439     -- eff=95.50 % cumulative eff=2.96 %
+ptl1 > 25 && ptl2 > 20: pass=105567     all=128384     -- eff=82.23 % cumulative eff=2.43 %
+mll > 20 GeV: pass=105016     all=105567     -- eff=99.48 % cumulative eff=2.42 %
+MC weight : pass=100717     all=105016     -- eff=95.91 % cumulative eff=2.32 %
+weightPhoSFJSON > 0: pass=100717     all=100717     -- eff=100.00 % cumulative eff=2.32 %
+weightTauSFJSON > 0: pass=100717     all=100717     -- eff=100.00 % cumulative eff=2.32 %
+correct category (13): pass=82269      all=100717     -- eff=81.68 % cumulative eff=1.90 %
+Z veto    : pass=79523      all=82269      -- eff=96.66 % cumulative eff=1.83 %
+no good b-jets: pass=3847       all=79523      -- eff=4.84 % cumulative eff=0.09 %
+At least two VBS jets: pass=1689       all=3847       -- eff=43.90 % cumulative eff=0.04 %
+VBS selection: pass=224        all=1689       -- eff=13.26 % cumulative eff=0.01 %
+thePuppiMET_pt > 30.0: pass=209        all=224        -- eff=93.30 % cumulative eff=0.00 %
+/mnt/home/mghimiray/VBSStudies/DATAMC//2023/ttWW/2023C/
+Total files: 151
+Number of Theory replicas: 103 / 9 / 4
+genEventSumLHEScaleRenorm:  [1, 1, 1, 1, 1, 1]
+genEventSumPSRenorm:  [1, 1, 1, 1]
+lumi(20230/5) = 18.1
+lumi(20230/5) = 18.1
+Used files: 38
+genEventSum(151): 14912000.0 / Events(total/ntuple): 14912000.0 / 4336000
+WeightExact/Approx 0.000010 / 0.000010 / Cross section: 8.165100
+starting 319 / 13 / 9.910696754291844e-06 / 20230 /  / false / 2
+['ngood_jets', 'vbs_mjj', 'vbs_ptjj', 'vbs_detajj', 'vbs_dphijj', 'vbs_ptj1', 'vbs_ptj2', 'vbs_etaj1', 'vbs_etaj2', 'vbs_zepvv', 'vbs_sumHT', 'vbs_pttot', 'vbs_detavvj1', 'vbs_detavvj2', 'vbs_ptbalance']
+triggerLEP: (HLT_Ele30_WPTight_Gsf||HLT_Ele32_WPTight_Gsf||HLT_Ele32_WPTight_Gsf_L1DoubleEG||HLT_Ele35_WPTight_Gsf||HLT_Ele115_CaloIdVT_GsfTrkIdT) or (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ||HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL||HLT_DoubleEle25_CaloIdL_MW||HLT_DoublePhoton70) or (HLT_IsoMu24||HLT_IsoMu27||HLT_Mu50) or (HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8||HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8) or (HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ||HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL||HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ||HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ)
+TIGHT_MU8(12): (fakeable_mu && fake_Muon_mediumPromptId == true && fake_Muon_promptMVA > 0.7)
+TIGHT_EL7(12): (fakeable_el && fake_Electron_promptMVA > 0.3 && fake_Electron_tightCharge == 2)
+jetTypeCorr: -1
+MUOYEAR/ELEYEAR/PHOYEAR/MUOWP/ELEWP/whichAna: 20230/2023PromptC/2023PromptC/Medium/Medium/2
+BtagCorr/AddCorr: 1/1
+ROOT::VecOps::RVec<float>
+doNtuples=False, x=0, theCat=13
+doNtuples=False, x=1, theCat=13
+doNtuples=False, x=2, theCat=13
+doNtuples=False, x=3, theCat=13
+doNtuples=False, x=4, theCat=13
+doNtuples=False, x=5, theCat=13
+doNtuples=False, x=6, theCat=13
+doNtuples=False, x=7, theCat=13
+doNtuples=False, x=8, theCat=13
+doNtuples=False, x=9, theCat=13
+doNtuples=False, x=10, theCat=13
+doNtuples=False, x=11, theCat=13
+doNtuples=False, x=12, theCat=13
+doNtuples=False, x=13, theCat=13
+doNtuples=False, x=14, theCat=13
+doNtuples=False, x=15, theCat=13
+doNtuples=False, x=16, theCat=13
+doNtuples=False, x=17, theCat=13
+doNtuples=False, x=18, theCat=13
+doNtuples=False, x=19, theCat=13
+doNtuples=False, x=20, theCat=13
+doNtuples=False, x=21, theCat=13
+doNtuples=False, x=22, theCat=13
+doNtuples=False, x=23, theCat=13
+doNtuples=False, x=24, theCat=13
+doNtuples=False, x=25, theCat=13
+---------------- SUMMARY 13 -------------
+pass JSON : pass=12458393   all=12458393   -- eff=100.00 % cumulative eff=100.00 %
+Passed trigger: pass=1346455    all=12458393   -- eff=10.81 % cumulative eff=10.81 %
+Only two loose leptons: pass=89747      all=1346455    -- eff=6.67 % cumulative eff=0.72 %
+Two fake leptons: pass=18295      all=89747      -- eff=20.39 % cumulative eff=0.15 %
+Sign-sign leptons: pass=8953       all=18295      -- eff=48.94 % cumulative eff=0.07 %
+No selected hadronic taus: pass=8939       all=8953       -- eff=99.84 % cumulative eff=0.07 %
+ptl1 > 25 && ptl2 > 20: pass=4092       all=8939       -- eff=45.78 % cumulative eff=0.03 %
+mll > 20 GeV: pass=3711       all=4092       -- eff=90.69 % cumulative eff=0.03 %
+MC weight : pass=1018       all=3711       -- eff=27.43 % cumulative eff=0.01 %
+weightPhoSFJSON > 0: pass=1018       all=1018       -- eff=100.00 % cumulative eff=0.01 %
+weightTauSFJSON > 0: pass=1018       all=1018       -- eff=100.00 % cumulative eff=0.01 %
+correct category (14): pass=535        all=1018       -- eff=52.55 % cumulative eff=0.00 %
+Z veto    : pass=497        all=535        -- eff=92.90 % cumulative eff=0.00 %
+no good b-jets: pass=407        all=497        -- eff=81.89 % cumulative eff=0.00 %
+At least two VBS jets: pass=11         all=407        -- eff=2.70 % cumulative eff=0.00 %
+VBS selection: pass=0          all=11         -- eff=0.00 % cumulative eff=0.00 %
+thePuppiMET_pt > 30.0: pass=0          all=0          -- eff=-nan % cumulative eff=0.00 %
+/mnt/home/mghimiray/VBSStudies/DATAMC//2023/WGamma10to100/2023D/
+Total files: 222
+Number of Theory replicas: 103 / 9 / 4
+genEventSumLHEScaleRenorm:  [1, 1, 1, 1, 1, 1]
+genEventSumPSRenorm:  [1, 1, 1, 1]
+lumi(20231/6) = 9.7
+lumi(20231/6) = 9.7
+Used files: 56
+genEventSum(222): 64891516820.56061 / Events(total/ntuple): 51539420.0 / 12458393
+WeightExact/Approx 0.000100 / 0.125894 / Cross section: 668915.380000
+starting 433 / 14 / 9.998963661062322e-05 / 20231 /  / false / 1
+['ngood_jets', 'vbs_mjj', 'vbs_ptjj', 'vbs_detajj', 'vbs_dphijj', 'vbs_ptj1', 'vbs_ptj2', 'vbs_etaj1', 'vbs_etaj2', 'vbs_zepvv', 'vbs_sumHT', 'vbs_pttot', 'vbs_detavvj1', 'vbs_detavvj2', 'vbs_ptbalance']
+triggerLEP: (HLT_Ele30_WPTight_Gsf||HLT_Ele32_WPTight_Gsf||HLT_Ele32_WPTight_Gsf_L1DoubleEG||HLT_Ele35_WPTight_Gsf||HLT_Ele115_CaloIdVT_GsfTrkIdT) or (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ||HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL||HLT_DoubleEle25_CaloIdL_MW||HLT_DoublePhoton70) or (HLT_IsoMu24||HLT_IsoMu27||HLT_Mu50) or (HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8||HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8) or (HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ||HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL||HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ||HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ)
+TIGHT_MU8(12): (fakeable_mu && fake_Muon_mediumPromptId == true && fake_Muon_promptMVA > 0.7)
+TIGHT_EL7(12): (fakeable_el && fake_Electron_promptMVA > 0.3 && fake_Electron_tightCharge == 2)
+jetTypeCorr: -1
+MUOYEAR/ELEYEAR/PHOYEAR/MUOWP/ELEWP/whichAna: 20231/2023PromptD/2023PromptD/Medium/Medium/2
+BtagCorr/AddCorr: 1/1
+ROOT::VecOps::RVec<float>
+doNtuples=False, x=0, theCat=14
+doNtuples=False, x=1, theCat=14
+doNtuples=False, x=2, theCat=14
+doNtuples=False, x=3, theCat=14
+doNtuples=False, x=4, theCat=14
+doNtuples=False, x=5, theCat=14
+doNtuples=False, x=6, theCat=14
+doNtuples=False, x=7, theCat=14
+doNtuples=False, x=8, theCat=14
+doNtuples=False, x=9, theCat=14
+doNtuples=False, x=10, theCat=14
+doNtuples=False, x=11, theCat=14
+doNtuples=False, x=12, theCat=14
+doNtuples=False, x=13, theCat=14
+doNtuples=False, x=14, theCat=14
+doNtuples=False, x=15, theCat=14
+doNtuples=False, x=16, theCat=14
+doNtuples=False, x=17, theCat=14
+doNtuples=False, x=18, theCat=14
+doNtuples=False, x=19, theCat=14
+doNtuples=False, x=20, theCat=14
+doNtuples=False, x=21, theCat=14
+doNtuples=False, x=22, theCat=14
+doNtuples=False, x=23, theCat=14
+doNtuples=False, x=24, theCat=14
+doNtuples=False, x=25, theCat=14
+---------------- SUMMARY 14 -------------
+pass JSON : pass=12961701   all=12961701   -- eff=100.00 % cumulative eff=100.00 %
+Passed trigger: pass=1403046    all=12961701   -- eff=10.82 % cumulative eff=10.82 %
+Only two loose leptons: pass=93478      all=1403046    -- eff=6.66 % cumulative eff=0.72 %
+Two fake leptons: pass=19141      all=93478      -- eff=20.48 % cumulative eff=0.15 %
+Sign-sign leptons: pass=9361       all=19141      -- eff=48.91 % cumulative eff=0.07 %
+No selected hadronic taus: pass=9348       all=9361       -- eff=99.86 % cumulative eff=0.07 %
+ptl1 > 25 && ptl2 > 20: pass=4267       all=9348       -- eff=45.65 % cumulative eff=0.03 %
+mll > 20 GeV: pass=3874       all=4267       -- eff=90.79 % cumulative eff=0.03 %
+MC weight : pass=1080       all=3874       -- eff=27.88 % cumulative eff=0.01 %
+weightPhoSFJSON > 0: pass=1080       all=1080       -- eff=100.00 % cumulative eff=0.01 %
+weightTauSFJSON > 0: pass=1080       all=1080       -- eff=100.00 % cumulative eff=0.01 %
+correct category (14): pass=572        all=1080       -- eff=52.96 % cumulative eff=0.00 %
+Z veto    : pass=538        all=572        -- eff=94.06 % cumulative eff=0.00 %
+no good b-jets: pass=436        all=538        -- eff=81.04 % cumulative eff=0.00 %
+At least two VBS jets: pass=11         all=436        -- eff=2.52 % cumulative eff=0.00 %
+VBS selection: pass=2          all=11         -- eff=18.18 % cumulative eff=0.00 %
+thePuppiMET_pt > 30.0: pass=2          all=2          -- eff=100.00 % cumulative eff=0.00 %
+/mnt/home/mghimiray/VBSStudies/DATAMC//2023/WGamma10to100/2023D/
+Total files: 222
+Number of Theory replicas: 103 / 9 / 4
+genEventSumLHEScaleRenorm:  [1, 1, 1, 1, 1, 1]
+genEventSumPSRenorm:  [1, 1, 1, 1]
+lumi(20231/6) = 9.7
+lumi(20231/6) = 9.7
+Used files: 55
+genEventSum(222): 64891516820.56061 / Events(total/ntuple): 51539420.0 / 12961701
+WeightExact/Approx 0.000100 / 0.125894 / Cross section: 668915.380000
+starting 433 / 14 / 9.998963661062322e-05 / 20231 /  / false / 2
+['ngood_jets', 'vbs_mjj', 'vbs_ptjj', 'vbs_detajj', 'vbs_dphijj', 'vbs_ptj1', 'vbs_ptj2', 'vbs_etaj1', 'vbs_etaj2', 'vbs_zepvv', 'vbs_sumHT', 'vbs_pttot', 'vbs_detavvj1', 'vbs_detavvj2', 'vbs_ptbalance']
+triggerLEP: (HLT_Ele30_WPTight_Gsf||HLT_Ele32_WPTight_Gsf||HLT_Ele32_WPTight_Gsf_L1DoubleEG||HLT_Ele35_WPTight_Gsf||HLT_Ele115_CaloIdVT_GsfTrkIdT) or (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ||HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL||HLT_DoubleEle25_CaloIdL_MW||HLT_DoublePhoton70) or (HLT_IsoMu24||HLT_IsoMu27||HLT_Mu50) or (HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8||HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8) or (HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ||HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL||HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ||HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ)
+TIGHT_MU8(12): (fakeable_mu && fake_Muon_mediumPromptId == true && fake_Muon_promptMVA > 0.7)
+TIGHT_EL7(12): (fakeable_el && fake_Electron_promptMVA > 0.3 && fake_Electron_tightCharge == 2)
+jetTypeCorr: -1
+MUOYEAR/ELEYEAR/PHOYEAR/MUOWP/ELEWP/whichAna: 20231/2023PromptD/2023PromptD/Medium/Medium/2
+BtagCorr/AddCorr: 1/1
+ROOT::VecOps::RVec<float>
+doNtuples=False, x=0, theCat=14
+doNtuples=False, x=1, theCat=14
+doNtuples=False, x=2, theCat=14
+doNtuples=False, x=3, theCat=14
+doNtuples=False, x=4, theCat=14
+doNtuples=False, x=5, theCat=14
+doNtuples=False, x=6, theCat=14
+doNtuples=False, x=7, theCat=14
+doNtuples=False, x=8, theCat=14
+doNtuples=False, x=9, theCat=14
+doNtuples=False, x=10, theCat=14
+doNtuples=False, x=11, theCat=14
+doNtuples=False, x=12, theCat=14
+doNtuples=False, x=13, theCat=14
+doNtuples=False, x=14, theCat=14
+doNtuples=False, x=15, theCat=14
+doNtuples=False, x=16, theCat=14
+doNtuples=False, x=17, theCat=14
+doNtuples=False, x=18, theCat=14
+doNtuples=False, x=19, theCat=14
+doNtuples=False, x=20, theCat=14
+doNtuples=False, x=21, theCat=14
+doNtuples=False, x=22, theCat=14
+doNtuples=False, x=23, theCat=14
+doNtuples=False, x=24, theCat=14
+doNtuples=False, x=25, theCat=14
+---------------- SUMMARY 14 -------------
+pass JSON : pass=12826612   all=12826612   -- eff=100.00 % cumulative eff=100.00 %
+Passed trigger: pass=1385513    all=12826612   -- eff=10.80 % cumulative eff=10.80 %
+Only two loose leptons: pass=92799      all=1385513    -- eff=6.70 % cumulative eff=0.72 %
+Two fake leptons: pass=18896      all=92799      -- eff=20.36 % cumulative eff=0.15 %
+Sign-sign leptons: pass=9220       all=18896      -- eff=48.79 % cumulative eff=0.07 %
+No selected hadronic taus: pass=9202       all=9220       -- eff=99.80 % cumulative eff=0.07 %
+ptl1 > 25 && ptl2 > 20: pass=4283       all=9202       -- eff=46.54 % cumulative eff=0.03 %
+mll > 20 GeV: pass=3875       all=4283       -- eff=90.47 % cumulative eff=0.03 %
+MC weight : pass=1054       all=3875       -- eff=27.20 % cumulative eff=0.01 %
+weightPhoSFJSON > 0: pass=1054       all=1054       -- eff=100.00 % cumulative eff=0.01 %
+weightTauSFJSON > 0: pass=1054       all=1054       -- eff=100.00 % cumulative eff=0.01 %
+correct category (14): pass=531        all=1054       -- eff=50.38 % cumulative eff=0.00 %
+Z veto    : pass=503        all=531        -- eff=94.73 % cumulative eff=0.00 %
+no good b-jets: pass=400        all=503        -- eff=79.52 % cumulative eff=0.00 %
+At least two VBS jets: pass=8          all=400        -- eff=2.00 % cumulative eff=0.00 %
+VBS selection: pass=1          all=8          -- eff=12.50 % cumulative eff=0.00 %
+thePuppiMET_pt > 30.0: pass=0          all=1          -- eff=0.00 % cumulative eff=0.00 %
+/mnt/home/mghimiray/VBSStudies/DATAMC//2023/WGamma10to100/2023D/
+Total files: 222
+Number of Theory replicas: 103 / 9 / 4
+genEventSumLHEScaleRenorm:  [1, 1, 1, 1, 1, 1]
+genEventSumPSRenorm:  [1, 1, 1, 1]
+lumi(20231/6) = 9.7
+lumi(20231/6) = 9.7
+Used files: 55
+genEventSum(222): 64891516820.56061 / Events(total/ntuple): 51539420.0 / 12826612
+WeightExact/Approx 0.000100 / 0.125894 / Cross section: 668915.380000
+starting 433 / 14 / 9.998963661062322e-05 / 20231 /  / false / 3
+['ngood_jets', 'vbs_mjj', 'vbs_ptjj', 'vbs_detajj', 'vbs_dphijj', 'vbs_ptj1', 'vbs_ptj2', 'vbs_etaj1', 'vbs_etaj2', 'vbs_zepvv', 'vbs_sumHT', 'vbs_pttot', 'vbs_detavvj1', 'vbs_detavvj2', 'vbs_ptbalance']
+triggerLEP: (HLT_Ele30_WPTight_Gsf||HLT_Ele32_WPTight_Gsf||HLT_Ele32_WPTight_Gsf_L1DoubleEG||HLT_Ele35_WPTight_Gsf||HLT_Ele115_CaloIdVT_GsfTrkIdT) or (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ||HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL||HLT_DoubleEle25_CaloIdL_MW||HLT_DoublePhoton70) or (HLT_IsoMu24||HLT_IsoMu27||HLT_Mu50) or (HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8||HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8) or (HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ||HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL||HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ||HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ)
+TIGHT_MU8(12): (fakeable_mu && fake_Muon_mediumPromptId == true && fake_Muon_promptMVA > 0.7)
+TIGHT_EL7(12): (fakeable_el && fake_Electron_promptMVA > 0.3 && fake_Electron_tightCharge == 2)
+jetTypeCorr: -1
+MUOYEAR/ELEYEAR/PHOYEAR/MUOWP/ELEWP/whichAna: 20231/2023PromptD/2023PromptD/Medium/Medium/2
+BtagCorr/AddCorr: 1/1
+ROOT::VecOps::RVec<float>
+doNtuples=False, x=0, theCat=14
+doNtuples=False, x=1, theCat=14
+doNtuples=False, x=2, theCat=14
+doNtuples=False, x=3, theCat=14
+doNtuples=False, x=4, theCat=14
+doNtuples=False, x=5, theCat=14
+doNtuples=False, x=6, theCat=14
+doNtuples=False, x=7, theCat=14
+doNtuples=False, x=8, theCat=14
+doNtuples=False, x=9, theCat=14
+doNtuples=False, x=10, theCat=14
+doNtuples=False, x=11, theCat=14
+doNtuples=False, x=12, theCat=14
+doNtuples=False, x=13, theCat=14
+doNtuples=False, x=14, theCat=14
+doNtuples=False, x=15, theCat=14
+doNtuples=False, x=16, theCat=14
+doNtuples=False, x=17, theCat=14
+doNtuples=False, x=18, theCat=14
+doNtuples=False, x=19, theCat=14
+doNtuples=False, x=20, theCat=14
+doNtuples=False, x=21, theCat=14
+doNtuples=False, x=22, theCat=14
+doNtuples=False, x=23, theCat=14
+doNtuples=False, x=24, theCat=14
+doNtuples=False, x=25, theCat=14
+---------------- SUMMARY 14 -------------
+pass JSON : pass=13292714   all=13292714   -- eff=100.00 % cumulative eff=100.00 %
+Passed trigger: pass=1437017    all=13292714   -- eff=10.81 % cumulative eff=10.81 %
+Only two loose leptons: pass=96240      all=1437017    -- eff=6.70 % cumulative eff=0.72 %
+Two fake leptons: pass=19768      all=96240      -- eff=20.54 % cumulative eff=0.15 %
+Sign-sign leptons: pass=9709       all=19768      -- eff=49.11 % cumulative eff=0.07 %
+No selected hadronic taus: pass=9689       all=9709       -- eff=99.79 % cumulative eff=0.07 %
+ptl1 > 25 && ptl2 > 20: pass=4384       all=9689       -- eff=45.25 % cumulative eff=0.03 %
+mll > 20 GeV: pass=3996       all=4384       -- eff=91.15 % cumulative eff=0.03 %
+MC weight : pass=1079       all=3996       -- eff=27.00 % cumulative eff=0.01 %
+weightPhoSFJSON > 0: pass=1079       all=1079       -- eff=100.00 % cumulative eff=0.01 %
+weightTauSFJSON > 0: pass=1079       all=1079       -- eff=100.00 % cumulative eff=0.01 %
+correct category (14): pass=523        all=1079       -- eff=48.47 % cumulative eff=0.00 %
+Z veto    : pass=488        all=523        -- eff=93.31 % cumulative eff=0.00 %
+no good b-jets: pass=405        all=488        -- eff=82.99 % cumulative eff=0.00 %
+At least two VBS jets: pass=10         all=405        -- eff=2.47 % cumulative eff=0.00 %
+VBS selection: pass=3          all=10         -- eff=30.00 % cumulative eff=0.00 %
+thePuppiMET_pt > 30.0: pass=3          all=3          -- eff=100.00 % cumulative eff=0.00 %
+/mnt/home/mghimiray/VBSStudies/DATAMC//2023/WGamma10to100/2023D/
+Total files: 222
+Number of Theory replicas: 103 / 9 / 4
+genEventSumLHEScaleRenorm:  [1, 1, 1, 1, 1, 1]
+genEventSumPSRenorm:  [1, 1, 1, 1]
+lumi(20231/6) = 9.7
+lumi(20231/6) = 9.7
+Used files: 56
+genEventSum(222): 64891516820.560616 / Events(total/ntuple): 51539420.0 / 13292714
+WeightExact/Approx 0.000100 / 0.125894 / Cross section: 668915.380000
+starting 433 / 14 / 9.99896366106232e-05 / 20231 /  / false / 0
+['ngood_jets', 'vbs_mjj', 'vbs_ptjj', 'vbs_detajj', 'vbs_dphijj', 'vbs_ptj1', 'vbs_ptj2', 'vbs_etaj1', 'vbs_etaj2', 'vbs_zepvv', 'vbs_sumHT', 'vbs_pttot', 'vbs_detavvj1', 'vbs_detavvj2', 'vbs_ptbalance']
+triggerLEP: (HLT_Ele30_WPTight_Gsf||HLT_Ele32_WPTight_Gsf||HLT_Ele32_WPTight_Gsf_L1DoubleEG||HLT_Ele35_WPTight_Gsf||HLT_Ele115_CaloIdVT_GsfTrkIdT) or (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ||HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL||HLT_DoubleEle25_CaloIdL_MW||HLT_DoublePhoton70) or (HLT_IsoMu24||HLT_IsoMu27||HLT_Mu50) or (HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8||HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8) or (HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ||HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL||HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ||HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ)
+TIGHT_MU8(12): (fakeable_mu && fake_Muon_mediumPromptId == true && fake_Muon_promptMVA > 0.7)
+TIGHT_EL7(12): (fakeable_el && fake_Electron_promptMVA > 0.3 && fake_Electron_tightCharge == 2)
+jetTypeCorr: -1
+MUOYEAR/ELEYEAR/PHOYEAR/MUOWP/ELEWP/whichAna: 20231/2023PromptD/2023PromptD/Medium/Medium/2
+BtagCorr/AddCorr: 1/1
+ROOT::VecOps::RVec<float>
+doNtuples=False, x=0, theCat=14
+doNtuples=False, x=1, theCat=14
+doNtuples=False, x=2, theCat=14
+doNtuples=False, x=3, theCat=14
+doNtuples=False, x=4, theCat=14
+doNtuples=False, x=5, theCat=14
+doNtuples=False, x=6, theCat=14
+doNtuples=False, x=7, theCat=14
+doNtuples=False, x=8, theCat=14
+doNtuples=False, x=9, theCat=14
+doNtuples=False, x=10, theCat=14
+doNtuples=False, x=11, theCat=14
+doNtuples=False, x=12, theCat=14
+doNtuples=False, x=13, theCat=14
+doNtuples=False, x=14, theCat=14
+doNtuples=False, x=15, theCat=14
+doNtuples=False, x=16, theCat=14
+doNtuples=False, x=17, theCat=14
+doNtuples=False, x=18, theCat=14
+doNtuples=False, x=19, theCat=14
+doNtuples=False, x=20, theCat=14
+doNtuples=False, x=21, theCat=14
+doNtuples=False, x=22, theCat=14
+doNtuples=False, x=23, theCat=14
+doNtuples=False, x=24, theCat=14
+doNtuples=False, x=25, theCat=14
+---------------- SUMMARY 14 -------------
+pass JSON : pass=25413391   all=25413391   -- eff=100.00 % cumulative eff=100.00 %
+Passed trigger: pass=2756004    all=25413391   -- eff=10.84 % cumulative eff=10.84 %
+Only two loose leptons: pass=183017     all=2756004    -- eff=6.64 % cumulative eff=0.72 %
+Two fake leptons: pass=37859      all=183017     -- eff=20.69 % cumulative eff=0.15 %
+Sign-sign leptons: pass=18433      all=37859      -- eff=48.69 % cumulative eff=0.07 %
+No selected hadronic taus: pass=18393      all=18433      -- eff=99.78 % cumulative eff=0.07 %
+ptl1 > 25 && ptl2 > 20: pass=8411       all=18393      -- eff=45.73 % cumulative eff=0.03 %
+mll > 20 GeV: pass=7673       all=8411       -- eff=91.23 % cumulative eff=0.03 %
+MC weight : pass=2188       all=7673       -- eff=28.52 % cumulative eff=0.01 %
+weightPhoSFJSON > 0: pass=2188       all=2188       -- eff=100.00 % cumulative eff=0.01 %
+weightTauSFJSON > 0: pass=2188       all=2188       -- eff=100.00 % cumulative eff=0.01 %
+correct category (14): pass=1148       all=2188       -- eff=52.47 % cumulative eff=0.00 %
+Z veto    : pass=1083       all=1148       -- eff=94.34 % cumulative eff=0.00 %
+no good b-jets: pass=930        all=1083       -- eff=85.87 % cumulative eff=0.00 %
+At least two VBS jets: pass=21         all=930        -- eff=2.26 % cumulative eff=0.00 %
+VBS selection: pass=7          all=21         -- eff=33.33 % cumulative eff=0.00 %
+thePuppiMET_pt > 30.0: pass=6          all=7          -- eff=85.71 % cumulative eff=0.00 %
+/mnt/home/mghimiray/VBSStudies/DATAMC//2023/WGamma10to100/2023C/
+Total files: 431
+Number of Theory replicas: 103 / 9 / 4
+genEventSumLHEScaleRenorm:  [1, 1, 1, 1, 1, 1]
+genEventSumPSRenorm:  [1, 1, 1, 1]
+lumi(20230/5) = 18.1
+lumi(20230/5) = 18.1
+Used files: 108
+genEventSum(431): 125924366474.03122 / Events(total/ntuple): 100002636.0 / 25413391
+WeightExact/Approx 0.000096 / 0.121070 / Cross section: 668915.380000
+starting 333 / 14 / 9.614793956892247e-05 / 20230 /  / false / 2
+['ngood_jets', 'vbs_mjj', 'vbs_ptjj', 'vbs_detajj', 'vbs_dphijj', 'vbs_ptj1', 'vbs_ptj2', 'vbs_etaj1', 'vbs_etaj2', 'vbs_zepvv', 'vbs_sumHT', 'vbs_pttot', 'vbs_detavvj1', 'vbs_detavvj2', 'vbs_ptbalance']
+triggerLEP: (HLT_Ele30_WPTight_Gsf||HLT_Ele32_WPTight_Gsf||HLT_Ele32_WPTight_Gsf_L1DoubleEG||HLT_Ele35_WPTight_Gsf||HLT_Ele115_CaloIdVT_GsfTrkIdT) or (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ||HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL||HLT_DoubleEle25_CaloIdL_MW||HLT_DoublePhoton70) or (HLT_IsoMu24||HLT_IsoMu27||HLT_Mu50) or (HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8||HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8) or (HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ||HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL||HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ||HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ)
+TIGHT_MU8(12): (fakeable_mu && fake_Muon_mediumPromptId == true && fake_Muon_promptMVA > 0.7)
+TIGHT_EL7(12): (fakeable_el && fake_Electron_promptMVA > 0.3 && fake_Electron_tightCharge == 2)
+jetTypeCorr: -1
+MUOYEAR/ELEYEAR/PHOYEAR/MUOWP/ELEWP/whichAna: 20230/2023PromptC/2023PromptC/Medium/Medium/2
+BtagCorr/AddCorr: 1/1
+ROOT::VecOps::RVec<float>
+doNtuples=False, x=0, theCat=14
+doNtuples=False, x=1, theCat=14
+doNtuples=False, x=2, theCat=14
+doNtuples=False, x=3, theCat=14
+doNtuples=False, x=4, theCat=14
+doNtuples=False, x=5, theCat=14
+doNtuples=False, x=6, theCat=14
+doNtuples=False, x=7, theCat=14
+doNtuples=False, x=8, theCat=14
+doNtuples=False, x=9, theCat=14
+doNtuples=False, x=10, theCat=14
+doNtuples=False, x=11, theCat=14
+doNtuples=False, x=12, theCat=14
+doNtuples=False, x=13, theCat=14
+doNtuples=False, x=14, theCat=14
+doNtuples=False, x=15, theCat=14
+doNtuples=False, x=16, theCat=14
+doNtuples=False, x=17, theCat=14
+doNtuples=False, x=18, theCat=14
+doNtuples=False, x=19, theCat=14
+doNtuples=False, x=20, theCat=14
+doNtuples=False, x=21, theCat=14
+doNtuples=False, x=22, theCat=14
+doNtuples=False, x=23, theCat=14
+doNtuples=False, x=24, theCat=14
+doNtuples=False, x=25, theCat=14
+---------------- SUMMARY 14 -------------
+pass JSON : pass=23937206   all=23937206   -- eff=100.00 % cumulative eff=100.00 %
+Passed trigger: pass=2594593    all=23937206   -- eff=10.84 % cumulative eff=10.84 %
+Only two loose leptons: pass=173358     all=2594593    -- eff=6.68 % cumulative eff=0.72 %
+Two fake leptons: pass=35749      all=173358     -- eff=20.62 % cumulative eff=0.15 %
+Sign-sign leptons: pass=17446      all=35749      -- eff=48.80 % cumulative eff=0.07 %
+No selected hadronic taus: pass=17416      all=17446      -- eff=99.83 % cumulative eff=0.07 %
+ptl1 > 25 && ptl2 > 20: pass=7870       all=17416      -- eff=45.19 % cumulative eff=0.03 %
+mll > 20 GeV: pass=7163       all=7870       -- eff=91.02 % cumulative eff=0.03 %
+MC weight : pass=1996       all=7163       -- eff=27.87 % cumulative eff=0.01 %
+weightPhoSFJSON > 0: pass=1996       all=1996       -- eff=100.00 % cumulative eff=0.01 %
+weightTauSFJSON > 0: pass=1996       all=1996       -- eff=100.00 % cumulative eff=0.01 %
+correct category (14): pass=1033       all=1996       -- eff=51.75 % cumulative eff=0.00 %
+Z veto    : pass=976        all=1033       -- eff=94.48 % cumulative eff=0.00 %
+no good b-jets: pass=797        all=976        -- eff=81.66 % cumulative eff=0.00 %
+At least two VBS jets: pass=31         all=797        -- eff=3.89 % cumulative eff=0.00 %
+VBS selection: pass=7          all=31         -- eff=22.58 % cumulative eff=0.00 %
+thePuppiMET_pt > 30.0: pass=5          all=7          -- eff=71.43 % cumulative eff=0.00 %
+/mnt/home/mghimiray/VBSStudies/DATAMC//2023/WGamma10to100/2023C/
+Total files: 431
+Number of Theory replicas: 103 / 9 / 4
+genEventSumLHEScaleRenorm:  [1, 1, 1, 1, 1, 1]
+genEventSumPSRenorm:  [1, 1, 1, 1]
+lumi(20230/5) = 18.1
+lumi(20230/5) = 18.1
+Used files: 108
+genEventSum(431): 125924366474.03122 / Events(total/ntuple): 100002636.0 / 23937206
+WeightExact/Approx 0.000096 / 0.121070 / Cross section: 668915.380000
+starting 333 / 14 / 9.614793956892247e-05 / 20230 /  / false / 1
+['ngood_jets', 'vbs_mjj', 'vbs_ptjj', 'vbs_detajj', 'vbs_dphijj', 'vbs_ptj1', 'vbs_ptj2', 'vbs_etaj1', 'vbs_etaj2', 'vbs_zepvv', 'vbs_sumHT', 'vbs_pttot', 'vbs_detavvj1', 'vbs_detavvj2', 'vbs_ptbalance']
+triggerLEP: (HLT_Ele30_WPTight_Gsf||HLT_Ele32_WPTight_Gsf||HLT_Ele32_WPTight_Gsf_L1DoubleEG||HLT_Ele35_WPTight_Gsf||HLT_Ele115_CaloIdVT_GsfTrkIdT) or (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ||HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL||HLT_DoubleEle25_CaloIdL_MW||HLT_DoublePhoton70) or (HLT_IsoMu24||HLT_IsoMu27||HLT_Mu50) or (HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8||HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8) or (HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ||HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL||HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ||HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ)
+TIGHT_MU8(12): (fakeable_mu && fake_Muon_mediumPromptId == true && fake_Muon_promptMVA > 0.7)
+TIGHT_EL7(12): (fakeable_el && fake_Electron_promptMVA > 0.3 && fake_Electron_tightCharge == 2)
+jetTypeCorr: -1
+MUOYEAR/ELEYEAR/PHOYEAR/MUOWP/ELEWP/whichAna: 20230/2023PromptC/2023PromptC/Medium/Medium/2
+BtagCorr/AddCorr: 1/1
+ROOT::VecOps::RVec<float>
+doNtuples=False, x=0, theCat=14
+doNtuples=False, x=1, theCat=14
+doNtuples=False, x=2, theCat=14
+doNtuples=False, x=3, theCat=14
+doNtuples=False, x=4, theCat=14
+doNtuples=False, x=5, theCat=14
+doNtuples=False, x=6, theCat=14
+doNtuples=False, x=7, theCat=14
+doNtuples=False, x=8, theCat=14
+doNtuples=False, x=9, theCat=14
+doNtuples=False, x=10, theCat=14
+doNtuples=False, x=11, theCat=14
+doNtuples=False, x=12, theCat=14
+doNtuples=False, x=13, theCat=14
+doNtuples=False, x=14, theCat=14
+doNtuples=False, x=15, theCat=14
+doNtuples=False, x=16, theCat=14
+doNtuples=False, x=17, theCat=14
+doNtuples=False, x=18, theCat=14
+doNtuples=False, x=19, theCat=14
+doNtuples=False, x=20, theCat=14
+doNtuples=False, x=21, theCat=14
+doNtuples=False, x=22, theCat=14
+doNtuples=False, x=23, theCat=14
+doNtuples=False, x=24, theCat=14
+doNtuples=False, x=25, theCat=14
+---------------- SUMMARY 14 -------------
+pass JSON : pass=24639748   all=24639748   -- eff=100.00 % cumulative eff=100.00 %
+Passed trigger: pass=2672753    all=24639748   -- eff=10.85 % cumulative eff=10.85 %
+Only two loose leptons: pass=177711     all=2672753    -- eff=6.65 % cumulative eff=0.72 %
+Two fake leptons: pass=36370      all=177711     -- eff=20.47 % cumulative eff=0.15 %
+Sign-sign leptons: pass=17948      all=36370      -- eff=49.35 % cumulative eff=0.07 %
+No selected hadronic taus: pass=17904      all=17948      -- eff=99.75 % cumulative eff=0.07 %
+ptl1 > 25 && ptl2 > 20: pass=8174       all=17904      -- eff=45.65 % cumulative eff=0.03 %
+mll > 20 GeV: pass=7412       all=8174       -- eff=90.68 % cumulative eff=0.03 %
+MC weight : pass=2133       all=7412       -- eff=28.78 % cumulative eff=0.01 %
+weightPhoSFJSON > 0: pass=2133       all=2133       -- eff=100.00 % cumulative eff=0.01 %
+weightTauSFJSON > 0: pass=2133       all=2133       -- eff=100.00 % cumulative eff=0.01 %
+correct category (14): pass=1088       all=2133       -- eff=51.01 % cumulative eff=0.00 %
+Z veto    : pass=1024       all=1088       -- eff=94.12 % cumulative eff=0.00 %
+no good b-jets: pass=844        all=1024       -- eff=82.42 % cumulative eff=0.00 %
+At least two VBS jets: pass=28         all=844        -- eff=3.32 % cumulative eff=0.00 %
+VBS selection: pass=5          all=28         -- eff=17.86 % cumulative eff=0.00 %
+thePuppiMET_pt > 30.0: pass=4          all=5          -- eff=80.00 % cumulative eff=0.00 %
+/mnt/home/mghimiray/VBSStudies/DATAMC//2023/WGamma10to100/2023C/
+Total files: 431
+Number of Theory replicas: 103 / 9 / 4
+genEventSumLHEScaleRenorm:  [1, 1, 1, 1, 1, 1]
+genEventSumPSRenorm:  [1, 1, 1, 1]
+lumi(20230/5) = 18.1
+lumi(20230/5) = 18.1
+Used files: 108
+genEventSum(431): 125924366474.03122 / Events(total/ntuple): 100002636.0 / 24639748
+WeightExact/Approx 0.000096 / 0.121070 / Cross section: 668915.380000
+starting 333 / 14 / 9.614793956892247e-05 / 20230 /  / false / 0
+['ngood_jets', 'vbs_mjj', 'vbs_ptjj', 'vbs_detajj', 'vbs_dphijj', 'vbs_ptj1', 'vbs_ptj2', 'vbs_etaj1', 'vbs_etaj2', 'vbs_zepvv', 'vbs_sumHT', 'vbs_pttot', 'vbs_detavvj1', 'vbs_detavvj2', 'vbs_ptbalance']
+triggerLEP: (HLT_Ele30_WPTight_Gsf||HLT_Ele32_WPTight_Gsf||HLT_Ele32_WPTight_Gsf_L1DoubleEG||HLT_Ele35_WPTight_Gsf||HLT_Ele115_CaloIdVT_GsfTrkIdT) or (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ||HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL||HLT_DoubleEle25_CaloIdL_MW||HLT_DoublePhoton70) or (HLT_IsoMu24||HLT_IsoMu27||HLT_Mu50) or (HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8||HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8) or (HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ||HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL||HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ||HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ)
+TIGHT_MU8(12): (fakeable_mu && fake_Muon_mediumPromptId == true && fake_Muon_promptMVA > 0.7)
+TIGHT_EL7(12): (fakeable_el && fake_Electron_promptMVA > 0.3 && fake_Electron_tightCharge == 2)
+jetTypeCorr: -1
+MUOYEAR/ELEYEAR/PHOYEAR/MUOWP/ELEWP/whichAna: 20230/2023PromptC/2023PromptC/Medium/Medium/2
+BtagCorr/AddCorr: 1/1
+ROOT::VecOps::RVec<float>
+doNtuples=False, x=0, theCat=14
+doNtuples=False, x=1, theCat=14
+doNtuples=False, x=2, theCat=14
+doNtuples=False, x=3, theCat=14
+doNtuples=False, x=4, theCat=14
+doNtuples=False, x=5, theCat=14
+doNtuples=False, x=6, theCat=14
+doNtuples=False, x=7, theCat=14
+doNtuples=False, x=8, theCat=14
+doNtuples=False, x=9, theCat=14
+doNtuples=False, x=10, theCat=14
+doNtuples=False, x=11, theCat=14
+doNtuples=False, x=12, theCat=14
+doNtuples=False, x=13, theCat=14
+doNtuples=False, x=14, theCat=14
+doNtuples=False, x=15, theCat=14
+doNtuples=False, x=16, theCat=14
+doNtuples=False, x=17, theCat=14
+doNtuples=False, x=18, theCat=14
+doNtuples=False, x=19, theCat=14
+doNtuples=False, x=20, theCat=14
+doNtuples=False, x=21, theCat=14
+doNtuples=False, x=22, theCat=14
+doNtuples=False, x=23, theCat=14
+doNtuples=False, x=24, theCat=14
+doNtuples=False, x=25, theCat=14
+---------------- SUMMARY 14 -------------
+pass JSON : pass=26012291   all=26012291   -- eff=100.00 % cumulative eff=100.00 %
+Passed trigger: pass=2818959    all=26012291   -- eff=10.84 % cumulative eff=10.84 %
+Only two loose leptons: pass=187519     all=2818959    -- eff=6.65 % cumulative eff=0.72 %
+Two fake leptons: pass=38495      all=187519     -- eff=20.53 % cumulative eff=0.15 %
+Sign-sign leptons: pass=18872      all=38495      -- eff=49.02 % cumulative eff=0.07 %
+No selected hadronic taus: pass=18834      all=18872      -- eff=99.80 % cumulative eff=0.07 %
+ptl1 > 25 && ptl2 > 20: pass=8661       all=18834      -- eff=45.99 % cumulative eff=0.03 %
+mll > 20 GeV: pass=7880       all=8661       -- eff=90.98 % cumulative eff=0.03 %
+MC weight : pass=2233       all=7880       -- eff=28.34 % cumulative eff=0.01 %
+weightPhoSFJSON > 0: pass=2233       all=2233       -- eff=100.00 % cumulative eff=0.01 %
+weightTauSFJSON > 0: pass=2233       all=2233       -- eff=100.00 % cumulative eff=0.01 %
+correct category (14): pass=1176       all=2233       -- eff=52.66 % cumulative eff=0.00 %
+Z veto    : pass=1100       all=1176       -- eff=93.54 % cumulative eff=0.00 %
+no good b-jets: pass=918        all=1100       -- eff=83.45 % cumulative eff=0.00 %
+At least two VBS jets: pass=27         all=918        -- eff=2.94 % cumulative eff=0.00 %
+VBS selection: pass=6          all=27         -- eff=22.22 % cumulative eff=0.00 %
+thePuppiMET_pt > 30.0: pass=6          all=6          -- eff=100.00 % cumulative eff=0.00 %
+/mnt/home/mghimiray/VBSStudies/DATAMC//2023/WGamma10to100/2023C/
+Total files: 431
+Number of Theory replicas: 103 / 9 / 4
+genEventSumLHEScaleRenorm:  [1, 1, 1, 1, 1, 1]
+genEventSumPSRenorm:  [1, 1, 1, 1]
+lumi(20230/5) = 18.1
+lumi(20230/5) = 18.1
+Used files: 107
+genEventSum(431): 125924366474.03122 / Events(total/ntuple): 100002636.0 / 26012291
+WeightExact/Approx 0.000096 / 0.121070 / Cross section: 668915.380000
+starting 333 / 14 / 9.614793956892247e-05 / 20230 /  / false / 3
+['ngood_jets', 'vbs_mjj', 'vbs_ptjj', 'vbs_detajj', 'vbs_dphijj', 'vbs_ptj1', 'vbs_ptj2', 'vbs_etaj1', 'vbs_etaj2', 'vbs_zepvv', 'vbs_sumHT', 'vbs_pttot', 'vbs_detavvj1', 'vbs_detavvj2', 'vbs_ptbalance']
+triggerLEP: (HLT_Ele30_WPTight_Gsf||HLT_Ele32_WPTight_Gsf||HLT_Ele32_WPTight_Gsf_L1DoubleEG||HLT_Ele35_WPTight_Gsf||HLT_Ele115_CaloIdVT_GsfTrkIdT) or (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ||HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL||HLT_DoubleEle25_CaloIdL_MW||HLT_DoublePhoton70) or (HLT_IsoMu24||HLT_IsoMu27||HLT_Mu50) or (HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8||HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8) or (HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ||HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL||HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ||HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ)
+TIGHT_MU8(12): (fakeable_mu && fake_Muon_mediumPromptId == true && fake_Muon_promptMVA > 0.7)
+TIGHT_EL7(12): (fakeable_el && fake_Electron_promptMVA > 0.3 && fake_Electron_tightCharge == 2)
+jetTypeCorr: -1
+MUOYEAR/ELEYEAR/PHOYEAR/MUOWP/ELEWP/whichAna: 20230/2023PromptC/2023PromptC/Medium/Medium/2
+BtagCorr/AddCorr: 1/1
+ROOT::VecOps::RVec<float>
+doNtuples=False, x=0, theCat=14
+doNtuples=False, x=1, theCat=14
+doNtuples=False, x=2, theCat=14
+doNtuples=False, x=3, theCat=14
+doNtuples=False, x=4, theCat=14
+doNtuples=False, x=5, theCat=14
+doNtuples=False, x=6, theCat=14
+doNtuples=False, x=7, theCat=14
+doNtuples=False, x=8, theCat=14
+doNtuples=False, x=9, theCat=14
+doNtuples=False, x=10, theCat=14
+doNtuples=False, x=11, theCat=14
+doNtuples=False, x=12, theCat=14
+doNtuples=False, x=13, theCat=14
+doNtuples=False, x=14, theCat=14
+doNtuples=False, x=15, theCat=14
+doNtuples=False, x=16, theCat=14
+doNtuples=False, x=17, theCat=14
+doNtuples=False, x=18, theCat=14
+doNtuples=False, x=19, theCat=14
+doNtuples=False, x=20, theCat=14
+doNtuples=False, x=21, theCat=14
+doNtuples=False, x=22, theCat=14
+doNtuples=False, x=23, theCat=14
+doNtuples=False, x=24, theCat=14
+doNtuples=False, x=25, theCat=14
+---------------- SUMMARY 14 -------------
