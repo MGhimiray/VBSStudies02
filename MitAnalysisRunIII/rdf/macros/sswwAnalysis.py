@@ -1028,6 +1028,7 @@ def readMCSample(sampleNOW,year,skimType,whichJob,group,ewkCorrWeights,wsWeights
             return 0
         print("Used files: {0}".format(len(files)))
 
+
     df = ROOT.RDataFrame("Events", files)
     nevents = df.Count().GetValue()
 
@@ -1059,6 +1060,7 @@ def readDASample(sampleNOW,year,skimType,whichJob,group,ewkCorrWeights,wsWeights
             return 0
         print("Used files: {0}".format(len(files)))
 
+
     df = ROOT.RDataFrame("Events", files)
 
     genEventSumLHEScaleRenorm = [1, 1, 1, 1, 1, 1]
@@ -1072,9 +1074,9 @@ def readDASample(sampleNOW,year,skimType,whichJob,group,ewkCorrWeights,wsWeights
 
 if __name__ == "__main__":
 
-    group = 4
+    group = 10
 
-    skimType = "3l"
+    skimType = "2l"
     year = 2022
     process = -1
     whichJob = -1
