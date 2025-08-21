@@ -1,6 +1,7 @@
 import ROOT
 from ROOT import TFile, TH1D, TH2D
 import os, sys, getopt, glob
+sys.path.append('/mnt/home/mghimiray/VBSStudies/VBSStudies03/MitAnalysisRunIII/rdf/macros')
 from utilsCategory import plotCategory
 
 if __name__ == "__main__":
