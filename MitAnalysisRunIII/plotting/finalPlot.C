@@ -22,6 +22,7 @@ bool isLogSpecial = false;
 bool isLogX = false;
 bool printRatios = false;
 bool printYieldsBinByBin = false;
+TString OUTPUT_DIR = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/plots/";
 
 void eraselabel(TPad *p,Double_t h){
   p->cd();
@@ -333,12 +334,13 @@ void finalPlot(int nsel = 0, int ReBin = 1, TString XTitle = "N_{jets}", TString
   if     (year == 2023)  {theLumi = 27.1; theYear = Form("%d",2023);}
   else if(year == 20230) {theLumi = 17.6;}
   else if(year == 20231) {theLumi = 9.5;}
-  else if(year == 2027)  {theLumi = 169; theYear = Form("Run 3");}
-  else if(year == 20240) {theLumi = 107; theYear = Form("%d",2024);}
+  else if(year == 2027)  {theLumi = 171; theYear = Form("Run 3");}
+  else if(year == 20240) {theLumi = 109; theYear = Form("%d",2024);}
   myPlot.Draw(ReBin);
   //CMS_lumi( pad1, year, 1);
   cmsstyle::SetExtraText("");
-  cmsstyle::SetLumi(Form("%s, %.1f fb^{#minus1}",theYear.Data(),theLumi));
+  cmsstyle::SetLumi(theLumi, "fb", theYear.Data(), 0);
+ // cmsstyle::SetLumi(Form("%s, %.1f fb^{#minus1}",theYear.Data(),theLumi));
   cmsstyle::SetEnergy(13.6);
   cmsstyle::CMS_lumi( pad1, 11);
 
@@ -466,11 +468,16 @@ void finalPlot(int nsel = 0, int ReBin = 1, TString XTitle = "N_{jets}", TString
     TString myOutputFile;
     outputName = Form("%s_%d",outputName.Data(),year);
     myOutputFile = Form("plots/%s.eps",outputName.Data());
+//c1->SaveAs(myOutputFile.Data());
+    myOutputFile = TString(OUTPUT_DIR) + "/" + outputName + ".png";
+    c1->SaveAs(myOutputFile.Data());
+    myOutputFile = TString(OUTPUT_DIR) + "/" + outputName + ".pdf";
+    c1->SaveAs(myOutputFile.Data());
     //c1->SaveAs(myOutputFile.Data());
-    myOutputFile = Form("plots/%s.png",outputName.Data());
-    c1->SaveAs(myOutputFile.Data());
-    myOutputFile = Form("plots/%s.pdf",outputName.Data());
-    c1->SaveAs(myOutputFile.Data());
+ //   myOutputFile = Form("plots/%s.png",outputName.Data());
+ //   c1->SaveAs(myOutputFile.Data());
+ //   myOutputFile = Form("plots/%s.pdf",outputName.Data());
+ //   c1->SaveAs(myOutputFile.Data());
     if(makeRootFile) {
       for(int i=1; i<=_hist[kPlotData]->GetNbinsX(); i++) if(_hist[kPlotData]->GetBinContent(i)<0) {_hist[kPlotData]->SetBinContent(i,0); _hist[kPlotData]->SetBinError(i,0);}
       TFile output(Form("plots/%s.root",outputName.Data()),"RECREATE");
