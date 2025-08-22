@@ -7,7 +7,7 @@ ROOT.PyConfig.DisableRootLogon = True
 if __name__ == "__main__":
     base = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/fillhisto_sswwAnalysis/"
     path = "fillhisto_sswwAnalysis"
-    year = 20230
+    year = 20231
     output = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/merge1/"
 
     valid = ['path=', "year=", 'output=', 'help']
