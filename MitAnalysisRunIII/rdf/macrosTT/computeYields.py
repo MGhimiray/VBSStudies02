@@ -1,12 +1,13 @@
 import ROOT
 from ROOT import TFile, TH1D, TH2D
 import os, sys, getopt, glob
+sys.path.append('/mnt/home/mghimiray/VBSStudies/VBSStudies03/MitAnalysisRunIII/rdf/macrosTT')
 from utilsCategory import plotCategory
 
 if __name__ == "__main__":
     path = "fillhisto_sswwAnalysis1001"
-    year = 2022
-    output = "anaZ"
+    year = 2023
+    output = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/OriginalTT/merge2/"
     showUnc = 0
 
     valid = ['path=', "year=", 'output=', "unc=", 'help']
@@ -37,7 +38,7 @@ if __name__ == "__main__":
     histo = []
     signalDict0 = []
     signalDict1 = []
-    if('sswwAna' in path):
+    if('sswwAnalysis' in path):
         histo.append(18)
         signalDict0.append(plotCategory("kPlotEWKSSWW"))
         signalDict1.append(plotCategory("kPlotEWKSSWW"))
@@ -124,7 +125,7 @@ if __name__ == "__main__":
     for nh in range(len(histo)):
         print("**********HISTO: {0} **********".format(histo[nh]))
         histoSel = [0 for y in range(nCat)]
-        inputFile = TFile("{0}/{1}_{2}_{3}.root".format(output,os.path.basename(path),year,histo[nh]),"w")
+        inputFile = TFile("{0}/{1}_{2}_{3}.root".format(output,os.path.basename(path),year,histo[nh]),"READ")
         theYields  = [0,0,0]
         theYieldsE = [0,0,0]
         theYieldsProcess     = [0 for y in range(nCat)]

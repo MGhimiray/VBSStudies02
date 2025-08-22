@@ -5,9 +5,13 @@ from utilsCategory import plotCategory
 ROOT.PyConfig.DisableRootLogon = True
 
 if __name__ == "__main__":
-    path = "fillhisto_zAnalysis"
-    year = 2018
-    output = "anaZ"
+    base = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/OriginalTT/histo/fillhisto_sswwAnalysis/"
+    path = "fillhisto_sswwAnalysis"
+    year = 20230
+    output = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/OriginalTT/merge1/"
+    mkdir = output
+    if not os.path.exists(mkdir):
+        os.makedirs(mkdir)
 
     valid = ['path=', "year=", 'output=', 'help']
     usage  =  "Usage: ana.py --path=<{0}>\n".format(path)
@@ -31,7 +35,7 @@ if __name__ == "__main__":
         if opt == "--output":
             output = str(arg)
 
-    paths_to_watch = path + "_sample*_year" + str(year) + "_job*.root"
+    paths_to_watch = "{0}/{1}1001_sample*_year{2}_job*.root".format(base, path, year)
     print("paths_to_watch: {0}".format(paths_to_watch))
     inputDataFolders = glob.glob(paths_to_watch)
     print("Total found files: {0}".format(len(inputDataFolders)))
