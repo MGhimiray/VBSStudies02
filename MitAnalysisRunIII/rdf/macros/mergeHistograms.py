@@ -5,10 +5,11 @@ from utilsCategory import plotCategory
 ROOT.PyConfig.DisableRootLogon = True
 
 if __name__ == "__main__":
-    base = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/fillhisto_sswwAnalysis/"
+    base = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/fillhisto_sswwAnalysis1/"
     path = "fillhisto_sswwAnalysis"
-    year = 20231
-    output = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/merge1/"
+    year = 20230
+    output = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/merge1/1001"
+    os.makedirs(output, exist_ok=True)
 
     valid = ['path=', "year=", 'output=', 'help']
     usage  =  "Usage: ana.py --path=<{0}>\n".format(path)

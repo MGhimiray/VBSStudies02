@@ -17,7 +17,7 @@
 // whichAna = 0 (SSWW), fidAna = 0/2/4 (WW), 1/3/5 (WWb)
 // whichAna = 0 (WZ), fidAna = 0 (WZ), 1 (WZb)
 
-void makeSSWWDataCards(int whichAna = 0, int fidAna = 0, TString InputDir = "/mnt//mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/merge2/", TString anaSel = "sswwAnalysis1001", int year = 20220){
+void makeSSWWDataCards(int whichAna = 0, int fidAna = 0, TString InputDir = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/merge1/1001", TString anaSel = "sswwAnalysis1001", int year = 20230){
 
   if(fidAna < 0 || fidAna > 6) printf("Wrong fidAna(%d)\n",fidAna);
 
@@ -460,7 +460,9 @@ void makeSSWWDataCards(int whichAna = 0, int fidAna = 0, TString InputDir = "/mn
     additionalSuffix = "_alt";
   }
 
-  TString outputLimits = Form("output_%s_%d_bin%d%s.root",anaSel.Data(),year,fidAna,additionalSuffix.Data());
+
+  TString outdir = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/datacards/1001";
+  TString outputLimits = Form("%s/output_%s_%d_bin%d%s.root", outdir.Data(), anaSel.Data(), year, fidAna, additionalSuffix.Data());
   outputFile = new TFile(outputLimits, "RECREATE");
   outputFile->cd();
   for(unsigned ic=kPlotData; ic!=nPlotCategories; ic++) {
@@ -483,7 +485,7 @@ void makeSSWWDataCards(int whichAna = 0, int fidAna = 0, TString InputDir = "/mn
 
   // Filling datacards txt file
   char outputLimitsCard[200];
-  sprintf(outputLimitsCard,"datacard_%s_%d_bin%d%s.txt",anaSel.Data(),year,fidAna,additionalSuffix.Data());
+  sprintf(outputLimitsCard,"%s/datacard_%s_%d_bin%d%s.txt", outdir.Data(),anaSel.Data(),year,fidAna,additionalSuffix.Data());
   ofstream newcardShape;
   newcardShape.open(outputLimitsCard);
   newcardShape << Form("imax * number of channels\n");
