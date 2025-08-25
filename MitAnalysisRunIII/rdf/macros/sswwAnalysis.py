@@ -26,7 +26,7 @@ bTagSel = 2
 useBTaggingWeights = 1
 
 useFR = 1
-whichAna = 2
+whichAna = 1
 
 selectionJsonPath = "config/selection.json"
 if(not os.path.exists(selectionJsonPath)):
