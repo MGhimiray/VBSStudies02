@@ -7,7 +7,7 @@ ROOT.PyConfig.DisableRootLogon = True
 if __name__ == "__main__":
     base = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/OriginalTT/histo/fillhisto_sswwAnalysis/"
     path = "fillhisto_sswwAnalysis"
-    year = 20230
+    year = 20231
     output = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/OriginalTT/merge1/"
     mkdir = output
     if not os.path.exists(mkdir):
