@@ -98,6 +98,7 @@ def selectionLL(df,year,PDType,isData,count):
                  .Filter("nFake == 2","Two fake leptons")
                  .Filter("Sum(fake_Muon_charge)+Sum(fake_Electron_charge) != 0", "Sign-sign leptons")
                  .Define("eventNum", "event")
+                 .Filter("nTight == 2","Two tight leptons")
                  )
 
     if(useFR == 0):
