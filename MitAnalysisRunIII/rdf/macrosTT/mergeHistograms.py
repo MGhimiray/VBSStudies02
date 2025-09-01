@@ -5,18 +5,20 @@ from utilsCategory import plotCategory
 ROOT.PyConfig.DisableRootLogon = True
 
 if __name__ == "__main__":
-    base = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/OriginalTT/histo/fillhisto_sswwAnalysis/"
+    dir = "1001"
+    base = f"/mnt/home/mghimiray/VBSStudies/Outputs_VBS/OriginalTT/{dir}/histo/fillhisto_sswwAnalysis/"
     path = "fillhisto_sswwAnalysis"
     year = 20230
-    output = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/OriginalTT/merge1/"
+    output = f"/mnt/home/mghimiray/VBSStudies/Outputs_VBS/OriginalTT/{dir}/merge1"
     mkdir = output
     if not os.path.exists(mkdir):
         os.makedirs(mkdir)
 
-    valid = ['path=', "year=", 'output=', 'help']
+    valid = ['path=', "year=", 'output=', 'dir=', 'help']
     usage  =  "Usage: ana.py --path=<{0}>\n".format(path)
     usage +=  "              --year=<{0}>\n".format(year)
-    usage +=  "              --output=<{0}>".format(output)
+    usage +=  "              --output=<{0}>\n".format(output)
+    usage +=  "              --dir=<{0}>".format(dir)
     try:
         opts, args = getopt.getopt(sys.argv[1:], "", valid)
     except getopt.GetoptError as ex:
