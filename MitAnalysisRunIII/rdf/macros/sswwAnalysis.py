@@ -13,8 +13,8 @@ import tmva_helper_xml
 
 
 correctionString = "_correction"
-# Why many options for datacards?
-makeDataCards = 1 # 1 (mjj diff), 2 (mll diff), 3 (njets diff), 4 (detajj diff), 5 (dphijj diff), 6 (mjj), 7 (mll), 8 (detajj), 9 (dphijj)
+
+makeDataCards = 2 # 1 (mjj diff), 2 (mll diff), 3 (njets diff), 4 (detajj diff), 5 (dphijj diff), 6 (mjj), 7 (mll), 8 (detajj), 9 (dphijj)
 genVBSSel = makeDataCards
 if(genVBSSel == 6):
     genVBSSel = 1
@@ -1145,7 +1145,7 @@ if __name__ == "__main__":
 
     group = 10
 
-    skimType = "3l"
+    skimType = "2l"
     year = 20220     #Changing the year for data, just for check, Monika, originally 2022
     process = -1
     whichJob = -1

@@ -2,6 +2,7 @@
 
 # Define mapping between years and corresponding processes
 # to run ./submit_cis.sh year (year = 2022/2023/2024)
+whichyear=$1
 if [ "$whichyear" = "2023" ]; then
     declare -A year_process_map
     year_process_map["20230"]="1022 1032 1042"
