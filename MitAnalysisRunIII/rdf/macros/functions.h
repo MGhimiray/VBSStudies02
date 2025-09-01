@@ -976,6 +976,12 @@ float compute_matrixWeight(const bool isData,
           const TH2D& hcorr2 = histoPromptRateEtaPt_el[numel];
           double sf1 = getValFromTH2(hcorr, fabs(el_eta[i]),el_pt[i]);
           double delta1 = getValFromTH2(hcorr2, fabs(el_eta[i]),el_pt[i]);
+
+          std::cout << "el[" << i << "] pt=" << el_pt[i]
+                  << " eta=" << el_eta[i]
+                  << " delta1=" << delta1
+                  << std::endl;
+                  
           sfTot *= ((1 - sf1) * (1 - delta1)) / (1 - sf1 - delta1);
     }
     else{
