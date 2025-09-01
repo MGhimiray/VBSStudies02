@@ -20,6 +20,26 @@ elif(genVBSSel == 8):
 elif(genVBSSel == 9):
     genVBSSel = 5
 
+if makeDataCards == 1:
+    dirT2 = "1001"
+if makeDataCards == 2:
+    dirT2 = "1002"
+if makeDataCards == 3:
+    dirT2 = "1003"
+if makeDataCards == 4:
+    dirT2 = "1004"
+if makeDataCards == 5:
+    dirT2 = "1005"
+if makeDataCards == 6:
+    dirT2 = "1006"
+if makeDataCards == 7:
+    dirT2 = "1007"
+if makeDataCards == 8:
+    dirT2 = "1008"
+if makeDataCards == 9:
+    dirT2 = "1009"
+
+
 doNtuples = False
 # 0 = T, 1 = M, 2 = L
 bTagSel = 2
@@ -558,7 +578,7 @@ def analysis(df,count,category,weight,year,PDType,isData,whichJob,nTheoryReplica
 
         print(f"doNtuples={doNtuples}, x={x}, theCat={theCat}")  # for checking the output files
         if(doNtuples == True and x == theCat):
-            output_dir = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/ntuple1/" # Defining output directory for histograms
+            output_dir = f"/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/{dirT2}/ntuple/" # Defining output directory for histograms
             os.makedirs(output_dir, exist_ok=True)
             outputFile = f"{output_dir}/ntupleSSWWAna_sample{count}_year{year}_job{whichJob}.root"
             dfwwvbscat[x].Snapshot("events", outputFile, branchList)
@@ -937,7 +957,7 @@ def analysis(df,count,category,weight,year,PDType,isData,whichJob,nTheoryReplica
                     histoMVA[j][x].SetBinContent(i+1,        histoMVA[j][x].GetBinContent(i+1)+       histo2D[j][x].GetBinContent(i+1,1))
                     histoMVA[j][x].SetBinError  (i+1,pow(pow(histoMVA[j][x].GetBinError  (i+1),2)+pow(histo2D[j][x].GetBinError  (i+1,1),2),0.5))
 
-    output_dir2 = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/fillhisto_sswwAnalysis1001/" # Defining output directory for histograms
+    output_dir2 = f"/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/{dirT2}/fillhisto_sswwAnalysis1001/" # Defining output directory for histograms
     os.makedirs(output_dir2, exist_ok=True)
     myfile = ROOT.TFile("{3}/fillhisto_sswwAnalysis1001_sample{0}_year{1}_job{2}.root".format(count,year,whichJob,output_dir2),'RECREATE')
     for i in range(nCat):
