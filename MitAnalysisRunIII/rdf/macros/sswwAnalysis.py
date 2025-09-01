@@ -25,6 +25,24 @@ elif(genVBSSel == 8):
 elif(genVBSSel == 9):
     genVBSSel = 5
 
+if makeDataCards == 1:
+    dirT2 = "1001"
+if makeDataCards == 2:
+    dirT2 = "1002"
+if makeDataCards == 3:
+    dirT2 = "1003"
+if makeDataCards == 4:
+    dirT2 = "1004"
+if makeDataCards == 5:
+    dirT2 = "1005"
+if makeDataCards == 6:
+    dirT2 = "1006"
+if makeDataCards == 7:
+    dirT2 = "1007"
+if makeDataCards == 8:
+    dirT2 = "1008"
+if makeDataCards == 9:
+    dirT2 = "1009"
 
 doNtuples = True
 # 0 = T, 1 = M, 2 = L
@@ -589,10 +607,12 @@ def analysis(df,count,category,weight,year,PDType,isData,whichJob,nTheoryReplica
         
         # Set output directory
         if (isData == "true"):
-            output_dir = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/matrix_method/ntuple/"
+            output_dir = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/matrix_method/{0}/ntuple/".format(dirT2)
         elif (isData == "false"):
-            output_dir = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/OriginalTT/ntuple/"
-        
+            output_dir = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/OriginalTT/{0}/ntuple/".format(dirT2)
+
+        os.makedirs(output_dir, exist_ok=True)
+
         # Debugging print
  #       print(f"isData={isData}, doNtuples={doNtuples}, x={x}, theCat={theCat}, output_dir={output_dir}")
 
@@ -978,11 +998,11 @@ def analysis(df,count,category,weight,year,PDType,isData,whichJob,nTheoryReplica
       
 
     if (isData == "true"):
-        output_dir2 = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/matrix_method/histo/fillhisto_sswwAnalysis/" 
+        output_dir2 = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/matrix_method/{0}/histo/fillhisto_sswwAnalysis/".format(dirT2)
     elif (isData == "false"):
-        output_dir2 = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/OriginalTT/histo/fillhisto_sswwAnalysis/" # Defining output directory for histograms
+        output_dir2 = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/OriginalTT/{0}/histo/fillhisto_sswwAnalysis/".format(dirT2) # Defining output directory for histograms
 
-
+    os.makedirs(output_dir2, exist_ok=True)
     myfile = ROOT.TFile("{3}/fillhisto_sswwAnalysis1001_sample{0}_year{1}1_job{2}.root".format(count,year,whichJob,output_dir2),'RECREATE')
     for i in range(nCat):
         for j in range(nHisto):
