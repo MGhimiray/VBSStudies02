@@ -11,7 +11,7 @@ import tmva_helper_xml
 correctionString = "_correction"
 makeDataCards = 2 # 1 (mjj diff), 2 (mll diff), 3 (njets diff), 4 (detajj diff), 5 (dphijj diff), 6 (mjj), 7 (mll), 8 (detajj), 9 (dphijj)
 genVBSSel = makeDataCards
-if(genVBSSel == 6):
+if(genVBSSel == 7):
     genVBSSel = 1
 elif(genVBSSel == 7):
     genVBSSel = 2
@@ -120,8 +120,10 @@ def selectionLL(df,year,PDType,isData,count):
                  .Filter("nTight == 2","Two tight leptons")
                  )
 
-    if(useFR == 0):
-        dftag = dftag.Filter("nTight == 2","Two tight leptons")
+    if(isData):
+        useFR = 0
+#    if(useFR == 0):
+#        dftag = dftag.Filter("nTight == 2","Two tight leptons")
 
     dftag = selectionTauVeto(dftag,year,isData)
     dftag = selectionPhoton (dftag,year,BARRELphotons,ENDCAPphotons)
