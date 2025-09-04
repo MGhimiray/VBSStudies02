@@ -7,8 +7,13 @@ from utilsAna import getMClist, getDATAlist
 from utilsAna import SwitchSample, groupFiles, getTriggerFromJson, getLeptomSelFromJson, getLumi
 from utilsSelection import selectionTauVeto, selectionPhoton, selectionJetMet, selection2LVar, selectionTrigger2L, selectionElMu, selectionWeigths, selectionGenLepJet, makeFinalVariable2D
 import tmva_helper_xml
+#ROOT.gSystem.Load("libTMVA")
+
+#print("TMVA Loaded:", hasattr(ROOT, "TMVA"))
+
 
 correctionString = "_correction"
+
 makeDataCards = 1 # 1 (mjj diff), 2 (mll diff), 3 (njets diff), 4 (detajj diff), 5 (dphijj diff), 6 (mjj), 7 (mll), 8 (detajj), 9 (dphijj)
 genVBSSel = makeDataCards
 if(genVBSSel == 6):
@@ -39,14 +44,15 @@ if makeDataCards == 8:
 if makeDataCards == 9:
     dirT2 = "1009"
 
-
-doNtuples = False
+doNtuples = True
 # 0 = T, 1 = M, 2 = L
 bTagSel = 2
 useBTaggingWeights = 1
 
 useFR = 1
 whichAna = 1
+
+# .jsons for event selection
 
 selectionJsonPath = "config/selection.json"
 if(not os.path.exists(selectionJsonPath)):
@@ -94,6 +100,9 @@ elif(elSelChoice == 8):
 elif(elSelChoice == 9):
     ELEWP = "Veto"
 
+
+# Trigger filters and additional filters on events
+
 def selectionLL(df,year,PDType,isData,count):
 
     overallTriggers = jsonObject['triggers']
@@ -104,13 +113,14 @@ def selectionLL(df,year,PDType,isData,count):
     TRIGGERSEL  = getTriggerFromJson(overallTriggers, "TRIGGERSEL", year)
 
     dftag = selectionTrigger2L(df,year,PDType,JSON,isData,TRIGGERSEL,TRIGGERDEL,TRIGGERSMU,TRIGGERDMU,TRIGGERMUEG)
-
+    
     overallLeptonSel = jsonObject['leptonSel']
     FAKE_MU   = getLeptomSelFromJson(overallLeptonSel, "FAKE_MU",   year)
     TIGHT_MU  = getLeptomSelFromJson(overallLeptonSel, "TIGHT_MU{0}".format(muSelChoice),  year, 1)
 
     FAKE_EL   = getLeptomSelFromJson(overallLeptonSel, "FAKE_EL",   year)
     TIGHT_EL  = getLeptomSelFromJson(overallLeptonSel, "TIGHT_EL{0}".format(elSelChoice),  year, 1)
+
 
     dftag = selectionElMu(dftag,year,FAKE_MU,TIGHT_MU,FAKE_EL,TIGHT_EL)
 
@@ -134,10 +144,11 @@ def selectionLL(df,year,PDType,isData,count):
 
     return dftag
 
-def analysis(df,count,category,weight,year,PDType,isData,whichJob,nTheoryReplicas,genEventSumLHEScaleRenorm,genEventSumPSRenorm,ewkCorrWeights,wsWeights,puWeights,histoBTVEffEtaPtLF,histoBTVEffEtaPtCJ,histoBTVEffEtaPtBJ,histoFakeEtaPt_mu,histoFakeEtaPt_el,histoLepSFEtaPt_mu,histoLepSFEtaPt_el,histoTriggerSFEtaPt_0_0,histoTriggerSFEtaPt_0_1,histoTriggerSFEtaPt_0_2,histoTriggerSFEtaPt_0_3,histoTriggerSFEtaPt_1_0,histoTriggerSFEtaPt_1_1,histoTriggerSFEtaPt_1_2,histoTriggerSFEtaPt_1_3,histoTriggerSFEtaPt_2_0,histoTriggerSFEtaPt_2_1,histoTriggerSFEtaPt_2_2,histoTriggerSFEtaPt_2_3,histoTriggerSFEtaPt_3_0,histoTriggerSFEtaPt_3_1,histoTriggerSFEtaPt_3_2,histoTriggerSFEtaPt_3_3):
+def analysis(df,count,category,weight,year,PDType,isData,whichJob,nTheoryReplicas,genEventSumLHEScaleRenorm,genEventSumPSRenorm,ewkCorrWeights,wsWeights,puWeights,histoBTVEffEtaPtLF,histoBTVEffEtaPtCJ,histoBTVEffEtaPtBJ,histoFakeEtaPt_mu,histoFakeEtaPt_el,histoLepSFEtaPt_mu,histoLepSFEtaPt_el,histoTriggerSFEtaPt_0_0,histoTriggerSFEtaPt_0_1,histoTriggerSFEtaPt_0_2,histoTriggerSFEtaPt_0_3,histoTriggerSFEtaPt_1_0,histoTriggerSFEtaPt_1_1,histoTriggerSFEtaPt_1_2,histoTriggerSFEtaPt_1_3,histoTriggerSFEtaPt_2_0,histoTriggerSFEtaPt_2_1,histoTriggerSFEtaPt_2_2,histoTriggerSFEtaPt_2_3,histoTriggerSFEtaPt_3_0,histoTriggerSFEtaPt_3_1,histoTriggerSFEtaPt_3_2,histoTriggerSFEtaPt_3_3, histoPromptRateEtaPt_el, histoPromptRateEtaPt_mu):
 
     print("starting {0} / {1} / {2} / {3} / {4} / {5} / {6}".format(count,category,weight,year,PDType,isData,whichJob))
 
+ #why wrong sign, dijet sample, must be wrong sign.
     theCat = category
     if(theCat > 100): theCat = plotCategory("kPlotData")
     if(theCat == plotCategory("kPlotqqWW") or theCat == plotCategory("kPlotggWW") or
@@ -203,6 +214,14 @@ def analysis(df,count,category,weight,year,PDType,isData,whichJob,nTheoryReplica
     ROOT.initHisto1D(ewkCorrWeights[1],11)
     ROOT.initHisto1D(ewkCorrWeights[2],12)
     ROOT.initHisto1D(ewkCorrWeights[3],13)
+    ROOT.initHisto2D(histoPromptRateEtaPt_el[0], 60)
+    ROOT.initHisto2D(histoPromptRateEtaPt_el[1], 61)
+    ROOT.initHisto2D(histoPromptRateEtaPt_el[2], 62)
+    ROOT.initHisto2D(histoPromptRateEtaPt_el[3], 63)
+    ROOT.initHisto2D(histoPromptRateEtaPt_mu[0], 64)
+    ROOT.initHisto2D(histoPromptRateEtaPt_mu[1], 65)
+    ROOT.initHisto2D(histoPromptRateEtaPt_mu[2], 66)
+    ROOT.initHisto2D(histoPromptRateEtaPt_mu[3], 67)
 
     ROOT.initJSONSFs(year)
 
@@ -242,6 +261,7 @@ def analysis(df,count,category,weight,year,PDType,isData,whichJob,nTheoryReplica
     tmva_helper = tmva_helper_xml.TMVAHelperXML(MVAweights)
     print(tmva_helper.variables)
 
+# For MC
     dftag = selectionLL(df,year,PDType,isData,count)
 
     if(isData == "false"):
@@ -260,7 +280,7 @@ def analysis(df,count,category,weight,year,PDType,isData,whichJob,nTheoryReplica
                    #.Define("bdt_vbfinc", ROOT.computeModel, ROOT.model.GetVariableNames())
                     )
     dfbase = tmva_helper.run_inference(dfbase,"bdt_vbfinc")
-
+# wwvbscat = vbs, wwbvbs = btag inverted
     dfwwcat = []
     dfwwbcat = []
     dfwwvbscat = []
@@ -346,6 +366,8 @@ def analysis(df,count,category,weight,year,PDType,isData,whichJob,nTheoryReplica
     for x in range(nCat):
         dfwwcat.append(dfbase.Filter("theCat=={0}".format(x), "correct category ({0})".format(x)))
 
+
+# Why compute_vbs_gen_category is  used for the signal Mc?
         if((x == plotCategory("kPlotEWKSSWW")) and isData == "false"):
             dfwwcat[x] = (dfwwcat[x].Define("theGenCat", "compute_vbs_gen_category({0},ngood_GenJets,good_GenJet_pt,good_GenJet_eta,good_GenJet_phi,good_GenJet_mass,ngood_GenDressedLeptons,good_GenDressedLepton_pdgId,good_GenDressedLepton_hasTauAnc,good_GenDressedLepton_pt,good_GenDressedLepton_eta,good_GenDressedLepton_phi,good_GenDressedLepton_mass,0)".format(genVBSSel))
                                     )
@@ -422,6 +444,7 @@ def analysis(df,count,category,weight,year,PDType,isData,whichJob,nTheoryReplica
         dfwwbvbscatJESUp        .append(dfwwcat[x])
         dfwwbvbscatUnclusteredUp.append(dfwwcat[x])
 
+# Signal region
         dfwwvbscatMuonMomUp     [x] = dfwwvbscatMuonMomUp     [x].Filter("mllMuonMomUp     > 20 && ptl1MuonMomUp     > 25 && ptl2MuonMomUp     > 20 && (DiLepton_flavor != 2 || abs(mllMuonMomUp     -91.1876) > 15) && nbtag_goodbtag_Jet_bjet        == 0 && nvbs_jets        >= 2 && vbs_mjj        > 500 && vbs_detajj        > 2.5 && vbs_zepvv        < 1.0 && thePuppiMET_pt              > {0}".format(metCut))
         dfwwvbscatElectronMomUp [x] = dfwwvbscatElectronMomUp [x].Filter("mllElectronMomUp > 20 && ptl1ElectronMomUp > 25 && ptl2ElectronMomUp > 20 && (DiLepton_flavor != 2 || abs(mllElectronMomUp -91.1876) > 15) && nbtag_goodbtag_Jet_bjet        == 0 && nvbs_jets        >= 2 && vbs_mjj        > 500 && vbs_detajj        > 2.5 && vbs_zepvv        < 1.0 && thePuppiMET_pt              > {0}".format(metCut))
         dfwwvbscatJes00Up       [x] = dfwwvbscatJes00Up       [x].Filter("mll{0}           > 20 && ptl1{0}           > 25 && ptl2{0}           > 20 && (DiLepton_flavor != 2 || abs(mll{0}           -91.1876) > 15) && nbtag_goodbtag_Jet_bjetJes00Up == 0 && nvbs_jetsJes00Up >= 2 && vbs_mjjJes00Up > 500 && vbs_detajjJes00Up > 2.5 && vbs_zepvvJes00Up < 1.0 && thePuppiMET_pt              > {1}".format(altMass,metCut))
@@ -457,6 +480,7 @@ def analysis(df,count,category,weight,year,PDType,isData,whichJob,nTheoryReplica
         dfwwvbscatJESUp         [x] = dfwwvbscatJESUp         [x].Filter("mll{0}           > 20 && ptl1{0}           > 25 && ptl2{0}           > 20 && (DiLepton_flavor != 2 || abs(mll{0}           -91.1876) > 15) && nbtag_goodbtag_Jet_bjet        == 0 && nvbs_jets        >= 2 && vbs_mjj        > 500 && vbs_detajj        > 2.5 && vbs_zepvv        < 1.0 && thePuppiMET_ptJESUp         > {1}".format(altMass,metCut))
         dfwwvbscatUnclusteredUp [x] = dfwwvbscatUnclusteredUp [x].Filter("mll{0}           > 20 && ptl1{0}           > 25 && ptl2{0}           > 20 && (DiLepton_flavor != 2 || abs(mll{0}           -91.1876) > 15) && nbtag_goodbtag_Jet_bjet        == 0 && nvbs_jets        >= 2 && vbs_mjj        > 500 && vbs_detajj        > 2.5 && vbs_zepvv        < 1.0 && thePuppiMET_ptUnclusteredUp > {1}".format(altMass,metCut))
 
+# b-tagged control region
         dfwwbvbscatMuonMomUp    [x] = dfwwbvbscatMuonMomUp    [x].Filter("mllMuonMomUp     > 20 && ptl1MuonMomUp     > 25 && ptl2MuonMomUp     > 20 && (DiLepton_flavor != 2 || abs(mllMuonMomUp     -91.1876) > 15) && nbtag_goodbtag_Jet_bjet        >  0 && nvbs_jets        >= 2 && vbs_mjj        > 500 && vbs_detajj        > 2.5 && vbs_zepvv        < 1.0 && thePuppiMET_pt              > {0}".format(metCut))
         dfwwbvbscatElectronMomUp[x] = dfwwbvbscatElectronMomUp[x].Filter("mllElectronMomUp > 20 && ptl1ElectronMomUp > 25 && ptl2ElectronMomUp > 20 && (DiLepton_flavor != 2 || abs(mllElectronMomUp -91.1876) > 15) && nbtag_goodbtag_Jet_bjet        >  0 && nvbs_jets        >= 2 && vbs_mjj        > 500 && vbs_detajj        > 2.5 && vbs_zepvv        < 1.0 && thePuppiMET_pt              > {0}".format(metCut))
         dfwwbvbscatJes00Up      [x] = dfwwbvbscatJes00Up      [x].Filter("mll{0}           > 20 && ptl1{0}           > 25 && ptl2{0}           > 20 && (DiLepton_flavor != 2 || abs(mll{0}           -91.1876) > 15) && nbtag_goodbtag_Jet_bjetJes00Up >  0 && nvbs_jetsJes00Up >= 2 && vbs_mjjJes00Up > 500 && vbs_detajjJes00Up > 2.5 && vbs_zepvvJes00Up < 1.0 && thePuppiMET_pt              > {1}".format(altMass,metCut))
@@ -505,6 +529,8 @@ def analysis(df,count,category,weight,year,PDType,isData,whichJob,nTheoryReplica
         histo[ 4][x] = dfwwcat[x] .Histo1D(("histo_{0}_{1}".format( 4,x), "histo_{0}_{1}".format( 4,x), 6,-0.5, 5.5), "ngood_jets","weight")
         histo[ 5][x] = dfwwbcat[x].Histo1D(("histo_{0}_{1}".format( 5,x), "histo_{0}_{1}".format( 5,x), 6,-0.5, 5.5), "ngood_jets","weight")
 
+# cut should be mjj = 200-500 GeV??
+
         dfwwcat[x]  = dfwwcat[x] .Filter("nvbs_jets >= 2 && vbs_mjj > 200", "At least two VBS jets")
         dfwwbcat[x] = dfwwbcat[x].Filter("nvbs_jets >= 2 && vbs_mjj > 200", "At least two VBS jets")
         histo[ 6][x] = dfwwcat[x] .Histo1D(("histo_{0}_{1}".format( 6,x), "histo_{0}_{1}".format( 6,x), 4,-0.5, 3.5), "ltype","weight")
@@ -527,6 +553,7 @@ def analysis(df,count,category,weight,year,PDType,isData,whichJob,nTheoryReplica
             histo[80+ltype][x] = dfwwbcat[x].Filter("ltype == {0}".format(ltype)).Histo1D(("histo_{0}_{1}".format(80+ltype,x), "histo_{0}_{1}".format(80+ltype,x),25, 0, 2.5), "etal1","weight")
             histo[84+ltype][x] = dfwwcat[x] .Filter("ltype == {0}".format(ltype)).Histo1D(("histo_{0}_{1}".format(84+ltype,x), "histo_{0}_{1}".format(84+ltype,x),25, 0, 2.5), "etal2","weight")
             histo[88+ltype][x] = dfwwbcat[x].Filter("ltype == {0}".format(ltype)).Histo1D(("histo_{0}_{1}".format(88+ltype,x), "histo_{0}_{1}".format(88+ltype,x),25, 0, 2.5), "etal2","weight")
+
 
         dfwwvbscat .append(dfwwcat[x] .Filter(VBSSEL, "VBS selection"))
         dfwwbvbscat.append(dfwwbcat[x].Filter(VBSSEL, "VBS selection"))
@@ -576,11 +603,23 @@ def analysis(df,count,category,weight,year,PDType,isData,whichJob,nTheoryReplica
         histo[52][x] = dfwwjjcat[x] .Histo1D(("histo_{0}_{1}".format(52,x), "histo_{0}_{1}".format(52,x),25, 0, 5), "vbs_etaj2","weight")
         histo[53][x] = dfwwbjjcat[x].Histo1D(("histo_{0}_{1}".format(53,x), "histo_{0}_{1}".format(53,x),25, 0, 5), "vbs_etaj2","weight")
 
+    
+        
+        # Set output directory
+        if (isData == "true"):
+            output_dir = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/matrix_method/{0}/ntuple/".format(dirT2)
+        elif (isData == "false"):
+            output_dir = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/OriginalTT/{0}/ntuple/".format(dirT2)
+
+        os.makedirs(output_dir, exist_ok=True)
+
+        # Debugging print
+ #       print(f"isData={isData}, doNtuples={doNtuples}, x={x}, theCat={theCat}, output_dir={output_dir}")
+
+
         print(f"doNtuples={doNtuples}, x={x}, theCat={theCat}")  # for checking the output files
-        if(doNtuples == True and x == theCat):
-            output_dir = f"/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/{dirT2}/ntuple/" # Defining output directory for histograms
-            os.makedirs(output_dir, exist_ok=True)
-            outputFile = f"{output_dir}/ntupleSSWWAna_sample{count}_year{year}_job{whichJob}.root"
+        if(doNtuples == True and x == theCat):            
+            outputFile = f"{output_dir}/ntupleSSWWAna_sample{count}_year{year}1_job{whichJob}.root"
             dfwwvbscat[x].Snapshot("events", outputFile, branchList)
 
         histo[ 99][x] = dfwwvbscat[x].Histo1D(("histo_{0}_{1}".format( 99,x), "histo_{0}_{1}".format( 99,x),12,500,3500), "vbs_mjj","weight")
@@ -956,10 +995,15 @@ def analysis(df,count,category,weight,year,PDType,isData,whichJob,nTheoryReplica
                 for i in range(histoMVA[j][x].GetNbinsX()):
                     histoMVA[j][x].SetBinContent(i+1,        histoMVA[j][x].GetBinContent(i+1)+       histo2D[j][x].GetBinContent(i+1,1))
                     histoMVA[j][x].SetBinError  (i+1,pow(pow(histoMVA[j][x].GetBinError  (i+1),2)+pow(histo2D[j][x].GetBinError  (i+1,1),2),0.5))
+      
 
-    output_dir2 = f"/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/{dirT2}/fillhisto_sswwAnalysis1001/" # Defining output directory for histograms
+    if (isData == "true"):
+        output_dir2 = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/matrix_method/{0}/histo/fillhisto_sswwAnalysis/".format(dirT2)
+    elif (isData == "false"):
+        output_dir2 = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/OriginalTT/{0}/histo/fillhisto_sswwAnalysis/".format(dirT2) # Defining output directory for histograms
+
     os.makedirs(output_dir2, exist_ok=True)
-    myfile = ROOT.TFile("{3}/fillhisto_sswwAnalysis1001_sample{0}_year{1}_job{2}.root".format(count,year,whichJob,output_dir2),'RECREATE')
+    myfile = ROOT.TFile("{3}/fillhisto_sswwAnalysis1001_sample{0}_year{1}1_job{2}.root".format(count,year,whichJob,output_dir2),'RECREATE')
     for i in range(nCat):
         for j in range(nHisto):
             if(histo[j][i] == 0): continue
@@ -975,11 +1019,13 @@ def analysis(df,count,category,weight,year,PDType,isData,whichJob,nTheoryReplica
         histoNonPrompt[i].Write()
     myfile.Close()
 
-def readMCSample(sampleNOW,year,skimType,whichJob,group,ewkCorrWeights,wsWeights,puWeights,histoBTVEffEtaPtLF,histoBTVEffEtaPtCJ,histoBTVEffEtaPtBJ,histoFakeEtaPt_mu,histoFakeEtaPt_el,histoLepSFEtaPt_mu,histoLepSFEtaPt_el,histoTriggerSFEtaPt_0_0,histoTriggerSFEtaPt_0_1,histoTriggerSFEtaPt_0_2,histoTriggerSFEtaPt_0_3,histoTriggerSFEtaPt_1_0,histoTriggerSFEtaPt_1_1,histoTriggerSFEtaPt_1_2,histoTriggerSFEtaPt_1_3,histoTriggerSFEtaPt_2_0,histoTriggerSFEtaPt_2_1,histoTriggerSFEtaPt_2_2,histoTriggerSFEtaPt_2_3,histoTriggerSFEtaPt_3_0,histoTriggerSFEtaPt_3_1,histoTriggerSFEtaPt_3_2,histoTriggerSFEtaPt_3_3):
+
+# MC files
+def readMCSample(sampleNOW,year,skimType,whichJob,group,ewkCorrWeights,wsWeights,puWeights,histoBTVEffEtaPtLF,histoBTVEffEtaPtCJ,histoBTVEffEtaPtBJ,histoFakeEtaPt_mu,histoFakeEtaPt_el,histoLepSFEtaPt_mu,histoLepSFEtaPt_el,histoTriggerSFEtaPt_0_0,histoTriggerSFEtaPt_0_1,histoTriggerSFEtaPt_0_2,histoTriggerSFEtaPt_0_3,histoTriggerSFEtaPt_1_0,histoTriggerSFEtaPt_1_1,histoTriggerSFEtaPt_1_2,histoTriggerSFEtaPt_1_3,histoTriggerSFEtaPt_2_0,histoTriggerSFEtaPt_2_1,histoTriggerSFEtaPt_2_2,histoTriggerSFEtaPt_2_3,histoTriggerSFEtaPt_3_0,histoTriggerSFEtaPt_3_1,histoTriggerSFEtaPt_3_2,histoTriggerSFEtaPt_3_3, histoPromptRateEtaPt_el, histoPromptRateEtaPt_mu):
 
     files = getMClist(sampleNOW, skimType)
     print("Total files: {0}".format(len(files)))
-
+# To check how many different MC weights are in a file, for LHEPDF, LHEScale, Partonshower
     genEventSumWeight = 0
     genEventSumNoWeight = 0
     nTheoryReplicas = [103, 9, 4]
@@ -1022,7 +1068,8 @@ def readMCSample(sampleNOW,year,skimType,whichJob,group,ewkCorrWeights,wsWeights
     runGetEntries = dfRuns.Count().GetValue()
 
     print("Number of Theory replicas: {0} / {1} / {2}".format(nTheoryReplicas[0],nTheoryReplicas[1],nTheoryReplicas[2]))
-
+# Is 4 the nominal value? I checked and the 4th value is 1
+# Why only specific samples?
     genEventSumLHEScaleRenorm = [1, 1, 1, 1, 1, 1]
     genEventSumPSRenorm = [1, 1, 1, 1]
     if(SwitchSample(sampleNOW,skimType)[2] == plotCategory("kPlotEWKSSWW") or
@@ -1039,9 +1086,11 @@ def readMCSample(sampleNOW,year,skimType,whichJob,group,ewkCorrWeights,wsWeights
     print("genEventSumLHEScaleRenorm: ",genEventSumLHEScaleRenorm)
     print("genEventSumPSRenorm: ",genEventSumPSRenorm)
 
+# Luminosity normalization
     weight = (SwitchSample(sampleNOW, skimType)[1] / genEventSumWeight)*getLumi(year)
     weightApprox = (SwitchSample(sampleNOW, skimType)[1] / genEventSumNoWeight)*getLumi(year)
 
+# Grouping the files for parallel processing
     if(whichJob != -1):
         groupedFile = groupFiles(files, group)
         files = groupedFile[whichJob]
@@ -1049,7 +1098,6 @@ def readMCSample(sampleNOW,year,skimType,whichJob,group,ewkCorrWeights,wsWeights
             print("no files in job/group: {0} / {1}".format(whichJob, group))
             return 0
         print("Used files: {0}".format(len(files)))
-
 
     df = ROOT.RDataFrame("Events", files)
     nevents = df.Count().GetValue()
@@ -1059,9 +1107,9 @@ def readMCSample(sampleNOW,year,skimType,whichJob,group,ewkCorrWeights,wsWeights
 
     PDType = os.path.basename(SwitchSample(sampleNOW, skimType)[0]).split('+')[0]
 
-    analysis(df,sampleNOW,SwitchSample(sampleNOW,skimType)[2],weight,year,PDType,"false",whichJob,nTheoryReplicas,genEventSumLHEScaleRenorm,genEventSumPSRenorm,ewkCorrWeights,wsWeights,puWeights,histoBTVEffEtaPtLF,histoBTVEffEtaPtCJ,histoBTVEffEtaPtBJ,histoFakeEtaPt_mu,histoFakeEtaPt_el,histoLepSFEtaPt_mu,histoLepSFEtaPt_el,histoTriggerSFEtaPt_0_0,histoTriggerSFEtaPt_0_1,histoTriggerSFEtaPt_0_2,histoTriggerSFEtaPt_0_3,histoTriggerSFEtaPt_1_0,histoTriggerSFEtaPt_1_1,histoTriggerSFEtaPt_1_2,histoTriggerSFEtaPt_1_3,histoTriggerSFEtaPt_2_0,histoTriggerSFEtaPt_2_1,histoTriggerSFEtaPt_2_2,histoTriggerSFEtaPt_2_3,histoTriggerSFEtaPt_3_0,histoTriggerSFEtaPt_3_1,histoTriggerSFEtaPt_3_2,histoTriggerSFEtaPt_3_3)
+    analysis(df,sampleNOW,SwitchSample(sampleNOW,skimType)[2],weight,year,PDType,"false",whichJob,nTheoryReplicas,genEventSumLHEScaleRenorm,genEventSumPSRenorm,ewkCorrWeights,wsWeights,puWeights,histoBTVEffEtaPtLF,histoBTVEffEtaPtCJ,histoBTVEffEtaPtBJ,histoFakeEtaPt_mu,histoFakeEtaPt_el,histoLepSFEtaPt_mu,histoLepSFEtaPt_el,histoTriggerSFEtaPt_0_0,histoTriggerSFEtaPt_0_1,histoTriggerSFEtaPt_0_2,histoTriggerSFEtaPt_0_3,histoTriggerSFEtaPt_1_0,histoTriggerSFEtaPt_1_1,histoTriggerSFEtaPt_1_2,histoTriggerSFEtaPt_1_3,histoTriggerSFEtaPt_2_0,histoTriggerSFEtaPt_2_1,histoTriggerSFEtaPt_2_2,histoTriggerSFEtaPt_2_3,histoTriggerSFEtaPt_3_0,histoTriggerSFEtaPt_3_1,histoTriggerSFEtaPt_3_2,histoTriggerSFEtaPt_3_3, histoPromptRateEtaPt_el, histoPromptRateEtaPt_mu)
 
-def readDASample(sampleNOW,year,skimType,whichJob,group,ewkCorrWeights,wsWeights,puWeights,histoBTVEffEtaPtLF,histoBTVEffEtaPtCJ,histoBTVEffEtaPtBJ,histoFakeEtaPt_mu,histoFakeEtaPt_el,histoLepSFEtaPt_mu,histoLepSFEtaPt_el,histoTriggerSFEtaPt_0_0,histoTriggerSFEtaPt_0_1,histoTriggerSFEtaPt_0_2,histoTriggerSFEtaPt_0_3,histoTriggerSFEtaPt_1_0,histoTriggerSFEtaPt_1_1,histoTriggerSFEtaPt_1_2,histoTriggerSFEtaPt_1_3,histoTriggerSFEtaPt_2_0,histoTriggerSFEtaPt_2_1,histoTriggerSFEtaPt_2_2,histoTriggerSFEtaPt_2_3,histoTriggerSFEtaPt_3_0,histoTriggerSFEtaPt_3_1,histoTriggerSFEtaPt_3_2,histoTriggerSFEtaPt_3_3):
+def readDASample(sampleNOW,year,skimType,whichJob,group,ewkCorrWeights,wsWeights,puWeights,histoBTVEffEtaPtLF,histoBTVEffEtaPtCJ,histoBTVEffEtaPtBJ,histoFakeEtaPt_mu,histoFakeEtaPt_el,histoLepSFEtaPt_mu,histoLepSFEtaPt_el,histoTriggerSFEtaPt_0_0,histoTriggerSFEtaPt_0_1,histoTriggerSFEtaPt_0_2,histoTriggerSFEtaPt_0_3,histoTriggerSFEtaPt_1_0,histoTriggerSFEtaPt_1_1,histoTriggerSFEtaPt_1_2,histoTriggerSFEtaPt_1_3,histoTriggerSFEtaPt_2_0,histoTriggerSFEtaPt_2_1,histoTriggerSFEtaPt_2_2,histoTriggerSFEtaPt_2_3,histoTriggerSFEtaPt_3_0,histoTriggerSFEtaPt_3_1,histoTriggerSFEtaPt_3_2,histoTriggerSFEtaPt_3_3, histoPromptRateEtaPt_el, histoPromptRateEtaPt_mu):
 
     PDType = "0"
     if  (sampleNOW >= 1000 and sampleNOW <= 1009): PDType = "SingleMuon"
@@ -1082,7 +1130,6 @@ def readDASample(sampleNOW,year,skimType,whichJob,group,ewkCorrWeights,wsWeights
             return 0
         print("Used files: {0}".format(len(files)))
 
-
     df = ROOT.RDataFrame("Events", files)
 
     genEventSumLHEScaleRenorm = [1, 1, 1, 1, 1, 1]
@@ -1092,14 +1139,14 @@ def readDASample(sampleNOW,year,skimType,whichJob,group,ewkCorrWeights,wsWeights
     nevents = df.Count().GetValue()
     print("%s entries in the dataset" %nevents)
 
-    analysis(df,sampleNOW,sampleNOW,weight,year,PDType,"true",whichJob,0,genEventSumLHEScaleRenorm,genEventSumPSRenorm,ewkCorrWeights,wsWeights,puWeights,histoBTVEffEtaPtLF,histoBTVEffEtaPtCJ,histoBTVEffEtaPtBJ,histoFakeEtaPt_mu,histoFakeEtaPt_el,histoLepSFEtaPt_mu,histoLepSFEtaPt_el,histoTriggerSFEtaPt_0_0,histoTriggerSFEtaPt_0_1,histoTriggerSFEtaPt_0_2,histoTriggerSFEtaPt_0_3,histoTriggerSFEtaPt_1_0,histoTriggerSFEtaPt_1_1,histoTriggerSFEtaPt_1_2,histoTriggerSFEtaPt_1_3,histoTriggerSFEtaPt_2_0,histoTriggerSFEtaPt_2_1,histoTriggerSFEtaPt_2_2,histoTriggerSFEtaPt_2_3,histoTriggerSFEtaPt_3_0,histoTriggerSFEtaPt_3_1,histoTriggerSFEtaPt_3_2,histoTriggerSFEtaPt_3_3)
+    analysis(df,sampleNOW,sampleNOW,weight,year,PDType,"true",whichJob,0,genEventSumLHEScaleRenorm,genEventSumPSRenorm,ewkCorrWeights,wsWeights,puWeights,histoBTVEffEtaPtLF,histoBTVEffEtaPtCJ,histoBTVEffEtaPtBJ,histoFakeEtaPt_mu,histoFakeEtaPt_el,histoLepSFEtaPt_mu,histoLepSFEtaPt_el,histoTriggerSFEtaPt_0_0,histoTriggerSFEtaPt_0_1,histoTriggerSFEtaPt_0_2,histoTriggerSFEtaPt_0_3,histoTriggerSFEtaPt_1_0,histoTriggerSFEtaPt_1_1,histoTriggerSFEtaPt_1_2,histoTriggerSFEtaPt_1_3,histoTriggerSFEtaPt_2_0,histoTriggerSFEtaPt_2_1,histoTriggerSFEtaPt_2_2,histoTriggerSFEtaPt_2_3,histoTriggerSFEtaPt_3_0,histoTriggerSFEtaPt_3_1,histoTriggerSFEtaPt_3_2,histoTriggerSFEtaPt_3_3, histoPromptRateEtaPt_el, histoPromptRateEtaPt_mu)
 
 if __name__ == "__main__":
 
     group = 10
 
     skimType = "2l"
-    year = 2022
+    year = 20220     #Changing the year for data, just for check, Monika, originally 2022
     process = -1
     whichJob = -1
 
@@ -1125,6 +1172,7 @@ if __name__ == "__main__":
         if opt == "--whichJob":
             whichJob = int(arg)
 
+# Electroweak corrections
     ewkCorrWeights = []
     ewkCorrPath = "data/VV_NLO_LO_CMS_mjj.root"
     fewkCorrFile = ROOT.TFile(ewkCorrPath)
@@ -1136,6 +1184,7 @@ if __name__ == "__main__":
         ewkCorrWeights[x].SetDirectory(0)
     fewkCorrFile.Close()
 
+# Wrongsign SF and unc
     wsWeights = []
     wsPath = "data/histoWSSF_{0}.root".format(year)
     fwsFile = ROOT.TFile(wsPath)
@@ -1146,6 +1195,7 @@ if __name__ == "__main__":
         wsWeights[x].SetDirectory(0)
     fwsFile.Close()
 
+# Taking PU weights
     puWeights = []
     puPath = "data/puWeights_UL_{0}.root".format(year)
     fPuFile = ROOT.TFile(puPath)
@@ -1156,11 +1206,10 @@ if __name__ == "__main__":
         puWeights[x].SetDirectory(0)
     fPuFile.Close()
 
+# Taking the fake rates
     histoFakeEtaPt_mu = []
     histoFakeEtaPt_el = []
     fakePath = "data/histoFakeEtaPt_{0}.root".format(year)
-    if(whichAna == 3):
-        fakePath = "data/histoFakeEtaPt_ptlcone_{0}.root".format(year)
     fFakeFile = ROOT.TFile(fakePath)
     histoFakeEtaPt_mu.append(fFakeFile.Get("histoFakeEffSelEtaPt_0_{0}_fakeAnalysis1001_anaType1".format(muSelChoice)))
     histoFakeEtaPt_mu.append(fFakeFile.Get("histoFakeEffSelEtaPt_0_{0}_fakeAnalysis1002_anaType1".format(muSelChoice)))
@@ -1185,6 +1234,31 @@ if __name__ == "__main__":
         histoFakeEtaPt_el[x].SetDirectory(0)
     fFakeFile.Close()
 
+# prompt rate
+    
+    histoPromptRateEtaPt_mu = []
+    histoPromptRateEtaPt_el = []
+    prompratepath = "data/histoDeltaEtaPt_{0}.root".format(year)
+    fPromptRateFile = ROOT.TFile(prompratepath)
+
+    histoPromptRateEtaPt_mu.append(fPromptRateFile.Get("histodeltaEtaPt_mu_0_{0}".format(muSelChoice)))
+    histoPromptRateEtaPt_mu.append(fPromptRateFile.Get("histodeltaEtaPt_mu_1_{0}".format(muSelChoice)))
+    histoPromptRateEtaPt_mu.append(fPromptRateFile.Get("histodeltaEtaPt_mu_2_{0}".format(muSelChoice)))
+    histoPromptRateEtaPt_mu.append(fPromptRateFile.Get("histodeltaEtaPt_mu_3_{0}".format(muSelChoice)))
+    histoPromptRateEtaPt_el.append(fPromptRateFile.Get("histodeltaEtaPt_el_0_{0}".format(elSelChoice)))
+    histoPromptRateEtaPt_el.append(fPromptRateFile.Get("histodeltaEtaPt_el_1_{0}".format(elSelChoice)))
+    histoPromptRateEtaPt_el.append(fPromptRateFile.Get("histodeltaEtaPt_el_2_{0}".format(elSelChoice)))
+    histoPromptRateEtaPt_el.append(fPromptRateFile.Get("histodeltaEtaPt_el_3_{0}".format(elSelChoice)))
+    for x in range(4):
+        if histoPromptRateEtaPt_mu[x]:
+            histoPromptRateEtaPt_mu[x].SetDirectory(0)
+        else:
+            print(f"Warning: histoPromptRateEtaPt_mu[{x}] not found!")
+        if histoPromptRateEtaPt_el[x]:
+            histoPromptRateEtaPt_el[x].SetDirectory(0)
+        else:
+            print(f"Warning: histoPromptRateEtaPt_el[{x}] not found!")
+# lepton SF
     lepSFPath = "data/histoLepSFEtaPt_{0}{1}.root".format(year,correctionString)
     fLepSFFile = ROOT.TFile(lepSFPath)
     histoLepSFEtaPt_mu = fLepSFFile.Get("histoLepSFEtaPt_0_{0}".format(muSelChoice))
@@ -1193,6 +1267,7 @@ if __name__ == "__main__":
     histoLepSFEtaPt_el.SetDirectory(0)
     fLepSFFile.Close()
 
+# Trigger SF
     triggerSFPath = "data/histoTriggerSFEtaPt_{0}.root".format(year)
     fTriggerSFFile = ROOT.TFile(triggerSFPath)
     histoTriggerSFEtaPt_0_0 = fTriggerSFFile.Get("histoTriggerV1SFEtaPt_0_0")
@@ -1229,6 +1304,7 @@ if __name__ == "__main__":
     histoTriggerSFEtaPt_3_3.SetDirectory(0)
     fTriggerSFFile.Close()
 
+# Btagging SF LF = lightflavor, CJ= charm jets, BJ = b jets
     BTVEffPath = "data/histoBtagEffSelEtaPt_{0}.root".format(year)
     fBTVEffPathFile = ROOT.TFile(BTVEffPath)
     histoBTVEffEtaPtLF = fBTVEffPathFile.Get("histoBtagEffSelEtaPt_{0}".format(0+3*bTagSel))
@@ -1241,8 +1317,8 @@ if __name__ == "__main__":
 
     try:
         if(process >= 0 and process < 1000):
-            readMCSample(process,year,skimType,whichJob,group,ewkCorrWeights,wsWeights,puWeights,histoBTVEffEtaPtLF,histoBTVEffEtaPtCJ,histoBTVEffEtaPtBJ,histoFakeEtaPt_mu,histoFakeEtaPt_el,histoLepSFEtaPt_mu,histoLepSFEtaPt_el,histoTriggerSFEtaPt_0_0,histoTriggerSFEtaPt_0_1,histoTriggerSFEtaPt_0_2,histoTriggerSFEtaPt_0_3,histoTriggerSFEtaPt_1_0,histoTriggerSFEtaPt_1_1,histoTriggerSFEtaPt_1_2,histoTriggerSFEtaPt_1_3,histoTriggerSFEtaPt_2_0,histoTriggerSFEtaPt_2_1,histoTriggerSFEtaPt_2_2,histoTriggerSFEtaPt_2_3,histoTriggerSFEtaPt_3_0,histoTriggerSFEtaPt_3_1,histoTriggerSFEtaPt_3_2,histoTriggerSFEtaPt_3_3)
+            readMCSample(process,year,skimType,whichJob,group,ewkCorrWeights,wsWeights,puWeights,histoBTVEffEtaPtLF,histoBTVEffEtaPtCJ,histoBTVEffEtaPtBJ,histoFakeEtaPt_mu,histoFakeEtaPt_el,histoLepSFEtaPt_mu,histoLepSFEtaPt_el,histoTriggerSFEtaPt_0_0,histoTriggerSFEtaPt_0_1,histoTriggerSFEtaPt_0_2,histoTriggerSFEtaPt_0_3,histoTriggerSFEtaPt_1_0,histoTriggerSFEtaPt_1_1,histoTriggerSFEtaPt_1_2,histoTriggerSFEtaPt_1_3,histoTriggerSFEtaPt_2_0,histoTriggerSFEtaPt_2_1,histoTriggerSFEtaPt_2_2,histoTriggerSFEtaPt_2_3,histoTriggerSFEtaPt_3_0,histoTriggerSFEtaPt_3_1,histoTriggerSFEtaPt_3_2,histoTriggerSFEtaPt_3_3, histoPromptRateEtaPt_el, histoPromptRateEtaPt_mu)
         elif(process >= 1000):
-            readDASample(process,year,skimType,whichJob,group,ewkCorrWeights,wsWeights,puWeights,histoBTVEffEtaPtLF,histoBTVEffEtaPtCJ,histoBTVEffEtaPtBJ,histoFakeEtaPt_mu,histoFakeEtaPt_el,histoLepSFEtaPt_mu,histoLepSFEtaPt_el,histoTriggerSFEtaPt_0_0,histoTriggerSFEtaPt_0_1,histoTriggerSFEtaPt_0_2,histoTriggerSFEtaPt_0_3,histoTriggerSFEtaPt_1_0,histoTriggerSFEtaPt_1_1,histoTriggerSFEtaPt_1_2,histoTriggerSFEtaPt_1_3,histoTriggerSFEtaPt_2_0,histoTriggerSFEtaPt_2_1,histoTriggerSFEtaPt_2_2,histoTriggerSFEtaPt_2_3,histoTriggerSFEtaPt_3_0,histoTriggerSFEtaPt_3_1,histoTriggerSFEtaPt_3_2,histoTriggerSFEtaPt_3_3)
+            readDASample(process,year,skimType,whichJob,group,ewkCorrWeights,wsWeights,puWeights,histoBTVEffEtaPtLF,histoBTVEffEtaPtCJ,histoBTVEffEtaPtBJ,histoFakeEtaPt_mu,histoFakeEtaPt_el,histoLepSFEtaPt_mu,histoLepSFEtaPt_el,histoTriggerSFEtaPt_0_0,histoTriggerSFEtaPt_0_1,histoTriggerSFEtaPt_0_2,histoTriggerSFEtaPt_0_3,histoTriggerSFEtaPt_1_0,histoTriggerSFEtaPt_1_1,histoTriggerSFEtaPt_1_2,histoTriggerSFEtaPt_1_3,histoTriggerSFEtaPt_2_0,histoTriggerSFEtaPt_2_1,histoTriggerSFEtaPt_2_2,histoTriggerSFEtaPt_2_3,histoTriggerSFEtaPt_3_0,histoTriggerSFEtaPt_3_1,histoTriggerSFEtaPt_3_2,histoTriggerSFEtaPt_3_3, histoPromptRateEtaPt_el, histoPromptRateEtaPt_mu)
     except Exception as e:
         print("FAILED {0}".format(e))
