@@ -2,7 +2,8 @@
 
 year=$1
 
-for dir in {1001..1009}; do
+#for dir in {1001..1009}; do
+for dir in {1001};do
   inputdir="/mnt/home/mghimiray/VBSStudies/Outputs_VBS/matrix_method/${dir}/histo/fillhisto_sswwAnalysis"
   outdir="/mnt/home/mghimiray/VBSStudies/Outputs_VBS/OriginalTT/${dir}/histo/fillhisto_sswwAnalysis"
 
