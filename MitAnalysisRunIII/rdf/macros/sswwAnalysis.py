@@ -606,10 +606,7 @@ def analysis(df,count,category,weight,year,PDType,isData,whichJob,nTheoryReplica
     
         
         # Set output directory
-        if (isData == "true"):
-            output_dir = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/matrix_method/{0}/ntuple/".format(dirT2)
-        elif (isData == "false"):
-            output_dir = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/OriginalTT/{0}/ntuple/".format(dirT2)
+        output_dir = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/{0}/ntuple/".format(dirT2)
 
         os.makedirs(output_dir, exist_ok=True)
 
@@ -997,10 +994,7 @@ def analysis(df,count,category,weight,year,PDType,isData,whichJob,nTheoryReplica
                     histoMVA[j][x].SetBinError  (i+1,pow(pow(histoMVA[j][x].GetBinError  (i+1),2)+pow(histo2D[j][x].GetBinError  (i+1,1),2),0.5))
       
 
-    if (isData == "true"):
-        output_dir2 = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/matrix_method/{0}/histo/fillhisto_sswwAnalysis/".format(dirT2)
-    elif (isData == "false"):
-        output_dir2 = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/OriginalTT/{0}/histo/fillhisto_sswwAnalysis/".format(dirT2) # Defining output directory for histograms
+    output_dir2 = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/{0}/histo/fillhisto_sswwAnalysis/".format(dirT2) # Defining output directory for histograms
 
     os.makedirs(output_dir2, exist_ok=True)
     myfile = ROOT.TFile("{3}/fillhisto_sswwAnalysis1001_sample{0}_year{1}1_job{2}.root".format(count,year,whichJob,output_dir2),'RECREATE')
