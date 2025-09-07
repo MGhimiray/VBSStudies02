@@ -616,7 +616,7 @@ def analysis(df,count,category,weight,year,PDType,isData,whichJob,nTheoryReplica
 
         print(f"doNtuples={doNtuples}, x={x}, theCat={theCat}")  # for checking the output files
         if(doNtuples == True and x == theCat):            
-            outputFile = f"{output_dir}/ntupleSSWWAna_sample{count}_year{year}1_job{whichJob}.root"
+            outputFile = f"{output_dir}/ntupleSSWWAna_sample{count}_year{year}_job{whichJob}.root"
             dfwwvbscat[x].Snapshot("events", outputFile, branchList)
 
         histo[ 99][x] = dfwwvbscat[x].Histo1D(("histo_{0}_{1}".format( 99,x), "histo_{0}_{1}".format( 99,x),12,500,3500), "vbs_mjj","weight")
@@ -997,7 +997,7 @@ def analysis(df,count,category,weight,year,PDType,isData,whichJob,nTheoryReplica
     output_dir2 = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/{0}/histo/fillhisto_sswwAnalysis/".format(dirT2) # Defining output directory for histograms
 
     os.makedirs(output_dir2, exist_ok=True)
-    myfile = ROOT.TFile("{3}/fillhisto_sswwAnalysis1001_sample{0}_year{1}1_job{2}.root".format(count,year,whichJob,output_dir2),'RECREATE')
+    myfile = ROOT.TFile("{3}/fillhisto_sswwAnalysis1001_sample{0}_year{1}_job{2}.root".format(count,year,whichJob,output_dir2),'RECREATE')
     for i in range(nCat):
         for j in range(nHisto):
             if(histo[j][i] == 0): continue
