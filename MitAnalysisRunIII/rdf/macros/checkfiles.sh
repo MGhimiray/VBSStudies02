@@ -134,7 +134,7 @@ if ((${#missing_detail[@]})); then
     if [[ -z "${DRYRUN:-}" ]]; then
       command -v sbatch >/dev/null 2>&1 || { echo "ERROR: sbatch not found in PATH"; exit 4; }
       sbatch -p INTEL_HASWELL --time=70:00:00 --cpus-per-task=1 --nodes=1 \
-             --job-name="vbsoriginalTT_${tag}_${sample}_${job}" \
+             --job-name="vbs_${tag}_${sample}_${job}" \
              --output="log/vbs__${tag}_${sample}_${job}.out" \
              --error="log/vbs__${tag}_${sample}_${job}.err" \
              submit_cis_analysis.sh "$tag" "$sample" "$job" \
