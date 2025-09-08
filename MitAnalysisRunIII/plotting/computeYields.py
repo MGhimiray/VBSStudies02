@@ -6,8 +6,8 @@ from utilsCategory import plotCategory
 
 if __name__ == "__main__":
     path = "fillhisto_sswwAnalysis1001"
-    year = 2023
-    output = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/merge2/"
+    year = 2027
+    output = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/1001/merge3"
     showUnc = 0
 
     valid = ['path=', "year=", 'output=', "unc=", 'help']

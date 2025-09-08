@@ -22,7 +22,7 @@ bool isLogSpecial = false;
 bool isLogX = false;
 bool printRatios = false;
 bool printYieldsBinByBin = false;
-TString OUTPUT_DIR = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/plots/";
+TString OUTPUT_DIR = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/1001/plots/";
 
 void eraselabel(TPad *p,Double_t h){
   p->cd();
@@ -468,7 +468,7 @@ void finalPlot(int nsel = 0, int ReBin = 1, TString XTitle = "N_{jets}", TString
     TString myOutputFile;
     outputName = Form("%s_%d",outputName.Data(),year);
     myOutputFile = Form("plots/%s.eps",outputName.Data());
-//c1->SaveAs(myOutputFile.Data());
+    c1->SaveAs(myOutputFile.Data());
     myOutputFile = TString(OUTPUT_DIR) + "/" + outputName + ".png";
     c1->SaveAs(myOutputFile.Data());
     myOutputFile = TString(OUTPUT_DIR) + "/" + outputName + ".pdf";

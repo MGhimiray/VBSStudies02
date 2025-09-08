@@ -5,8 +5,8 @@ from utilsCategory import plotCategory
 ROOT.PyConfig.DisableRootLogon = True
 
 if __name__ == "__main__":
-    dir = "1002"
-    base = f"/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/{dir}/fillhisto_sswwAnalysis1001"
+    dir = "1001"
+    base = f"/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/{dir}/histo/fillhisto_sswwAnalysis"
     path = "fillhisto_sswwAnalysis"
     year = 20220
     output = f"/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/{dir}/merge1"
