@@ -17,7 +17,7 @@
 // whichAna = 0 (SSWW), fidAna = 0/2/4 (WW), 1/3/5 (WWb)
 // whichAna = 0 (WZ), fidAna = 0 (WZ), 1 (WZb)
 
-void makeSSWWDataCards(int whichAna = 0, int fidAna = 0, TString InputDir = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/merge1/1001", TString anaSel = "sswwAnalysis1001", int year = 20230){
+void makeSSWWDataCards(int whichAna = 0, int fidAna = 1, TString InputDir = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/1001/merge1/", TString anaSel = "sswwAnalysis1001", int year = 20221){
 
   if(fidAna < 0 || fidAna > 6) printf("Wrong fidAna(%d)\n",fidAna);
 
@@ -32,6 +32,7 @@ void makeSSWWDataCards(int whichAna = 0, int fidAna = 0, TString InputDir = "/mn
   else if(year == 20221) {triggerEffUnc = 1.005; theYear = 2022;}
   else if(year == 20230) {triggerEffUnc = 1.005; theYear = 2023;}
   else if(year == 20231) {triggerEffUnc = 1.005; theYear = 2023;}
+  else if(year == 20240) {triggerEffUnc = 1.005; theYear = 2024;}
   else {printf("Wrong year!\n"); return;}
 
   int jumpValue = 200;
@@ -461,7 +462,8 @@ void makeSSWWDataCards(int whichAna = 0, int fidAna = 0, TString InputDir = "/mn
   }
 
 
-  TString outdir = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/datacards/1001";
+  TString outdir = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/1001/datacards";
+  std::filesystem::create_directories(outdir.Data());
   TString outputLimits = Form("%s/output_%s_%d_bin%d%s.root", outdir.Data(), anaSel.Data(), year, fidAna, additionalSuffix.Data());
   outputFile = new TFile(outputLimits, "RECREATE");
   outputFile->cd();
