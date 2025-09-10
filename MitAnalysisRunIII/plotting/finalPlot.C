@@ -467,7 +467,7 @@ void finalPlot(int nsel = 0, int ReBin = 1, TString XTitle = "N_{jets}", TString
   if(strcmp(outputName.Data(),"") != 0){
     TString myOutputFile;
     outputName = Form("%s_%d",outputName.Data(),year);
-    myOutputFile = Form("plots/%s.eps",outputName.Data());
+    myOutputFile = TString(OUTPUT_DIR) + "/" + outputName + ".eps";
     c1->SaveAs(myOutputFile.Data());
     myOutputFile = TString(OUTPUT_DIR) + "/" + outputName + ".png";
     c1->SaveAs(myOutputFile.Data());
