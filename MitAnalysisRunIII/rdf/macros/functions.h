@@ -997,9 +997,10 @@ static int count_TT = 0, count_TF = 0, count_FT = 0, count_FF = 0;
     static float sumW_TT = 0.0, sumW_TF = 0.0, sumW_FT = 0.0, sumW_FF = 0.0;
     static double total_sfTot = 0.0;
 
-    // Check for available leptons
-    if (!tight_mu.empty() || !tight_el.empty()) {
-        // Muon-Muon pairs
+    if (numel == 0 && nummu == 0) {
+        // Check for available leptons
+        if (!tight_mu.empty() || !tight_el.empty()) {
+            // Muon-Muon pairs
         for (size_t i = 0; i < tight_mu.size(); ++i) {
             for (size_t j = i + 1; j < tight_mu.size(); ++j) { // Avoid self-pairs and duplicates
                 int mu1_tight = tight_mu[i];
@@ -1063,7 +1064,7 @@ static int count_TT = 0, count_TF = 0, count_FT = 0, count_FF = 0;
         }
     }
     total_sfTot += sfTot;
-
+  
     std::cout << "[Counts & Weights] "
               << "TT: " << count_TT << " (sumW=" << sumW_TT << "), "
               << "TF: " << count_TF << " (sumW=" << sumW_TF << "), "
@@ -1073,7 +1074,7 @@ static int count_TT = 0, count_TF = 0, count_FT = 0, count_FF = 0;
              
               
     std::cout << "Total sfTot: " << total_sfTot << std::endl;
-    
+  }
 
   return sfTot;
       }

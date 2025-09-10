@@ -11,7 +11,7 @@ if [ $theOption -eq 0 ]; then
 
   export theAna=sswwAnalysis$1
 
-  for year in 20220 20221 20230 20231;
+  for year in 20220 20221 20230 20231 20240;
   do
 
   #for bin in 0 1 2 3 4 5;

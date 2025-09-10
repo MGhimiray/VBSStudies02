@@ -10,7 +10,7 @@ theCondor=$2;
 theYear=$3;
 group=10
 dir=1001
-outdir="/mnt/home/mghimiray/VBSStudies/Outputs_VBS/OriginalTT/${dir}/merge2/"
+outdir="/mnt/home/mghimiray/VBSStudies/Outputs_VBS/OriginalTT/${dir}/merge3/"
 mkdir -p "$outdir"
 
 if [ ${theYear} = 2027 ]; then
