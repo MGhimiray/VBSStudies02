@@ -22,7 +22,7 @@ bool isLogSpecial = false;
 bool isLogX = false;
 bool printRatios = false;
 bool printYieldsBinByBin = false;
-TString OUTPUT_DIR = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/OriginalTT/plots/";
+TString OUTPUT_DIR = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/OriginalTT/1001/plots/";
 
 void eraselabel(TPad *p,Double_t h){
   p->cd();

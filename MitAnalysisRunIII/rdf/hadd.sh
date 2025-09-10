@@ -49,17 +49,6 @@ for dir in 1001; do
           echo "SKIP (missing): $in1 or $in2"
         fi
       done
-      for sample in 1022 1023 1024 1025 1026 1027 1028 1032 1033 1034 1035 1036 1037 1038 1042 1043 1044 1045 1046 1047 1048; do
-        in1="$inputdir/fillhisto_sswwAnalysis${dir}_sample${sample}_year202411_job${i}.root"
-        in2="$inputdir/fillhisto_sswwAnalysis${dir}_sample${sample}_year20241_job${i}.root"
-        out="$outdir/fillhisto_sswwAnalysis${dir}_sample${sample}_year20241_job${i}.root"
-        if [[ -f "$in1" && -f "$in2" ]]; then
-          echo "hadd -> $out"
-          hadd -f "$out" "$in1" "$in2"
-        else
-          echo "SKIP (missing): $in1 or $in2"
-        fi
-      done
 
     elif [[ "$year" == "2022" ]]; then
       for sample in 1001 1002 1011 1012 1021 1022 1023 1031 1032 1033 1042 1043; do

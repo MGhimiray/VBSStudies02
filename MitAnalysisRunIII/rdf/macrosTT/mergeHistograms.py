@@ -6,7 +6,7 @@ ROOT.PyConfig.DisableRootLogon = True
 
 if __name__ == "__main__":
     dir = "1001"
-    base = f"/mnt/home/mghimiray/VBSStudies/Outputs_VBS/OriginalTT/{dir}/histo/fillhisto_sswwAnalysis/"
+    base = f"/mnt/home/mghimiray/VBSStudies/Outputs_VBS/OriginalTT/{dir}/histo/fillhisto_sswwAnalysis"
     path = "fillhisto_sswwAnalysis"
     year = 20230
     output = f"/mnt/home/mghimiray/VBSStudies/Outputs_VBS/OriginalTT/{dir}/merge1"
