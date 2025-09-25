@@ -11,14 +11,14 @@ if [ $theOption -eq 0 ]; then
 
   export theAna=sswwAnalysis$1
 
-  for year in 20220 20221 20230 20231;
+  for year in 20220 20221 20230 20231 20240;
   do
 
   #for bin in 0 1 2 3 4 5;
   for bin in 0 1;
   do
 
-  root -l -q -b makeSSWWDataCards.C'(0,'${bin}',"anaZ","'${theAna}'",'${year}')';
+  root -l -q -b makeSSWWDataCards.C'(0,'${bin}',"/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/1001/merge1/","'${theAna}'",'${year}')';
 
   done
   done
@@ -26,27 +26,27 @@ if [ $theOption -eq 0 ]; then
 elif [ $theOption -eq 1 ]; then
   export theAna=wzAnalysis$1
 
-  root -l -q -b makeSSWWDataCards.C'(0,0,"anaZ","'${theAna}'",20220)'
-  root -l -q -b makeSSWWDataCards.C'(0,1,"anaZ","'${theAna}'",20220)'
+  root -l -q -b makeSSWWDataCards.C'(0,0,"/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/1001/merge1/","'${theAna}'",20220)'
+  root -l -q -b makeSSWWDataCards.C'(0,1,"/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/1001/merge1/","'${theAna}'",20220)'
 
-  root -l -q -b makeSSWWDataCards.C'(0,0,"anaZ","'${theAna}'",20221)'
-  root -l -q -b makeSSWWDataCards.C'(0,1,"anaZ","'${theAna}'",20221)'
+  root -l -q -b makeSSWWDataCards.C'(0,0,"/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/1001/merge1/","'${theAna}'",20221)'
+  root -l -q -b makeSSWWDataCards.C'(0,1,"/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/1001/merge1/","'${theAna}'",20221)'
 
-  root -l -q -b makeSSWWDataCards.C'(0,0,"anaZ","'${theAna}'",20230)'
-  root -l -q -b makeSSWWDataCards.C'(0,1,"anaZ","'${theAna}'",20230)'
+  root -l -q -b makeSSWWDataCards.C'(0,0,"/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/1001/merge1/","'${theAna}'",20230)'
+  root -l -q -b makeSSWWDataCards.C'(0,1,"/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/1001/merge1/","'${theAna}'",20230)'
 
-  root -l -q -b makeSSWWDataCards.C'(0,0,"anaZ","'${theAna}'",20231)'
-  root -l -q -b makeSSWWDataCards.C'(0,1,"anaZ","'${theAna}'",20231)'
+  root -l -q -b makeSSWWDataCards.C'(0,0,"/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/1001/merge1/","'${theAna}'",20231)'
+  root -l -q -b makeSSWWDataCards.C'(0,1,"/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/1001/merge1/","'${theAna}'",20231)'
 
 elif [ $theOption -eq 2 ]; then
   export theAna=zzAnalysis$1
 
-  root -l -q -b makeSSWWDataCards.C'(0,0,"anaZ","'${theAna}'",20220)'
+  root -l -q -b makeSSWWDataCards.C'(0,0,"/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/1001/merge1/","'${theAna}'",20220)'
 
-  root -l -q -b makeSSWWDataCards.C'(0,0,"anaZ","'${theAna}'",20221)'
+  root -l -q -b makeSSWWDataCards.C'(0,0,"/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/1001/merge1/","'${theAna}'",20221)'
 
-  root -l -q -b makeSSWWDataCards.C'(0,0,"anaZ","'${theAna}'",20230)'
+  root -l -q -b makeSSWWDataCards.C'(0,0,"/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/1001/merge1/","'${theAna}'",20230)'
 
-  root -l -q -b makeSSWWDataCards.C'(0,0,"anaZ","'${theAna}'",20231)'
+  root -l -q -b makeSSWWDataCards.C'(0,0,"/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/1001/merge1/","'${theAna}'",20231)'
 
 fi
