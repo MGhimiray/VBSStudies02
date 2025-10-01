@@ -165,8 +165,8 @@ static void OverlayAndSave(TH1* hDD, TH1* hMM,
   // Draw order: histograms then both sets of error bars
   hDD->Draw("HIST");
   hMM->Draw("HIST SAME");
-  hDDerr->Draw("E1 SAME");
-  hMMerr->Draw("E1 SAME");
+  //hDDerr->Draw("E1 SAME");
+ // hMMerr->Draw("E1 SAME");
 
   // Legend
   TLegend leg(0.62, 0.68, 0.90, 0.84);
