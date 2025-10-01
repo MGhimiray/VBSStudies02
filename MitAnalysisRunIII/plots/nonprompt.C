@@ -1,4 +1,4 @@
-// overlay_dd_mm.C — run with: root overlay_dd_mm.C
+// overlay_dd_mm.C — run with: root -l -b -q overlay_dd_mm.C
 // DD (filled purple) vs MM (black line) with statistical error bars (E1) for both.
 // Saves PNG, PDF, EPS. CMS + lumi stamp. Larger axis fonts.
 
@@ -21,11 +21,11 @@
 // ----------------- knobs you can tweak -----------------
 static const int    kAnaId        = 1001;
 static const int    kYear         = 2027;
-static const bool   kNormalize    = true;   // keep OFF
+static const bool   kNormalize    = true;   // normalize both histos to unit area (with bin-width)
 static const int    kRebin        = 1;
-static const double kHeadroom     = 2.0;     // y-max = headroom * peak
-static const int    kYDivisions   = 505;     // fewer Y ticks (primary=5, minor=5)
-static const bool   kLogY         = false;   // set true if you want log-y
+static const double kHeadroom     = 2.0;    // y-max = headroom * peak (for linear y)
+static const int    kYDivisions   = 505;    // fewer Y ticks (primary=5, minor=5)
+static const bool   kLogY         = false;  // set true if you want log-y
 static const char*  kOutDir       = "DDMM_plots_2027";
 // -------------------------------------------------------
 
@@ -82,10 +82,11 @@ static void DrawCMSLumi(const char* lumiText = "Run 3, 171 fb^{-1} (13.6 TeV)",
 static void OverlayAndSave(TH1* hDD, TH1* hMM,
                            const char* xaxisTitle,
                            const char* outBase,
-                           bool /*normalizeShape*/,
+                           bool normalizeShape,
                            int rebin)
 {
   if (!hDD || !hMM) return;
+
   if (rebin > 1) { hDD->Rebin(rebin); hMM->Rebin(rebin); }
 
   hDD->SetName(std::string(std::string(hDD->GetName()) + "_DD").c_str());
@@ -94,6 +95,7 @@ static void OverlayAndSave(TH1* hDD, TH1* hMM,
   StyleDD(hDD);
   StyleMM(hMM);
 
+  // Axis titles
   hDD->GetXaxis()->SetTitle(xaxisTitle);
   hMM->GetXaxis()->SetTitle(xaxisTitle);
   const char* yTitle = "Events / bin";
@@ -110,7 +112,16 @@ static void OverlayAndSave(TH1* hDD, TH1* hMM,
   hDD->SetTitle("");
   hMM->SetTitle("");
 
-  // --- Stat error bars setup (E1) for both ---
+  // --- Normalize to unit area with bin-width if requested ---
+  if (normalizeShape) {
+    const int nbx = hDD->GetNbinsX();
+    double intDD = hDD->Integral(1, nbx, "width");
+    double intMM = hMM->Integral(1, nbx, "width");
+    if (intDD > 0) hDD->Scale(1.0 / intDD, "width");
+    if (intMM > 0) hMM->Scale(1.0 / intMM, "width");
+  }
+
+  // Stat error bars setup (after scaling)
   gStyle->SetErrorX(0);       // no horizontal caps (pure vertical)
   gStyle->SetEndErrorSize(3); // cap size in pixels
 
@@ -128,7 +139,7 @@ static void OverlayAndSave(TH1* hDD, TH1* hMM,
   hMMerr->SetLineColor(kBlack);
   hMMerr->SetLineWidth(1);
 
-  // Y range with headroom
+  // Y-range with headroom
   double maxy = std::max(hDD->GetMaximum(), hMM->GetMaximum());
 
   TCanvas c("c", "", 900, 700);
@@ -143,7 +154,7 @@ static void OverlayAndSave(TH1* hDD, TH1* hMM,
     double minPos = 1e30;
     for (int b=1; b<=hDD->GetNbinsX(); ++b) { double v=hDD->GetBinContent(b); if (v>0 && v<minPos) minPos=v; }
     for (int b=1; b<=hMM->GetNbinsX(); ++b) { double v=hMM->GetBinContent(b); if (v>0 && v<minPos) minPos=v; }
-    if (!(minPos>0)) minPos = 0.5;
+    if (!(minPos>0)) minPos = 5e-4; // safe small floor
     hDD->SetMinimum(minPos*0.5);
     hDD->SetMaximum(maxy*5.0);
   } else {
@@ -157,20 +168,13 @@ static void OverlayAndSave(TH1* hDD, TH1* hMM,
   hDDerr->Draw("E1 SAME");
   hMMerr->Draw("E1 SAME");
 
+  // Legend
   TLegend leg(0.62, 0.68, 0.90, 0.84);
   leg.SetBorderSize(0);
   leg.SetFillStyle(0);
+  if (normalizeShape) leg.SetHeader("Normalized to unit area", "C");
   leg.AddEntry(hDD, "Fakerate method", "f");
   leg.AddEntry(hMM, "Matrix method", "l");
-  leg.Draw();
-  // Legend
-//  TLegend leg(0.62, 0.62, 0.92, 0.88);
-//  leg.SetBorderSize(0);
-//  leg.SetFillStyle(0);
-//  leg.AddEntry(hDD,    "Fakerate method", "f");
-//  leg.AddEntry(hMM,    "Matrix method",   "l");
-//  leg.AddEntry(hDDerr, "DD stat. unc.",   "lep");
-//  leg.AddEntry(hMMerr, "MM stat. unc.",   "lep");
   leg.Draw();
 
   DrawCMSLumi("Run 3, 171 fb^{-1} (13.6 TeV)", 0.14, 0.90, 0.93, 0.90, 0.072, 0.060);
