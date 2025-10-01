@@ -21,7 +21,7 @@
 // ----------------- knobs you can tweak -----------------
 static const int    kAnaId        = 1001;
 static const int    kYear         = 2027;
-static const bool   kNormalize    = false;   // keep OFF
+static const bool   kNormalize    = true;   // keep OFF
 static const int    kRebin        = 1;
 static const double kHeadroom     = 2.0;     // y-max = headroom * peak
 static const int    kYDivisions   = 505;     // fewer Y ticks (primary=5, minor=5)
