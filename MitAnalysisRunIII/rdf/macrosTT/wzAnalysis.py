@@ -10,9 +10,23 @@ from utilsSelection import selectionTauVeto, selectionPhoton, selectionJetMet, s
 from utilsMVA import redefineMVAVariables
 import tmva_helper_xml
 
-makeDataCards = 2 # 1 (njets), 2 (lepton flavor), 3 (3D), 4 (BDT 2D), 5 (mjj), 6 (mjj diff)
+makeDataCards = 6 # 1 (njets), 2 (lepton flavor), 3 (3D), 4 (BDT 2D), 5 (mjj), 6 (mjj diff)
 genVBSSel = 1
 correctionString = "_correction"
+
+if makeDataCards == 1:
+    dirT2 = "1001"
+if makeDataCards == 2:
+    dirT2 = "1002"
+if makeDataCards == 3:
+    dirT2 = "1003"
+if makeDataCards == 4:
+    dirT2 = "1004"
+if makeDataCards == 5:
+    dirT2 = "1005"
+if makeDataCards == 6:
+    dirT2 = "1006"
+
 
 doNtuples = False
 # 0 = T, 1 = M, 2 = L
@@ -20,7 +34,7 @@ bTagSel = 0
 useBTaggingWeights = 1
 
 useFR = 1
-whichAna = 0 # 0 (inclusive) / 1 (VBS)
+whichAna = 1 # 0 (inclusive) / 1 (VBS)
 
 altMass = "Def"
 jetEtaCut = 2.5
@@ -93,6 +107,7 @@ def selectionLL(df,year,PDType,isData,count):
                  .Filter("nFake == 3","Three fake leptons")
                  .Define("eventNum", "event")
                  .Filter("(Sum(fake_mu) > 0 and Max(fake_Muon_pt) > 25) or (Sum(fake_el) > 0 and Max(fake_Electron_pt) > 25)","At least one high pt lepton")
+                 .Filter("nTight == 3")
                  )
 
     if(useFR == 0):
@@ -683,9 +698,16 @@ def analysis(df,count,category,weight,year,PDType,isData,whichJob,nTheoryReplica
         histo[34][x] = dfwzbvbscat[x].Histo1D(("histo_{0}_{1}".format(34,x), "histo_{0}_{1}".format(34,x), 10,0,3.1416), "vbs_dphijj","weight")
         histo[35][x] = dfwzvbscat[x] .Histo1D(("histo_{0}_{1}".format(35,x), "histo_{0}_{1}".format(35,x), 10,-1,1), "bdt_vbfinc","weight")
         histo[36][x] = dfwzbvbscat[x].Histo1D(("histo_{0}_{1}".format(36,x), "histo_{0}_{1}".format(36,x), 10,-1,1), "bdt_vbfinc","weight")
+        
+        if (isData == "true"):
+            output_dir = "/mnt/home/mghimiray/VBSStudies/Outputs_VBSwz/matrix_method/{0}/ntuple/"
+        elif (isData == "false"):
+            output_dir = "/mnt/home/mghimiray/VBSStudies/Outputs_VBSwz/OriginalTT/{0}/ntuple/".format(dirT2)
+
+        os.makedirs(output_dir, exist_ok=True)
 
         if(doNtuples == True and x == theCat):
-            outputFile = "ntupleWZAna_sample{0}_year{1}_job{2}.root".format(count,year,whichJob)
+            outputFile = f"{output_dir}/ntupleWZAna_sample{count}_year{year}_job{whichJob}.root"
             dfwzvbscat[x].Snapshot("events", outputFile, branchList)
             dfwzvbsBDTcat.append(dfwzvbscat[x].Filter("bdt_vbfinc[0] >= 0","bdt_vbfinc[0] >= 0"))
             dfwzvbsBDTcat.append(dfwzvbscat[x].Filter("bdt_vbfinc[0] <  0","bdt_vbfinc[0] <  0"))
@@ -1398,8 +1420,14 @@ def analysis(df,count,category,weight,year,PDType,isData,whichJob,nTheoryReplica
                 for i in range(histo[j][x].GetNbinsX()):
                     histo[j][x].SetBinContent(i+1,	  histo[j][x].GetBinContent(i+1)+	histo2D[j][x].GetBinContent(i+1,1))
                     histo[j][x].SetBinError  (i+1,pow(pow(histo[j][x].GetBinError  (i+1),2)+pow(histo2D[j][x].GetBinError  (i+1,1),2),0.5))
+    
+    if (isData == "true"):
+        output_dir2 = "/mnt/home/mghimiray/VBSStudies/Outputs_VBSwz/matrix_method/{0}/histo/fillhisto_sswwAnalysis/".format(dirT2)
+    elif (isData == "false"):
+        output_dir2 = "/mnt/home/mghimiray/VBSStudies/Outputs_VBSwz/OriginalTT/{0}/histo/fillhisto_sswwAnalysis/".format(dirT2) # Defining output directory for histograms
 
-    myfile = ROOT.TFile("fillhisto_wzAnalysis_sample{0}_year{1}_job{2}.root".format(count,year,whichJob),'RECREATE')
+    os.makedirs(output_dir2, exist_ok=True)
+    myfile = ROOT.TFile("{3}/fillhisto_wzAnalysis1001_sample{0}_year{1}_job{2}.root".format(count,year,whichJob,output_dir2),'RECREATE')
     for i in range(nCat):
         for j in range(nHisto):
             if(histo[j][i] == 0): continue
@@ -1528,7 +1556,7 @@ def readDASample(sampleNOW,year,skimType,whichJob,group,ewkCorrWeights,wsWeights
 
 if __name__ == "__main__":
 
-    group = 2
+    group = 10
 
     skimType = "3l"
     year = 2022
