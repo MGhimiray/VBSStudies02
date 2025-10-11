@@ -172,7 +172,6 @@ static void OverlayAndSave(TH1* hDD, TH1* hMM,
   TLegend leg(0.62, 0.68, 0.90, 0.84);
   leg.SetBorderSize(0);
   leg.SetFillStyle(0);
-  if (normalizeShape) leg.SetHeader("Normalized to unit area", "C");
   leg.AddEntry(hDD, "Fakerate method", "f");
   leg.AddEntry(hMM, "Matrix method", "l");
   leg.Draw();
