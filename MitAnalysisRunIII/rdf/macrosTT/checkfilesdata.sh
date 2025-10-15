@@ -9,7 +9,7 @@ year=${1:?Usage: $0 YEAR WHICHANA}
 whichana=${2:?Usage: $0 YEAR WHICHANA}
 
 # Verify the capitalization ("matrix_method" vs "Matrix_method") matches your FS.
-outdir="/mnt/home/mghimiray/VBSStudies/Outputs_VBS/matrix_method/${whichana}/histo/fillhisto_sswwAnalysis"
+outdir="/mnt/home/mghimiray/VBSStudies/Outputs_VBSwz/matrix_method/${whichana}/histo/fillhisto_sswwAnalysis"
 
 echo "== Check files =="
 echo " year     : $year"
@@ -55,7 +55,7 @@ esac
 get_max_seen_job() {
   local tag="$1" sample="$2"
   shopt -s nullglob
-  local arr=( "$outdir"/fillhisto_sswwAnalysis"${whichana}"_sample"${sample}"_year"${tag}"_job*.root )
+  local arr=( "$outdir"/fillhisto_sswwAnalysis1001_sample"${sample}"_year"${tag}"_job*.root )
   shopt -u nullglob
   local max=-1 f
   for f in "${arr[@]}"; do

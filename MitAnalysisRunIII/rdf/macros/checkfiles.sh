@@ -56,7 +56,7 @@ esac
 get_max_seen_job() {
   local tag="$1" sample="$2"
   shopt -s nullglob
-  local arr=( "$outdir"/fillhisto_sswwAnalysis"${whichana}"_sample"${sample}"_year"${tag}"1_job*.root )
+  local arr=( "$outdir"/fillhisto_sswwAnalysis1001_sample"${sample}"_year"${tag}"1_job*.root )
   shopt -u nullglob
   local max=-1 f
   for f in "${arr[@]}"; do
