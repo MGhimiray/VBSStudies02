@@ -1,6 +1,6 @@
 // overlay_dd_mm.C — run with: root -l -b -q overlay_dd_mm.C
-// DD (filled purple) vs MM (black line) with statistical error bars (E1) for both.
-// Saves PNG, PDF, EPS. CMS + lumi stamp. Larger axis fonts.
+// DD (filled purple) vs MM (black line) with optional normalization,
+// and a bottom ratio panel: (Fake-rate / Matrix). Saves PNG, PDF, EPS.
 
 #include <TFile.h>
 #include <TH1.h>
@@ -12,6 +12,8 @@
 #include <TColor.h>
 #include <TAxis.h>
 #include <TLatex.h>
+#include <TPad.h>
+#include <TLine.h>
 
 #include <vector>
 #include <string>
@@ -21,12 +23,17 @@
 // ----------------- knobs you can tweak -----------------
 static const int    kAnaId        = 1001;
 static const int    kYear         = 2027;
-static const bool   kNormalize    = true;   // normalize both histos to unit area (with bin-width)
+static const bool   kNormalize    = true;    // normalize both histos to unit area (with bin-width)
 static const int    kRebin        = 1;
-static const double kHeadroom     = 2.0;    // y-max = headroom * peak (for linear y)
-static const int    kYDivisions   = 505;    // fewer Y ticks (primary=5, minor=5)
-static const bool   kLogY         = false;  // set true if you want log-y
+static const double kHeadroom     = 2.0;     // y-max = headroom * peak (for linear y)
+static const int    kYDivisions   = 505;     // fewer Y ticks (primary=5, minor=5)
+static const bool   kLogY         = false;   // log scale for top panel
 static const char*  kOutDir       = "DDMM_plots_2027";
+
+// Ratio panel controls
+static const bool   kShowRatio    = true;
+static const double kRatioYmin    = 0.5;
+static const double kRatioYmax    = 1.5;
 // -------------------------------------------------------
 
 static TH1* GetTH1FromFile(const char* path, const char* key) {
@@ -95,10 +102,10 @@ static void OverlayAndSave(TH1* hDD, TH1* hMM,
   StyleDD(hDD);
   StyleMM(hMM);
 
-  // Axis titles
+  // Axis titles (top panel will hide X, ratio will carry X)
+  const char* yTitle = "Events / bin";
   hDD->GetXaxis()->SetTitle(xaxisTitle);
   hMM->GetXaxis()->SetTitle(xaxisTitle);
-  const char* yTitle = "Events / bin";
   hDD->GetYaxis()->SetTitle(yTitle);
   hMM->GetYaxis()->SetTitle(yTitle);
 
@@ -121,9 +128,9 @@ static void OverlayAndSave(TH1* hDD, TH1* hMM,
     if (intMM > 0) hMM->Scale(1.0 / intMM, "width");
   }
 
-  // Stat error bars setup (after scaling)
-  gStyle->SetErrorX(0);       // no horizontal caps (pure vertical)
-  gStyle->SetEndErrorSize(3); // cap size in pixels
+  // Stat error bar styling (if you choose to draw E1)
+  gStyle->SetErrorX(0);
+  gStyle->SetEndErrorSize(3);
 
   TH1* hDDerr = (TH1*)hDD->Clone((std::string(hDD->GetName())+"_err").c_str());
   hDDerr->SetDirectory(nullptr);
@@ -139,22 +146,43 @@ static void OverlayAndSave(TH1* hDD, TH1* hMM,
   hMMerr->SetLineColor(kBlack);
   hMMerr->SetLineWidth(1);
 
-  // Y-range with headroom
+  // Y-range headroom (for top)
   double maxy = std::max(hDD->GetMaximum(), hMM->GetMaximum());
 
+  // ------------ Canvas with ratio pad ------------
   TCanvas c("c", "", 900, 700);
-  c.SetLeftMargin(0.12);
-  c.SetRightMargin(0.05);
-  c.SetBottomMargin(0.12);
-  c.SetTopMargin(0.12);
   gStyle->SetOptStat(0);
-  c.SetLogy(kLogY);
+
+  // Pads: top (pad1) and bottom (pad2)
+  TPad* pad1 = new TPad("pad1","pad1", 0.0, kShowRatio ? 0.30 : 0.0, 1.0, 1.0);
+  TPad* pad2 = nullptr;
+  pad1->SetLeftMargin(0.12);
+  pad1->SetRightMargin(0.05);
+  pad1->SetTopMargin(0.12);
+  pad1->SetBottomMargin(kShowRatio ? 0.02 : 0.12);
+  pad1->SetTicks(1,1);
+  pad1->SetLogy(kLogY);
+  pad1->Draw();
+
+  if (kShowRatio) {
+    pad2 = new TPad("pad2","pad2", 0.0, 0.0, 1.0, 0.30);
+    pad2->SetLeftMargin(0.12);
+    pad2->SetRightMargin(0.05);
+    pad2->SetTopMargin(0.02);
+    pad2->SetBottomMargin(0.38);
+    pad2->SetGridy(true);
+    pad2->SetTicks(1,1);
+    pad2->Draw();
+  }
+
+  // ------------ Top pad (main histograms) ------------
+  pad1->cd();
 
   if (kLogY) {
     double minPos = 1e30;
     for (int b=1; b<=hDD->GetNbinsX(); ++b) { double v=hDD->GetBinContent(b); if (v>0 && v<minPos) minPos=v; }
     for (int b=1; b<=hMM->GetNbinsX(); ++b) { double v=hMM->GetBinContent(b); if (v>0 && v<minPos) minPos=v; }
-    if (!(minPos>0)) minPos = 5e-4; // safe small floor
+    if (!(minPos>0)) minPos = 5e-4;
     hDD->SetMinimum(minPos*0.5);
     hDD->SetMaximum(maxy*5.0);
   } else {
@@ -162,22 +190,79 @@ static void OverlayAndSave(TH1* hDD, TH1* hMM,
     hDD->SetMaximum(kHeadroom * maxy);
   }
 
-  // Draw order: histograms then both sets of error bars
+  // Hide X on top; ratio will carry it
+  hDD->GetXaxis()->SetLabelSize(kShowRatio ? 0.0 : 0.048);
+  hDD->GetXaxis()->SetTitleSize(kShowRatio ? 0.0 : 0.060);
+
+  // Draw order
   hDD->Draw("HIST");
   hMM->Draw("HIST SAME");
-  //hDDerr->Draw("E1 SAME");
- // hMMerr->Draw("E1 SAME");
+  // Uncomment if you want error bars on top:
+  // hDDerr->Draw("E1 SAME");
+  // hMMerr->Draw("E1 SAME");
 
   // Legend
   TLegend leg(0.62, 0.68, 0.90, 0.84);
   leg.SetBorderSize(0);
   leg.SetFillStyle(0);
-  leg.AddEntry(hDD, "Fakerate method", "f");
+  leg.AddEntry(hDD, "Fake-rate method", "f");
   leg.AddEntry(hMM, "Matrix method", "l");
   leg.Draw();
 
   DrawCMSLumi("Run 3, 171 fb^{-1} (13.6 TeV)", 0.14, 0.90, 0.93, 0.90, 0.072, 0.060);
 
+  // ------------ Bottom pad (ratio) ------------
+  TH1* hRatio = nullptr;
+  if (kShowRatio) {
+    pad2->cd();
+    hRatio = (TH1*)hDD->Clone((std::string(hDD->GetName())+"_ratio").c_str());
+    hRatio->SetDirectory(nullptr);
+    // Protect against division by zero
+    for (int b=1; b<=hRatio->GetNbinsX(); ++b) {
+      double denom = hMM->GetBinContent(b);
+      if (denom == 0.0) {
+        hRatio->SetBinContent(b, 0.0);
+        hRatio->SetBinError(b, 0.0);
+      }
+    }
+    hRatio->Divide(hMM);
+
+    // Style
+    hRatio->SetTitle("");
+    hRatio->SetLineColor(kBlack);
+    hRatio->SetLineWidth(1);
+    hRatio->SetMarkerStyle(20);
+    hRatio->SetMarkerSize(0.8);
+    hRatio->SetMarkerColor(kBlack);
+
+    // Axes
+    hRatio->GetYaxis()->SetTitle("Fake-rate / Matrix");
+    hRatio->GetYaxis()->SetNdivisions(505);
+    hRatio->GetYaxis()->SetTitleSize(0.11);
+    hRatio->GetYaxis()->SetTitleOffset(0.5);
+    hRatio->GetYaxis()->SetLabelSize(0.10);
+
+    hRatio->GetXaxis()->SetTitle(xaxisTitle);
+    hRatio->GetXaxis()->SetTitleSize(0.12);
+    hRatio->GetXaxis()->SetLabelSize(0.11);
+    hRatio->GetXaxis()->SetTickLength(0.06);
+
+    hRatio->SetMinimum(kRatioYmin);
+    hRatio->SetMaximum(kRatioYmax);
+
+    hRatio->Draw("E1");
+
+    // Unity line
+    double xmin = hRatio->GetXaxis()->GetXmin();
+    double xmax = hRatio->GetXaxis()->GetXmax();
+    TLine line(xmin, 1.0, xmax, 1.0);
+    line.SetLineStyle(2);
+    line.SetLineWidth(2);
+    line.Draw("SAME");
+  }
+
+  // ------------ Save ------------
+  c.cd();
   TString png = TString::Format("%s.png", outBase);
   TString pdf = TString::Format("%s.pdf", outBase);
   TString eps = TString::Format("%s.eps", outBase);
@@ -187,6 +272,7 @@ static void OverlayAndSave(TH1* hDD, TH1* hMM,
 
   delete hDDerr;
   delete hMMerr;
+  if (hRatio) delete hRatio;
 }
 
 // ---------- named macro entrypoint (no args) ----------
