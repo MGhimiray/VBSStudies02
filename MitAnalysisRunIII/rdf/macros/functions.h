@@ -360,9 +360,9 @@ float compute_JSON_ELE_SFs(std::string yearS, std::string valType0S, std::string
     else if(pt_used < 75) recoNameAux = (char*)"Reco20to75";
     const char *recoName = recoNameAux;
     double sf0 = corrSFs.eval_electronTRKSF(year,valType0,    recoName,el_eta[i],pt_used,el_phi[i]);
-    double sf1 = corrSFs.eval_electronIDSF (year,valType1,workingPoint,el_eta[i],pt_used,el_phi[i]);
-    sfTot = sfTot*sf0*sf1;
-    if(debug) printf("eleff(%d-%s/%s) %.3f %.3f %.3f %.3f %.3f %.3f %.3f\n",i,valType0,valType1,el_pt[i],el_eta[i],el_phi[i],sf0,sf1,sf0*sf1,sfTot);
+//    double sf1 = corrSFs.eval_electronIDSF (year,valType1,workingPoint,el_eta[i],pt_used,el_phi[i]);
+    sfTot = sfTot*sf0;
+    if(debug) printf("eleff(%d-%s/%s) %.3f %.3f %.3f %.3f %.3f\n",i,valType0,valType1,el_pt[i],el_eta[i],el_phi[i],sf0,sfTot);
   }
 
   return sfTot;
@@ -932,20 +932,34 @@ float compute_MuonSF(const Vec_f& mu_pt, const Vec_f& mu_eta){
   return sfTot;
 }
 
-float compute_ElectronSF(const Vec_f& el_pt, const Vec_f& el_eta){
+//float compute_ElectronSF(const Vec_f& el_pt, const Vec_f& el_eta){
 
-  bool debug = false;
-  if(debug) printf("eleff: %lu\n",el_pt.size());
+//  bool debug = false;
+//  if(debug) printf("eleff: %lu\n",el_pt.size());
+//  double sfTot = 1.0;
+//  for(unsigned int i=0;i<el_pt.size();i++) {
+//    const TH2D& hcorr = histoLepSFEtaPt_el;
+//    double sf = getValFromTH2(hcorr, fabs(el_eta[i]), el_pt[i]);
+//    sfTot = sfTot*sf;
+//    if(debug) printf("lepel(%d) %.3f %.3f %.3f %.3f\n",i,el_pt[i],el_eta[i],sf,sfTot);
+ // }    
+ // return sfTot;
+//}
+
+float compute_ElectronSF(const Vec_f& el_pt, const Vec_f& el_eta, std::string workingPointS, std::string yearS, std::string valtype){
+  
   double sfTot = 1.0;
+  const char *year = yearS.c_str();
+  const char *workingPoint = workingPointS.c_str();
+  const char *type = valtype.c_str();
   for(unsigned int i=0;i<el_pt.size();i++) {
-    const TH2D& hcorr = histoLepSFEtaPt_el;
-    double sf = getValFromTH2(hcorr, fabs(el_eta[i]), el_pt[i]);
-    sfTot = sfTot*sf;
-    if(debug) printf("lepel(%d) %.3f %.3f %.3f %.3f\n",i,el_pt[i],el_eta[i],sf,sfTot);
+    double sf1 = corrSFs.eval_electronIDSF(year,type,workingPoint,el_eta[i],el_pt[i]);
+    sfTot = sfTot*sf1;
   }
-      
+  printf("compute_ElectronSF: %s %s %.3f\n",year,workingPoint,sfTot);
   return sfTot;
-}
+} 
+
 
 float compute_PURecoSF(const Vec_f& mu_pt, const Vec_f& mu_eta,
                        const Vec_f& el_pt, const Vec_f& el_eta,

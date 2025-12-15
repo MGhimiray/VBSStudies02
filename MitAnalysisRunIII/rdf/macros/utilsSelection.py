@@ -859,6 +859,12 @@ def selectionMCWeigths(df,year,PDType,weight,type,bTagSel,useBTaggingWeights,nTh
     if(correctionString == "_correction"):
         MUOWP = "Medium"
         ELEWP = "Medium"
+    SFELEYEAR = "NULL"
+    if  (year == 20220): SFELEYEAR = "2022Prompt"
+    if  (year == 20221): SFELEYEAR = "2022EEPrompt"
+    elif(year == 20230): SFELEYEAR = "2023Prompt"
+    elif(year == 20231): SFELEYEAR = "2023BpixPrompt"
+    elif(year == 20240): SFELEYEAR = "2024Prompt"
     print("MUOYEAR/ELEYEAR/PHOYEAR/MUOWP/ELEWP/whichAna: {0}/{1}/{2}/{3}/{4}/{5}".format(MUOYEAR,ELEYEAR,PHOYEAR,MUOWP,ELEWP,whichAna))
 
     dftag =(df.Define("PDType","\"{0}\"".format(PDType))
@@ -870,7 +876,8 @@ def selectionMCWeigths(df,year,PDType,weight,type,bTagSel,useBTaggingWeights,nTh
               .Define("fake_Electron_genPartIdx","Electron_genPartIdx[fake_el]")
               .Define("weightPURecoSF","compute_PURecoSF(fake_Muon_pt,fake_Muon_eta,fake_Electron_pt,fake_Electron_eta,Pileup_nTrueInt,0)")
               .Define("weightMuonSF","compute_MuonSF(fake_Muon_pt,fake_Muon_eta)")
-              .Define("weightElectronSF","compute_ElectronSF(fake_Electron_pt,fake_Electron_eta)")
+              .Define("weightElectronSF","compute_ElectronSF(fake_Electron_pt,fake_Electron_eta,\"{ELEWP}\",\"{SFELEYEAR}\", \"sf\")".format(ELEWP=ELEWP,SFELEYEAR=SFELEYEAR))
+
               .Define("weightTriggerSF","compute_TriggerSF(ptl1,ptl2,etal1,etal2,ltype,0)")
              #.Define("weightTriggerSF","compute_TriggerForSingleLegsSF(ptl1,ptl2,etal1,etal2,ltype)")
 

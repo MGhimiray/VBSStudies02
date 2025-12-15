@@ -8,7 +8,7 @@ if __name__ == "__main__":
     dir = "1001"
     base = f"/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/{dir}/histo/fillhisto_sswwAnalysis"
     path = "fillhisto_sswwAnalysis"
-    year = 20220
+    year = 20240
     output = f"/mnt/home/mghimiray/VBSStudies/Outputs_VBS/DataDriven/{dir}/merge1"
     os.makedirs(output, exist_ok=True)
 

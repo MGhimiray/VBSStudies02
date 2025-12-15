@@ -18,7 +18,7 @@ class MyCorrections {
     double eval_muonISOSF (double eta, double pt, const char *valType);
 
     double eval_electronTRKSF(const char *the_input_year, const char *valType, const char *workingPoint, double eta, double pt, double phi);
-    double eval_electronIDSF (const char *the_input_year, const char *valType, const char *workingPoint, double eta, double pt, double phi);
+    double eval_electronIDSF (const char *the_input_year, const char *workingPoint, const char *type, double eta, double pt);
     double eval_electronScale(const char *valType, const int gain, const double run, const double eta, const double r9, const double et);
     double eval_electronSmearing(const char *valType, const double eta, const double r9);
     double eval_electronEtDependentScale(const char *valType, const double run, const double eta, const double r9, const double pt, const double gain);
@@ -174,8 +174,8 @@ MyCorrections::MyCorrections(int the_input_year) {
   else if(year == 20231) electronTRKSF_ = csetTRKELE->at("Electron-ID-SF");
   else if(year == 20240) electronTRKSF_ = csetTRKELE->at("Electron-ID-SF");
 
-  std::string fileNameIDELE = dirName+"EGM/"+subDirName+"electron.json.gz";
-  if(year == 20240) fileNameIDELE = dirName+"EGM/"+subDirName+"electronID.json.gz";
+  std::string fileNameIDELE = dirName+"EGM/"+subDirName+"electronID.json.gz";
+//  if(year == 20240) fileNameIDELE = dirName+"EGM/"+subDirName+"electronID.json.gz";
   auto csetIDELE = correction::CorrectionSet::from_file(fileNameIDELE);
   if     (year == 20220) electronIDSF_ = csetIDELE->at("Electron-ID-SF");
   else if(year == 20221) electronIDSF_ = csetIDELE->at("Electron-ID-SF");
@@ -433,10 +433,16 @@ double MyCorrections::eval_electronTRKSF(const char *the_input_year, const char 
   return electronTRKSF_->evaluate({the_input_year, valType, workingPoint, eta, pt, phi});
 };
 
-double MyCorrections::eval_electronIDSF(const char *the_input_year, const char *valType, const char *workingPoint, double eta, double pt, double phi) {
+//double MyCorrections::eval_electronIDSF(const char *the_input_year, const char *valType, const char *workingPoint, double eta, double pt, double phi) {
+//  pt = std::min(std::max(pt,10.001),999.9);
+//  if(year <= 20221 || year >= 20240) return electronIDSF_->evaluate({the_input_year, valType, workingPoint, eta, pt});
+//  return electronIDSF_->evaluate({the_input_year, valType, workingPoint, eta, pt, phi});
+//};
+
+double MyCorrections::eval_electronIDSF(const char *the_input_year,const char *valType,const char *workingPoint, double eta, double pt) {
   pt = std::min(std::max(pt,10.001),999.9);
   if(year <= 20221 || year >= 20240) return electronIDSF_->evaluate({the_input_year, valType, workingPoint, eta, pt});
-  return electronIDSF_->evaluate({the_input_year, valType, workingPoint, eta, pt, phi});
+  return electronIDSF_->evaluate({the_input_year, valType, workingPoint, eta, pt});
 };
 
 double MyCorrections::eval_electronScale(const char *valType, const int gain, const double run, const double eta, const double r9, const double et) {
