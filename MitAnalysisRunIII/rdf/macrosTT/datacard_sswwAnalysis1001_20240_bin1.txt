@@ -1,0 +1,94 @@
+imax * number of channels
+jmax * number of background minus 1
+kmax * number of nuisance parameters
+shapes    *   *   /mnt/home/mghimiray/VBSStudies/Outputs_VBS/OriginalTT/1001/datacards/output_sswwAnalysis1001_20240_bin1.root  histo_$PROCESS histo_$PROCESS_$SYSTEMATIC
+shapes data_obs * /mnt/home/mghimiray/VBSStudies/Outputs_VBS/OriginalTT/1001/datacards/output_sswwAnalysis1001_20240_bin1.root  histo_Data
+Observation 364.000000
+bin   ch1 ch1 ch1 ch1 ch1 ch1 ch1 ch1 ch1 ch1 ch1 ch1 
+process  EWKSSWW  QCDSSWW  EWKWZ  WZ  ZZ  NonPrompt  VVV  WS  Signal0  Signal1  Signal2  Signal3  
+process  0  7  -5  9  10  11  12  16  -1  -2  -3  -4  
+rate  0.364607  8.148470  14.815926  30.948624  1.055352  181.079117  13.540274  30.761337  17.680544  13.233085  12.856376  9.669161  
+CMS_SMP25013_fake_ssww_m0 shape - - - - - 1.0 - - - - - - 
+CMS_SMP25013_fake_ssww_m1 shape - - - - - 1.0 - - - - - - 
+CMS_SMP25013_fake_ssww_m2 shape - - - - - 1.0 - - - - - - 
+CMS_SMP25013_fake_ssww_e0 shape - - - - - 1.0 - - - - - - 
+CMS_SMP25013_fake_ssww_e1 shape - - - - - 1.0 - - - - - - 
+CMS_SMP25013_fake_ssww_e2 shape - - - - - 1.0 - - - - - - 
+lumi_13p6TeV_0 lnN  1.002  1.002  1.002  1.002  1.002 -  1.002  1.002  1.002  1.002  1.002  1.002 
+lumi_13p6TeV_1 lnN  1.007  1.007  1.007  1.007  1.007 -  1.007  1.007  1.007  1.007  1.007  1.007 
+lumi_13p6TeV_2 lnN  1.014  1.014  1.014  1.014  1.014 -  1.014  1.014  1.014  1.014  1.014  1.014 
+CMS_SMP25013_trigger_2024   lnN      1.005  1.005  1.005  1.005  1.005 -  1.005  1.005  1.005  1.005  1.005  1.005 
+CMS_SMP25013_wrongsign_stat_2024 shape - - - - - - - 1.0 - - - - 
+CMS_SMP25013_wrongsign_method shape - - - - - - - 1.0 - - - - 
+CMS_btag_fixedWP_bc_bfragmentation shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_btag_fixedWP_bc_colorreconnection shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_btag_fixedWP_bc_hdamp shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_btag_fixedWP_bc_jer shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_btag_fixedWP_bc_jes shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_btag_fixedWP_bc_pdf shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_btag_fixedWP_bc_pileup shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_btag_fixedWP_bc_topmass shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_btag_fixedWP_bc_type3 shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_btag_fixedWP_bc_uncorrelated_2024 shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_btag_fixedWP_light_simple shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_eff_m_reco_2024 shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_eff_m_id_2024 shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_eff_m_iso_2024 shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_eff_e_reco_2024 shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_eff_e_id shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_SMP25013_eff_m_tightid_2024 shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_SMP25013_eff_e_tightid_2024 shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+pileup_13p6TeV shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_scale_j_AbsoluteMPFBias shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_scale_j_AbsoluteScale shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_scale_j_AbsoluteStat_2024 shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_scale_j_FlavorQCD shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_scale_j_Fragmentation shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_scale_j_PileUpDataMC shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_scale_j_PileUpPtBB shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_scale_j_PileUpPtEC1 shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_scale_j_PileUpPtEC2 shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_scale_j_PileUpPtHF shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_scale_j_PileUpPtRef shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_scale_j_RelativeFSR shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_scale_j_RelativeJEREC1_2024 shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_scale_j_RelativeJEREC2_2024 shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_scale_j_RelativeJERHF shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_scale_j_RelativePtBB shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_scale_j_RelativePtEC1_2024 shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_scale_j_RelativePtEC2_2024 shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_scale_j_RelativePtHF shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_scale_j_RelativeBal shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_scale_j_RelativeSample_2024 shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_scale_j_RelativeStatEC_2024 shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_scale_j_RelativeStatFSR_2024 shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_scale_j_RelativeStatHF_2024 shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_scale_j_SinglePionECAL shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_scale_j_SinglePionHCAL shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_scale_j_TimePtEta_2024 shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_res_j_2024 shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_scale_m_2024 shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_scale_e_2024 shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+CMS_scale_met_unclustered_energy_2024 shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+QCD_scale_QCDSSWW_ACCEPT shape -  1.0  -  -  -  -  -  -  -  -  -  -  
+QCD_scale_EWKWZ_ACCEPT shape -  -  1.0  -  -  -  -  -  -  -  -  -  
+QCD_scale_WZ_ACCEPT shape -  -  -  1.0  -  -  -  -  -  -  -  -  
+QCD_scale_ZZ_ACCEPT shape -  -  -  -  1.0  -  -  -  -  -  -  -  
+QCD_scale_VVV_ACCEPT shape -  -  -  -  -  -  1.0  -  -  -  -  -  
+QCD_scale_WS_ACCEPT shape -  -  -  -  -  -  -  1.0  -  -  -  -  
+QCD_scale_EWKSSWW_ACCEPT shape 1.0 - - - - - - - 1.0 1.0 1.0 1.0 
+PS_QCDSSWW_ACCEPT shape -  1.0  -  -  -  -  -  -  -  -  -  -  
+PS_EWKWZ_ACCEPT shape -  -  1.0  -  -  -  -  -  -  -  -  -  
+PS_WZ_ACCEPT shape -  -  -  1.0  -  -  -  -  -  -  -  -  
+PS_ZZ_ACCEPT shape -  -  -  -  1.0  -  -  -  -  -  -  -  
+PS_VVV_ACCEPT shape -  -  -  -  -  -  1.0  -  -  -  -  -  
+PS_WS_ACCEPT shape -  -  -  -  -  -  -  1.0  -  -  -  -  
+PS_EWKSSWW_ACCEPT shape 1.0 - - - - - - - 1.0 1.0 1.0 1.0 
+WWewkCorr shape 1.0 - - - - - - - 1.0 1.0 1.0 1.0 
+WZewkCorr shape - - 1.0 - - - - - - - - - 
+pdf100 shape 1.0 1.0 1.0 1.0 1.0 - 1.0 1.0 1.0 1.0 1.0 1.0 
+pdfqq   lnN      1.010  1.010  1.010  1.010  1.010 -  1.010  1.010  1.010  1.010  1.010  1.010 
+CMS_ssww_wznorm  rateParam * WZ 1 [0.1,4.9]
+CMS_ssww_ewkwznorm  rateParam * EWKWZ 1 [0.1,4.9]
+CMS_ssww_nonpromptnorm  rateParam * NonPrompt 1 [0.1,4.9]
+ch1 autoMCStats 0

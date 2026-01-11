@@ -9,7 +9,7 @@ year=${1:?Usage: $0 YEAR WHICHANA}
 whichana=${2:?Usage: $0 YEAR WHICHANA}
 
 # Verify the capitalization ("matrix_method" vs "Matrix_method") matches your FS.
-outdir="/mnt/home/mghimiray/VBSStudies/Outputs_VBSwz/matrix_method/${whichana}/histo/fillhisto_sswwAnalysis"
+outdir="/mnt/home/mghimiray/VBSStudies/Outputs_VBS/matrix_method/${whichana}/histo/fillhisto_sswwAnalysis"
 
 echo "== Check files =="
 echo " year     : $year"

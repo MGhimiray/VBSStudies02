@@ -8,7 +8,7 @@ set -uo pipefail
 year=${1:?Usage: $0 YEAR WHICHANA}
 whichana=${2:?Usage: $0 YEAR WHICHANA}
 
-outdir="/mnt/home/mghimiray/VBSStudies/Outputs_VBSwz/OriginalTT/${whichana}/histo/fillhisto_sswwAnalysis"
+outdir="/mnt/home/mghimiray/VBSStudies/Outputs_VBS/OriginalTT/${whichana}/histo/fillhisto_sswwAnalysis"
 
 echo "== Check files =="
 echo " year     : $year"
@@ -57,7 +57,7 @@ get_max_seen_job() {
   # Collect matches safely
   shopt -s nullglob
   local -a arr
-  arr=( "$outdir"/fillhisto_wzAnalysis1001_sample"${sample}"_year"${tag}"_job*.root )
+  arr=( "$outdir"/fillhisto_sswwAnalysis1001_sample"${sample}"_year"${tag}"_job*.root )
 #  arr=( "$outdir"/fillhisto_sswwAnalysis"${whichana}"_sample"${sample}"_year"${tag}"_job*.root )
   shopt -u nullglob
 
@@ -83,7 +83,7 @@ total_found=0
 for tag in "${tags[@]}"; do
   for sample in ${samples[$tag]}; do
     for job in $jobs_list; do
-      f="$outdir/fillhisto_wzAnalysis1001_sample${sample}_year${tag}_job${job}.root"
+      f="$outdir/fillhisto_sswwAnalysis1001_sample${sample}_year${tag}_job${job}.root"
       (( total_expected++ ))
       if [[ -s "$f" ]]; then
         (( total_found++ ))
