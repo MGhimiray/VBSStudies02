@@ -27,6 +27,10 @@ def getBTagCut_DeepJet(type,year):
        value[0] = 0.6563
        value[1] = 0.2435
        value[2] = 0.0480
+    elif(year == 20250):
+       value[0] = 0.6563
+       value[1] = 0.2435
+       value[2] = 0.0480
 
     return value[type]
 
@@ -55,6 +59,10 @@ def getBTagCut_PNet(type,year):
        value[0] = 0.6133
        value[1] = 0.1919
        value[2] = 0.0359
+    elif(year == 20250):
+       value[0] = 0.6133
+       value[1] = 0.1919
+       value[2] = 0.0359
 
     return value[type]
 
@@ -80,6 +88,10 @@ def getBTagCut(type,year):
        value[1] = 0.3494
        value[2] = 0.0683
     elif(year == 20240):
+       value[0] = 0.4648
+       value[1] = 0.1272
+       value[2] = 0.0246
+    elif(year == 20250):
        value[0] = 0.4648
        value[1] = 0.1272
        value[2] = 0.0246
@@ -134,7 +146,7 @@ def selectionPhoton(df,year,BARRELphotons,ENDCAPphotons):
 
     return dftag
 
-def makeJES(df,year,postFix,bTagSel,jetEtaCut):
+def makeJES(df,year,postFix,bTagSel,jetEtaCut,jetTypeCorr):
     postFitDef = postFix
     postFitMet = "Def"
     if(postFix == ""):
@@ -154,6 +166,9 @@ def makeJES(df,year,postFix,bTagSel,jetEtaCut):
               .Define("good_Jet_neEmEF{0}".format(postFix), "clean_Jet_neEmEF[good_jet{0}]".format(postFix))
               .Define("good_Jet_chHEF{0}".format(postFix), "clean_Jet_chHEF[good_jet{0}]".format(postFix))
               .Define("good_Jet_neHEF{0}".format(postFix), "clean_Jet_neHEF[good_jet{0}]".format(postFix))
+              .Define("good_Jet_VetoMapMask{0}".format(postFix), "cleaningJetVetoMapMask(good_Jet_eta{0},good_Jet_phi{1},{2},{3})".format(postFix,postFix,jetTypeCorr,year))
+              .Define("good_jetVeto{0}".format(postFix), "good_Jet_VetoMapMask{0} > 0".format(postFix))
+              .Define("ngood_jetsVeto{0}".format(postFix), "Sum(good_jetVeto{0})*1.0f".format(postFix))
 
               .Define("mjj{0}".format(postFix),	  "compute_jet_var(good_Jet_pt{0}, good_Jet_eta, good_Jet_phi, good_Jet_mass, 0)".format(postFix))
               .Define("ptjj{0}".format(postFix),  "compute_jet_var(good_Jet_pt{0}, good_Jet_eta, good_Jet_phi, good_Jet_mass, 1)".format(postFix))
@@ -188,6 +203,8 @@ def makeJES(df,year,postFix,bTagSel,jetEtaCut):
               .Define("vbs_ptj2{0}".format(postFix),  "compute_jet_var(vbs_Jet_pt{0}, vbs_Jet_eta, vbs_Jet_phi, vbs_Jet_mass, 5)".format(postFix))
               .Define("vbs_etaj1{0}".format(postFix), "compute_jet_var(vbs_Jet_pt{0}, vbs_Jet_eta, vbs_Jet_phi, vbs_Jet_mass, 6)".format(postFix))
               .Define("vbs_etaj2{0}".format(postFix), "compute_jet_var(vbs_Jet_pt{0}, vbs_Jet_eta, vbs_Jet_phi, vbs_Jet_mass, 7)".format(postFix))
+              .Define("vbs_phij1{0}".format(postFix), "compute_jet_var(vbs_Jet_pt{0}, vbs_Jet_eta, vbs_Jet_phi, vbs_Jet_mass, 8)".format(postFix))
+              .Define("vbs_phij2{0}".format(postFix), "compute_jet_var(vbs_Jet_pt{0}, vbs_Jet_eta, vbs_Jet_phi, vbs_Jet_mass, 9)".format(postFix))
 
               .Define("PuppiMET_pt{0}".format(postFitDef), "compute_JSON_MET_Unc(PuppiMET_pt,PuppiMET_phi,RawPuppiMET_pt,RawPuppiMET_phi,clean_Jet_chEmEF,clean_Jet_neEmEF,clean_Jet_muonSubtrFactor,clean_Jet_rawFactor,clean_Jet_pt{0},clean_Jet_pt{1},clean_Jet_eta,clean_Jet_phi,clean_Jet_mass,1)".format(postFitMet,postFitDef))
               .Define("PuppiMET_phi{0}".format(postFitDef),"compute_JSON_MET_Unc(PuppiMET_pt,PuppiMET_phi,RawPuppiMET_pt,RawPuppiMET_phi,clean_Jet_chEmEF,clean_Jet_neEmEF,clean_Jet_muonSubtrFactor,clean_Jet_rawFactor,clean_Jet_pt{0},clean_Jet_pt{1},clean_Jet_eta,clean_Jet_phi,clean_Jet_mass,2)".format(postFitMet,postFitDef))
@@ -333,40 +350,43 @@ def selectionJetMet(df,year,bTagSel,isData,count,jetEtaCut):
                      .Define("thePuppiMET_ptUnclusteredUp" ,"thePuppiMET_pt")
                      )
 
-    dftag = makeJES(dftag,year,""        ,bTagSel,jetEtaCut)
-    dftag = makeJES(dftag,year,"Jes00Up" ,bTagSel,jetEtaCut)
-    dftag = makeJES(dftag,year,"Jes01Up" ,bTagSel,jetEtaCut)
-    dftag = makeJES(dftag,year,"Jes02Up" ,bTagSel,jetEtaCut)
-    dftag = makeJES(dftag,year,"Jes03Up" ,bTagSel,jetEtaCut)
-    dftag = makeJES(dftag,year,"Jes04Up" ,bTagSel,jetEtaCut)
-    dftag = makeJES(dftag,year,"Jes05Up" ,bTagSel,jetEtaCut)
-    dftag = makeJES(dftag,year,"Jes06Up" ,bTagSel,jetEtaCut)
-    dftag = makeJES(dftag,year,"Jes07Up" ,bTagSel,jetEtaCut)
-    dftag = makeJES(dftag,year,"Jes08Up" ,bTagSel,jetEtaCut)
-    dftag = makeJES(dftag,year,"Jes09Up" ,bTagSel,jetEtaCut)
-    dftag = makeJES(dftag,year,"Jes10Up" ,bTagSel,jetEtaCut)
-    dftag = makeJES(dftag,year,"Jes11Up" ,bTagSel,jetEtaCut)
-    dftag = makeJES(dftag,year,"Jes12Up" ,bTagSel,jetEtaCut)
-    dftag = makeJES(dftag,year,"Jes13Up" ,bTagSel,jetEtaCut)
-    dftag = makeJES(dftag,year,"Jes14Up" ,bTagSel,jetEtaCut)
-    dftag = makeJES(dftag,year,"Jes15Up" ,bTagSel,jetEtaCut)
-    dftag = makeJES(dftag,year,"Jes16Up" ,bTagSel,jetEtaCut)
-    dftag = makeJES(dftag,year,"Jes17Up" ,bTagSel,jetEtaCut)
-    dftag = makeJES(dftag,year,"Jes18Up" ,bTagSel,jetEtaCut)
-    dftag = makeJES(dftag,year,"Jes19Up" ,bTagSel,jetEtaCut)
-    dftag = makeJES(dftag,year,"Jes20Up" ,bTagSel,jetEtaCut)
-    dftag = makeJES(dftag,year,"Jes21Up" ,bTagSel,jetEtaCut)
-    dftag = makeJES(dftag,year,"Jes22Up" ,bTagSel,jetEtaCut)
-    dftag = makeJES(dftag,year,"Jes23Up" ,bTagSel,jetEtaCut)
-    dftag = makeJES(dftag,year,"Jes24Up" ,bTagSel,jetEtaCut)
-    dftag = makeJES(dftag,year,"Jes25Up" ,bTagSel,jetEtaCut)
-    dftag = makeJES(dftag,year,"Jes26Up" ,bTagSel,jetEtaCut)
-    dftag = makeJES(dftag,year,"Jes27Up" ,bTagSel,jetEtaCut)
-    dftag = makeJES(dftag,year,"JerUp"   ,bTagSel,jetEtaCut)
-    dftag = makeJES(dftag,year,"Raw"     ,bTagSel,jetEtaCut)
-    dftag = makeJES(dftag,year,"NoJESJER",bTagSel,jetEtaCut)
-    dftag = makeJES(dftag,year,"NoJES"   ,bTagSel,jetEtaCut)
-    dftag = makeJES(dftag,year,"NoJER"   ,bTagSel,jetEtaCut)
+    dftag = makeJES(dftag,year,""        ,bTagSel,jetEtaCut,jetTypeCorr)
+    dftag = makeJES(dftag,year,"Jes00Up" ,bTagSel,jetEtaCut,jetTypeCorr)
+    dftag = makeJES(dftag,year,"Jes01Up" ,bTagSel,jetEtaCut,jetTypeCorr)
+    dftag = makeJES(dftag,year,"Jes02Up" ,bTagSel,jetEtaCut,jetTypeCorr)
+    dftag = makeJES(dftag,year,"Jes03Up" ,bTagSel,jetEtaCut,jetTypeCorr)
+    dftag = makeJES(dftag,year,"Jes04Up" ,bTagSel,jetEtaCut,jetTypeCorr)
+    dftag = makeJES(dftag,year,"Jes05Up" ,bTagSel,jetEtaCut,jetTypeCorr)
+    dftag = makeJES(dftag,year,"Jes06Up" ,bTagSel,jetEtaCut,jetTypeCorr)
+    dftag = makeJES(dftag,year,"Jes07Up" ,bTagSel,jetEtaCut,jetTypeCorr)
+    dftag = makeJES(dftag,year,"Jes08Up" ,bTagSel,jetEtaCut,jetTypeCorr)
+    dftag = makeJES(dftag,year,"Jes09Up" ,bTagSel,jetEtaCut,jetTypeCorr)
+    dftag = makeJES(dftag,year,"Jes10Up" ,bTagSel,jetEtaCut,jetTypeCorr)
+    dftag = makeJES(dftag,year,"Jes11Up" ,bTagSel,jetEtaCut,jetTypeCorr)
+    dftag = makeJES(dftag,year,"Jes12Up" ,bTagSel,jetEtaCut,jetTypeCorr)
+    dftag = makeJES(dftag,year,"Jes13Up" ,bTagSel,jetEtaCut,jetTypeCorr)
+    dftag = makeJES(dftag,year,"Jes14Up" ,bTagSel,jetEtaCut,jetTypeCorr)
+    dftag = makeJES(dftag,year,"Jes15Up" ,bTagSel,jetEtaCut,jetTypeCorr)
+    dftag = makeJES(dftag,year,"Jes16Up" ,bTagSel,jetEtaCut,jetTypeCorr)
+    dftag = makeJES(dftag,year,"Jes17Up" ,bTagSel,jetEtaCut,jetTypeCorr)
+    dftag = makeJES(dftag,year,"Jes18Up" ,bTagSel,jetEtaCut,jetTypeCorr)
+    dftag = makeJES(dftag,year,"Jes19Up" ,bTagSel,jetEtaCut,jetTypeCorr)
+    dftag = makeJES(dftag,year,"Jes20Up" ,bTagSel,jetEtaCut,jetTypeCorr)
+    dftag = makeJES(dftag,year,"Jes21Up" ,bTagSel,jetEtaCut,jetTypeCorr)
+    dftag = makeJES(dftag,year,"Jes22Up" ,bTagSel,jetEtaCut,jetTypeCorr)
+    dftag = makeJES(dftag,year,"Jes23Up" ,bTagSel,jetEtaCut,jetTypeCorr)
+    dftag = makeJES(dftag,year,"Jes24Up" ,bTagSel,jetEtaCut,jetTypeCorr)
+    dftag = makeJES(dftag,year,"Jes25Up" ,bTagSel,jetEtaCut,jetTypeCorr)
+    dftag = makeJES(dftag,year,"Jes26Up" ,bTagSel,jetEtaCut,jetTypeCorr)
+    dftag = makeJES(dftag,year,"Jes27Up" ,bTagSel,jetEtaCut,jetTypeCorr)
+    dftag = makeJES(dftag,year,"JerUp"   ,bTagSel,jetEtaCut,jetTypeCorr)
+    dftag = makeJES(dftag,year,"Raw"     ,bTagSel,jetEtaCut,jetTypeCorr)
+    dftag = makeJES(dftag,year,"NoJESJER",bTagSel,jetEtaCut,jetTypeCorr)
+    dftag = makeJES(dftag,year,"NoJES"   ,bTagSel,jetEtaCut,jetTypeCorr)
+    dftag = makeJES(dftag,year,"NoJER"   ,bTagSel,jetEtaCut,jetTypeCorr)
+
+    # vetoing events if any jet goes to the masking region
+    #dftag = dftag.Filter("ngood_jetsVeto == ngood_jets","Jet_veto_mask")
 
     return dftag
 
@@ -663,6 +683,18 @@ def selectionTrigger2L(df,year,PDType,JSON,isData,triggerSEL,triggerDEL,triggerS
     elif(year == 2024):
         triggerLEP = "{0} or {1} or {2} or {3} or {4}".format(triggerSEL,triggerDEL,triggerSMU,triggerDMU,triggerMUEG)
 
+    elif(year == 2025 and PDType == "MuonEG"):
+        triggerLEP = "{0}".format(triggerMUEG)
+
+    elif(year == 2025 and PDType == "Muon"):
+        triggerLEP = "({0} or {1}) and not {2}".format(triggerDMU,triggerSMU,triggerMUEG)
+
+    elif(year == 2025 and PDType == "EGamma"):
+        triggerLEP = "({0} or {1}) and not {2} and not {3} and not {4}".format(triggerSEL,triggerDEL,triggerSMU,triggerDMU,triggerMUEG)
+
+    elif(year == 2025):
+        triggerLEP = "{0} or {1} or {2} or {3} or {4}".format(triggerSEL,triggerDEL,triggerSMU,triggerDMU,triggerMUEG)
+
     else:
         print("PROBLEM with triggers!!!")
 
@@ -705,6 +737,10 @@ def selectionTrigger1L(df,year,PDType,JSON,isData,triggerFAKEMU,triggerFAKEEL):
         triggerFAKE = triggerFAKEMU
     elif(year == 2024 and PDType == "EGamma"):
         triggerFAKE =  triggerFAKEEL
+    elif(year == 2025 and PDType == "Muon"):
+        triggerFAKE = triggerFAKEMU
+    elif(year == 2025 and PDType == "EGamma"):
+        triggerFAKE =  triggerFAKEEL
     elif(PDType == "MuonEG"):
         triggerFAKE =  "0"
     elif(year == 2018):
@@ -714,6 +750,8 @@ def selectionTrigger1L(df,year,PDType,JSON,isData,triggerFAKEMU,triggerFAKEEL):
     elif(year == 2023):
         triggerFAKE = "{0} or {1}".format(triggerFAKEMU,triggerFAKEEL)
     elif(year == 2024):
+        triggerFAKE = "{0} or {1}".format(triggerFAKEMU,triggerFAKEEL)
+    elif(year == 2025):
         triggerFAKE = "{0} or {1}".format(triggerFAKEMU,triggerFAKEEL)
     else:
         print("PROBLEM with triggers!!!")
@@ -850,12 +888,14 @@ def selectionMCWeigths(df,year,PDType,weight,type,bTagSel,useBTaggingWeights,nTh
     elif(year == 20230): ELEYEAR = "2023PromptC"
     elif(year == 20231): ELEYEAR = "2023PromptD"
     elif(year == 20240): ELEYEAR = "2024Prompt"
+    elif(year == 20250): ELEYEAR = "2024Prompt"
     PHOYEAR = "NULL"
     if  (year == 20220): PHOYEAR = "2022Re-recoBCD"
     elif(year == 20221): PHOYEAR = "2022Re-recoE+PromptFG"
     elif(year == 20230): PHOYEAR = "2023PromptC"
     elif(year == 20231): PHOYEAR = "2023PromptD"
-    elif(year == 20240): PHOYEAR = "2024_ID"
+    elif(year == 20240): PHOYEAR = "2024Prompt"
+    elif(year == 20250): PHOYEAR = "2024Prompt"
     if(correctionString == "_correction"):
         MUOWP = "Medium"
         ELEWP = "Medium"
@@ -869,8 +909,8 @@ def selectionMCWeigths(df,year,PDType,weight,type,bTagSel,useBTaggingWeights,nTh
               .Define("fake_Electron_genPartFlav","Electron_genPartFlav[fake_el]")
               .Define("fake_Electron_genPartIdx","Electron_genPartIdx[fake_el]")
               .Define("weightPURecoSF","compute_PURecoSF(fake_Muon_pt,fake_Muon_eta,fake_Electron_pt,fake_Electron_eta,Pileup_nTrueInt,0)")
-              .Define("weightMuonSF","compute_MuonSF(fake_Muon_pt,fake_Muon_eta)")
-              .Define("weightElectronSF","compute_ElectronSF(fake_Electron_pt,fake_Electron_eta)")
+              .Define("weightMuonSF","compute_MuonSF(fake_Muon_pt,fake_Muon_eta, 0.0)")
+              .Define("weightElectronSF","compute_ElectronSF(fake_Electron_pt,fake_Electron_eta, 0.0)")
               .Define("weightTriggerSF","compute_TriggerSF(ptl1,ptl2,etal1,etal2,ltype,0)")
              #.Define("weightTriggerSF","compute_TriggerForSingleLegsSF(ptl1,ptl2,etal1,etal2,ltype)")
 
@@ -878,6 +918,11 @@ def selectionMCWeigths(df,year,PDType,weight,type,bTagSel,useBTaggingWeights,nTh
               .Filter("weightMC != 0","MC weight")
 
               .Define("nWS", "compute_number_WS(fake_Muon_pt,fake_Muon_eta,fake_Muon_charge,fake_Muon_genPartIdx,fake_Electron_pt,fake_Electron_eta,fake_Electron_charge,fake_Electron_genPartIdx,GenPart_pdgId)")
+
+              .Define("GenJet_bHadron","GenJet_pt > 20 && GenJet_hadronFlavour == 5")
+              .Define("nGenJet_bHadron","Sum(GenJet_bHadron)")
+              .Define("GenJet_bParton","GenJet_pt > 20 && abs(GenJet_partonFlavour) == 5")
+              .Define("nGenJet_bParton","Sum(GenJet_bParton)")
 
               .Define("MUOYEAR","\"{0}\"".format(MUOYEAR))
               .Define("ELEYEAR","\"{0}\"".format(ELEYEAR))
@@ -894,7 +939,7 @@ def selectionMCWeigths(df,year,PDType,weight,type,bTagSel,useBTaggingWeights,nTh
 
               .Define("weightPUSF_Nom","compute_JSON_PU_SF(Pileup_nTrueInt,\"nominal\")")
 
-              .Define("weightWS", "compute_WSSF({0},fake_Electron_pt,fake_Electron_eta,fake_Electron_charge,fake_Electron_genPartIdx,GenPart_pdgId)".format(whichAna))
+              .Define("weightWS", "compute_WSSF(1,fake_Electron_pt,fake_Electron_eta,fake_Electron_charge,fake_Electron_genPartIdx,GenPart_pdgId)")
 
               .Define("weightEWKCorr", "compute_EWKCorr(0,PDType,mjjGen)")
 
@@ -908,6 +953,10 @@ def selectionMCWeigths(df,year,PDType,weight,type,bTagSel,useBTaggingWeights,nTh
                      .Define("weight","weightMC*weightWS*weightEWKCorr*weightBtagSF*weightPURecoSF*weightTriggerSF*weightMuoSFJSON*weightEleSFJSON*weightMuonSF*weightElectronSF")
                      .Define("weightMuoCorr","weightMuoSFJSON*weightMuonSF")
                      .Define("weightEleCorr","weightEleSFJSON*weightElectronSF")
+                     .Define("weightMuonTightSFUp"  ,"weight/weightMuonSF*compute_MuonSF(fake_Muon_pt,fake_Muon_eta,+1.0)")
+                     .Define("weightMuonTightSFDown","weight/weightMuonSF*compute_MuonSF(fake_Muon_pt,fake_Muon_eta,-1.0)")
+                     .Define("weightElectronTightSFUp"  ,"weight/weightElectronSF*compute_ElectronSF(fake_Electron_pt,fake_Electron_eta,+1.0)")
+                     .Define("weightElectronTightSFDown","weight/weightElectronSF*compute_ElectronSF(fake_Electron_pt,fake_Electron_eta,-1.0)")
                     )
         else:
             print("BtagCorr/AddCorr: 0/1")
@@ -915,6 +964,10 @@ def selectionMCWeigths(df,year,PDType,weight,type,bTagSel,useBTaggingWeights,nTh
                      .Define("weight","weightMC*weightWS*weightEWKCorr*weightPURecoSF*weightTriggerSF*weightMuoSFJSON*weightEleSFJSON*weightMuonSF*weightElectronSF")
                      .Define("weightMuoCorr","weightMuoSFJSON*weightMuonSF")
                      .Define("weightEleCorr","weightEleSFJSON*weightElectronSF")
+                     .Define("weightMuonTightSFUp"  ,"weight/weightMuonSF*compute_MuonSF(fake_Muon_pt,fake_Muon_eta,+1.0)")
+                     .Define("weightMuonTightSFDown","weight/weightMuonSF*compute_MuonSF(fake_Muon_pt,fake_Muon_eta,-1.0)")
+                     .Define("weightElectronTightSFUp"  ,"weight/weightElectronSF*compute_ElectronSF(fake_Electron_pt,fake_Electron_eta,+1.0)")
+                     .Define("weightElectronTightSFDown","weight/weightElectronSF*compute_ElectronSF(fake_Electron_pt,fake_Electron_eta,-1.0)")
                     )
 
     else:
@@ -924,6 +977,10 @@ def selectionMCWeigths(df,year,PDType,weight,type,bTagSel,useBTaggingWeights,nTh
                      .Define("weight","weightMC*weightWS*weightEWKCorr*weightBtagSF*weightPURecoSF*weightTriggerSF*weightMuoSFJSON*weightEleSFJSON")
                      .Define("weightMuoCorr","weightMuoSFJSON")
                      .Define("weightEleCorr","weightEleSFJSON")
+                     .Define("weightMuonTightSFUp"  ,"weight")
+                     .Define("weightMuonTightSFDown","weight")
+                     .Define("weightElectronTightSFUp"  ,"weight")
+                     .Define("weightElectronTightSFDown","weight")
                     )
         else:
             print("BtagCorr/AddCorr: 0/0")
@@ -931,6 +988,10 @@ def selectionMCWeigths(df,year,PDType,weight,type,bTagSel,useBTaggingWeights,nTh
                      .Define("weight","weightMC*weightWS*weightEWKCorr*weightPURecoSF*weightTriggerSF*weightMuoSFJSON*weightEleSFJSON")
                      .Define("weightMuoCorr","weightMuoSFJSON")
                      .Define("weightEleCorr","weightEleSFJSON")
+                     .Define("weightMuonTightSFUp"  ,"weight")
+                     .Define("weightMuonTightSFDown","weight")
+                     .Define("weightElectronTightSFUp"  ,"weight")
+                     .Define("weightElectronTightSFDown","weight")
                     )
 
     if(useBTaggingWeights == 1):
@@ -987,8 +1048,8 @@ def selectionMCWeigths(df,year,PDType,weight,type,bTagSel,useBTaggingWeights,nTh
                  .Define("weightFakeAlte1","0")
                  .Define("weightFakeAlte2","0")
 
-                 .Define("weightWSUnc0","weight/weightWS*compute_WSSF({0},fake_Electron_pt,fake_Electron_eta,fake_Electron_charge,fake_Electron_genPartIdx,GenPart_pdgId)".format(2))
-                 .Define("weightWSUnc1","weight/weightWS*compute_WSSF({0},fake_Electron_pt,fake_Electron_eta,fake_Electron_charge,fake_Electron_genPartIdx,GenPart_pdgId)".format(3))
+                 .Define("weightWSUnc0","weight/weightWS*compute_WSSF(2,fake_Electron_pt,fake_Electron_eta,fake_Electron_charge,fake_Electron_genPartIdx,GenPart_pdgId)")
+                 .Define("weightWSUnc1","weight/weightWS*compute_WSSF(3,fake_Electron_pt,fake_Electron_eta,fake_Electron_charge,fake_Electron_genPartIdx,GenPart_pdgId)")
 
                  .Define("weightEWKCorrUnc","weight/weightEWKCorr*compute_EWKCorr(1,PDType,mjjGen)")
 
@@ -997,9 +1058,8 @@ def selectionMCWeigths(df,year,PDType,weight,type,bTagSel,useBTaggingWeights,nTh
 
                  )
 
-    dftag =(dftag.Define("weightBtagSFBC_00Up"  ,"weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"central\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
-                 .Define("weightBtagSFBC_01Up"  ,"weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"central\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
-                 .Define("weightBtagSFBC_02Up"  ,"weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"central\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
+    if(year < 20240):
+        dftag =(dftag.Define("weightBtagSFBC_02Up"  ,"weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"central\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
                  .Define("weightBtagSFBC_03Up"  ,"weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"up_bfragmentation\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
                  .Define("weightBtagSFBC_04Up"  ,"weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"up_colorreconnection\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
                  .Define("weightBtagSFBC_05Up"  ,"weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"up_hdamp\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
@@ -1011,8 +1071,6 @@ def selectionMCWeigths(df,year,PDType,weight,type,bTagSel,useBTaggingWeights,nTh
                  .Define("weightBtagSFBC_11Up"  ,"weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"up_type3\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
                  .Define("weightBtagSFBC_12Up"  ,"weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"up_statistic\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
 
-                 .Define("weightBtagSFBC_00Down","weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"central\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
-                 .Define("weightBtagSFBC_01Down","weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"central\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
                  .Define("weightBtagSFBC_02Down","weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"central\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
                  .Define("weightBtagSFBC_03Down","weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"down_bfragmentation\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
                  .Define("weightBtagSFBC_04Down","weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"down_colorreconnection\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
@@ -1023,6 +1081,35 @@ def selectionMCWeigths(df,year,PDType,weight,type,bTagSel,useBTaggingWeights,nTh
                  .Define("weightBtagSFBC_09Down","weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"down_pileup\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
                  .Define("weightBtagSFBC_10Down","weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"down_topmass\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
                  .Define("weightBtagSFBC_11Down","weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"down_type3\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
+                 .Define("weightBtagSFBC_12Down","weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"down_statistic\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
+
+                 .Define("weightBtagSFLF_00Up"  ,"weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"up\",-1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
+                 .Define("weightBtagSFLF_00Down","weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"down\",-1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
+                 )
+
+    else:
+        dftag =(dftag.Define("weightBtagSFBC_02Up"  ,"weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"central\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
+                 .Define("weightBtagSFBC_03Up"  ,"weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"up_fsrdef\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
+                 .Define("weightBtagSFBC_04Up"  ,"weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"up_isrdef\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
+                 .Define("weightBtagSFBC_05Up"  ,"weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"up_hdamp\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
+                 .Define("weightBtagSFBC_06Up"  ,"weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"up_jer\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
+                 .Define("weightBtagSFBC_07Up"  ,"weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"up_jes\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
+                 .Define("weightBtagSFBC_08Up"  ,"weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"up_tune\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
+                 .Define("weightBtagSFBC_09Up"  ,"weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"central\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
+                 .Define("weightBtagSFBC_10Up"  ,"weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"up_mass\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
+                 .Define("weightBtagSFBC_11Up"  ,"weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"central\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
+                 .Define("weightBtagSFBC_12Up"  ,"weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"up_statistic\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
+
+                 .Define("weightBtagSFBC_02Down","weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"central\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
+                 .Define("weightBtagSFBC_03Down","weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"down_fsrdef\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
+                 .Define("weightBtagSFBC_04Down","weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"down_isrdef\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
+                 .Define("weightBtagSFBC_05Down","weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"down_hdamp\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
+                 .Define("weightBtagSFBC_06Down","weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"down_jer\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
+                 .Define("weightBtagSFBC_07Down","weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"down_jes\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
+                 .Define("weightBtagSFBC_08Down","weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"down_tune\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
+                 .Define("weightBtagSFBC_09Down","weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"central\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
+                 .Define("weightBtagSFBC_10Down","weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"down_mass\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
+                 .Define("weightBtagSFBC_11Down","weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"central\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
                  .Define("weightBtagSFBC_12Down","weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"down_statistic\",1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
 
                  .Define("weightBtagSFLF_00Up"  ,"weight/weightBtagSF*compute_JSON_BTV_SF(goodbtag_Jet_pt,goodbtag_Jet_eta,goodbtag_Jet_btagUnifiedParTB,goodbtag_Jet_hadronFlavour,\"up\",-1,{0},{1})".format(bTagSel,getBTagCut(bTagSel,year)))
@@ -1128,6 +1215,7 @@ def selectionTheoryWeigths(dftag,weight,nTheoryReplicas,genEventSumLHEScaleRenor
 
     return dftag
 
+
 def selectionWeigths(df,isData,year,PDType,weight,type,bTagSel,useBTaggingWeights,nTheoryReplicas,genEventSumLHEScaleRenorm,genEventSumPSRenorm,MUOWP,ELEWP,correctionString,whichAna):
     fakeRateSel = [2, 5, 1, 8] # default, unc1, unc2, unc3
     if(whichAna == 1):
@@ -1136,10 +1224,10 @@ def selectionWeigths(df,isData,year,PDType,weight,type,bTagSel,useBTaggingWeight
         fakeRateSel[2] = 3
         fakeRateSel[3] = 7
     elif(whichAna == 2 or whichAna == 3):
-        fakeRateSel[0] = 0
-        fakeRateSel[1] = 1
+        fakeRateSel[0] = 6
+        fakeRateSel[1] = 8
         fakeRateSel[2] = 3
-        fakeRateSel[3] = 6
+        fakeRateSel[3] = 0
 
     if(isData == "true"): return selectionDAWeigths(df,year,PDType,whichAna,fakeRateSel)
     else:                 return selectionMCWeigths(df,year,PDType,weight,type,bTagSel,useBTaggingWeights,nTheoryReplicas,genEventSumLHEScaleRenorm,genEventSumPSRenorm,MUOWP,ELEWP,correctionString,whichAna,fakeRateSel)
@@ -1170,8 +1258,8 @@ def makeFinalVariable(df,var,theCat,start,x,bin,min,max,type):
     elif(type == 118): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),bin,min,max), "{0}".format(var),"weightEleSFIDUp")
     elif(type == 119): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),bin,min,max), "{0}".format(var),"weightPUSF_Up")
     elif(type == 120): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),bin,min,max), "{0}".format(var),"weightTriggerSFUp")
-    elif(type == 121): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),bin,min,max), "{0}".format(var),"weightBtagSFBC_00Up")
-    elif(type == 122): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),bin,min,max), "{0}".format(var),"weightBtagSFBC_01Up")
+    elif(type == 121): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),bin,min,max), "{0}".format(var),"weightMuonTightSFUp")
+    elif(type == 122): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),bin,min,max), "{0}".format(var),"weightElectronTightSFUp")
     elif(type == 123): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),bin,min,max), "{0}".format(var),"weightBtagSFBC_02Up")
     elif(type == 124): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),bin,min,max), "{0}".format(var),"weightBtagSFBC_03Up")
     elif(type == 125): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),bin,min,max), "{0}".format(var),"weightBtagSFBC_04Up")
@@ -1187,6 +1275,50 @@ def makeFinalVariable(df,var,theCat,start,x,bin,min,max,type):
     elif(type == 135): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),bin,min,max), "{0}".format(var),"weightEWKCorrUnc")
 
     else:              return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),bin,min,max), "{0}".format(var),"weight")
+
+def makeFinalVariableVar(df,var,theCat,start,x,xBins,type):
+    histoNumber = start+type
+    if(theCat == plotCategory("kPlotData")):
+        return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weight")
+
+    if  (type ==  0): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weight")
+    elif(type ==  1): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weightPS0")
+    elif(type ==  2): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weightPS1")
+    elif(type ==  3): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weightPS2")
+    elif(type ==  4): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weightPS3")
+    elif(type ==  5): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weightQCDScale0")
+    elif(type ==  6): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weightQCDScale1")
+    elif(type ==  7): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weightQCDScale2")
+    elif(type ==  8): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weightQCDScale3")
+    elif(type ==  9): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weightQCDScale4")
+    elif(type == 10): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weightQCDScale5")
+    elif(type >= 11 and type <= 113):
+                      return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weightPDF{0}".format(type-11))
+
+    elif(type == 114): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weightMuoSFTRKUp")
+    elif(type == 115): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weightMuoSFIDUp")
+    elif(type == 116): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weightMuoSFISOUp")
+    elif(type == 117): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weightEleSFTRKUp")
+    elif(type == 118): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weightEleSFIDUp")
+    elif(type == 119): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weightPUSF_Up")
+    elif(type == 120): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weightTriggerSFUp")
+    elif(type == 121): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weightMuonTightSFUp")
+    elif(type == 122): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weightElectronTightSFUp")
+    elif(type == 123): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weightBtagSFBC_02Up")
+    elif(type == 124): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weightBtagSFBC_03Up")
+    elif(type == 125): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weightBtagSFBC_04Up")
+    elif(type == 126): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weightBtagSFBC_05Up")
+    elif(type == 127): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weightBtagSFBC_06Up")
+    elif(type == 128): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weightBtagSFBC_07Up")
+    elif(type == 129): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weightBtagSFBC_08Up")
+    elif(type == 130): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weightBtagSFBC_09Up")
+    elif(type == 131): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weightBtagSFBC_10Up")
+    elif(type == 132): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weightBtagSFBC_11Up")
+    elif(type == 133): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weightBtagSFBC_12Up")
+    elif(type == 134): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weightBtagSFLF_00Up")
+    elif(type == 135): return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weightEWKCorrUnc")
+
+    else:              return df.Histo1D(("histo_{0}_{1}".format(histoNumber,x), "histo_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins), "{0}".format(var),"weight")
 
 def makeFinalVariable2D(df,varX,varY,theCat,start,x,binX,minX,maxX,binY,minY,maxY,type):
     histoNumber = start+type
@@ -1214,8 +1346,8 @@ def makeFinalVariable2D(df,varX,varY,theCat,start,x,binX,minX,maxX,binY,minY,max
     elif(type == 118): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),binX,minX,maxX,binY,minY,maxY), "{0}".format(varX), "{0}".format(varY),"weightEleSFIDUp")
     elif(type == 119): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),binX,minX,maxX,binY,minY,maxY), "{0}".format(varX), "{0}".format(varY),"weightPUSF_Up")
     elif(type == 120): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),binX,minX,maxX,binY,minY,maxY), "{0}".format(varX), "{0}".format(varY),"weightTriggerSFUp")
-    elif(type == 121): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),binX,minX,maxX,binY,minY,maxY), "{0}".format(varX), "{0}".format(varY),"weightBtagSFBC_00Up")
-    elif(type == 122): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),binX,minX,maxX,binY,minY,maxY), "{0}".format(varX), "{0}".format(varY),"weightBtagSFBC_01Up")
+    elif(type == 121): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),binX,minX,maxX,binY,minY,maxY), "{0}".format(varX), "{0}".format(varY),"weightMuonTightSFUp")
+    elif(type == 122): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),binX,minX,maxX,binY,minY,maxY), "{0}".format(varX), "{0}".format(varY),"weightElectronTightSFUp")
     elif(type == 123): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),binX,minX,maxX,binY,minY,maxY), "{0}".format(varX), "{0}".format(varY),"weightBtagSFBC_02Up")
     elif(type == 124): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),binX,minX,maxX,binY,minY,maxY), "{0}".format(varX), "{0}".format(varY),"weightBtagSFBC_03Up")
     elif(type == 125): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),binX,minX,maxX,binY,minY,maxY), "{0}".format(varX), "{0}".format(varY),"weightBtagSFBC_04Up")
@@ -1231,3 +1363,47 @@ def makeFinalVariable2D(df,varX,varY,theCat,start,x,binX,minX,maxX,binY,minY,max
     elif(type == 135): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),binX,minX,maxX,binY,minY,maxY), "{0}".format(varX), "{0}".format(varY),"weightEWKCorrUnc")
 
     else:              return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),binX,minX,maxX,binY,minY,maxY), "{0}".format(varX), "{0}".format(varY),"weight")
+
+def makeFinalVariable2DVar(df,varX,varY,theCat,start,x,xBins,yBins,type):
+    histoNumber = start+type
+    if(theCat == plotCategory("kPlotData")):
+        return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weight")
+
+    if  (type ==  0): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weight")
+    elif(type ==  1): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weightPS0")
+    elif(type ==  2): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weightPS1")
+    elif(type ==  3): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weightPS2")
+    elif(type ==  4): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weightPS3")
+    elif(type ==  5): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weightQCDScale0")
+    elif(type ==  6): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weightQCDScale1")
+    elif(type ==  7): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weightQCDScale2")
+    elif(type ==  8): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weightQCDScale3")
+    elif(type ==  9): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weightQCDScale4")
+    elif(type == 10): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weightQCDScale5")
+    elif(type >= 11 and type <= 113):
+                      return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weightPDF{0}".format(type-11))
+
+    elif(type == 114): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weightMuoSFTRKUp")
+    elif(type == 115): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weightMuoSFIDUp")
+    elif(type == 116): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weightMuoSFISOUp")
+    elif(type == 117): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weightEleSFTRKUp")
+    elif(type == 118): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weightEleSFIDUp")
+    elif(type == 119): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weightPUSF_Up")
+    elif(type == 120): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weightTriggerSFUp")
+    elif(type == 121): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weightMuonTightSFUp")
+    elif(type == 122): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weightElectronTightSFUp")
+    elif(type == 123): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weightBtagSFBC_02Up")
+    elif(type == 124): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weightBtagSFBC_03Up")
+    elif(type == 125): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weightBtagSFBC_04Up")
+    elif(type == 126): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weightBtagSFBC_05Up")
+    elif(type == 127): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weightBtagSFBC_06Up")
+    elif(type == 128): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weightBtagSFBC_07Up")
+    elif(type == 129): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weightBtagSFBC_08Up")
+    elif(type == 130): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weightBtagSFBC_09Up")
+    elif(type == 131): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weightBtagSFBC_10Up")
+    elif(type == 132): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weightBtagSFBC_11Up")
+    elif(type == 133): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weightBtagSFBC_12Up")
+    elif(type == 134): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weightBtagSFLF_00Up")
+    elif(type == 135): return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weightEWKCorrUnc")
+
+    else:              return df.Histo2D(("histo2d_{0}_{1}".format(histoNumber,x), "histo2d_{0}_{1}".format(histoNumber,x),len(xBins)-1,xBins,len(yBins)-1,yBins), "{0}".format(varX), "{0}".format(varY),"weight")

@@ -8,20 +8,19 @@ from utilsAna import getMClist, getDATAlist, getTriggerFromJson, getLumi
 from utilsAna import SwitchSample
 from utilsSelection import selectionGenLepJet, selectionTheoryWeigths, makeFinalVariable
 
-jetEtaCut = 2.5
 isRun3Sel = False
 
-def analysis(df,count,category,weight,year,PDType,isData,histo_wwpt,nTheoryReplicas,genEventSumLHEScaleRenorm,genEventSumPSRenorm):
+def analysis(df,count,category,weight,year,PDType,nSel,isData,histo_wwpt,ewkCorrWeights,nTheoryReplicas,genEventSumLHEScaleRenorm,genEventSumPSRenorm):
 
     xPtBins = array('d', [20,25,30,35,40,50,60,80,100,150,250,500,1000])
     xEtaBins = array('d', [0.0,0.3,0.6,0.9,1.2,1.5,1.8,2.1,2.5])
 
-    print("starting {0} / {1} / {2} / {3} / {4} / {5}".format(count,category,weight,year,PDType,isData))
+    print("starting {0} / {1} / {2} / {3} / {4} / {5} / {6}".format(count,category,weight,year,PDType,nSel,isData))
 
     theCat = category
     if(theCat > 100): theCat = plotCategory("kPlotData")
 
-    nCat, nHisto = plotCategory("kPlotCategories"), 900
+    nCat, nHisto = plotCategory("kPlotCategories"), 1200
     histo   = [[0 for x in range(nCat)] for y in range(nHisto)]
     histo2D = [[0 for y in range(nCat)] for x in range(nHisto)]
 
@@ -30,13 +29,36 @@ def analysis(df,count,category,weight,year,PDType,isData,histo_wwpt,nTheoryRepli
     ROOT.initHisto1D(histo_wwpt[2],5)
     ROOT.initHisto1D(histo_wwpt[3],6)
     ROOT.initHisto1D(histo_wwpt[4],7)
+    ROOT.initHisto1D(ewkCorrWeights[0],10)
+    ROOT.initHisto1D(ewkCorrWeights[1],11)
+    ROOT.initHisto1D(ewkCorrWeights[2],12)
+    ROOT.initHisto1D(ewkCorrWeights[3],13)
 
     ROOT.initJSONSFs(year)
 
-    dfcat = df.Define("PDType","\"{0}\"".format(PDType))\
-              .Define("weightForBTag","1.0f")\
-              .Define("weight","{0}*genWeight".format(weight/getLumi(year)))\
-              .Filter("weight != 0","good weight")
+    jetEtaCut = 2.5
+    ptlCut = 20
+    if(nSel == "vbs"):
+        print("vbs selection")
+        jetEtaCut = 4.7
+        ptlCut = 15.0
+
+    df = selectionGenLepJet(df,ptlCut,30,jetEtaCut)
+
+    dfcat = (df.Define("PDType","\"{0}\"".format(PDType))
+               .Define("weightForBTag","1.0f")
+               .Define("mjjGen", "compute_vbs_gen_variables(0,ngood_GenJets,good_GenJet_pt,good_GenJet_eta,good_GenJet_phi,good_GenJet_mass,ngood_GenDressedLeptons,good_GenDressedLepton_pdgId,good_GenDressedLepton_hasTauAnc,good_GenDressedLepton_pt,good_GenDressedLepton_eta,good_GenDressedLepton_phi,good_GenDressedLepton_mass)")
+               .Define("GenJet_bHadron","GenJet_pt > 20 && GenJet_hadronFlavour == 5")
+               .Define("nGenJet_bHadron","Sum(GenJet_bHadron)")
+               .Define("GenJet_bParton","GenJet_pt > 20 && abs(GenJet_partonFlavour) == 5")
+               .Define("nGenJet_bParton","Sum(GenJet_bParton)")
+               .Define("kPlotEWKWZ", "{0}".format(plotCategory("kPlotEWKWZ")))
+               .Filter("{0} != kPlotEWKWZ || nGenJet_bParton == 0".format(theCat), "EWKWZ requirement")
+               .Define("weightEWKCorr", "compute_EWKCorr(0,PDType,mjjGen)")
+               .Define("weight","{0}*genWeight*weightEWKCorr".format(weight/getLumi(year)))
+               .Filter("weight != 0","good weight")
+               .Define("weightNoEWKCorr","{0}*genWeight".format(weight/getLumi(year)))
+               )
 
     dfcat = selectionTheoryWeigths(dfcat,weight,nTheoryReplicas,genEventSumLHEScaleRenorm,genEventSumPSRenorm)
 
@@ -63,7 +85,7 @@ def analysis(df,count,category,weight,year,PDType,isData,histo_wwpt,nTheoryRepli
           .Define("Zrap", "abs(makeRapidity(Zpt[0],Zeta[0],Zphi[0],Zmass[0]))")
             )
 
-    dfwwxgen = selectionGenLepJet(dfcat,20,30,jetEtaCut).Filter("ngood_GenDressedLeptons >= 2", "ngood_GenDressedLeptons >= 2")
+    dfwwxgen = dfcat.Filter("ngood_GenDressedLeptons >= 2", "ngood_GenDressedLeptons >= 2")
     if(isRun3Sel == True):
         dfwwxgen = (dfwwxgen
                         .Define("theGenCat0", "compute_gen_category({0},ngood_GenJets,ngood_GenDressedLeptons,good_GenDressedLepton_pdgId,good_GenDressedLepton_hasTauAnc,good_GenDressedLepton_pt,good_GenDressedLepton_eta,good_GenDressedLepton_phi,good_GenDressedLepton_mass,0)-1.0".format(0))
@@ -121,8 +143,6 @@ def analysis(df,count,category,weight,year,PDType,isData,histo_wwpt,nTheoryRepli
 
     dfzllgen = dfzllgen.Filter("filter_GenDressedLepton_pt[0] > 25 && filter_GenDressedLepton_pt[1] > 20","Tighter pt requirements")
 
-    dfzllgen = selectionGenLepJet(dfzllgen,20,30,jetEtaCut)
-
     histo[15][x] = dfzllgen.Histo1D(("histo_{0}_{1}".format(15,x), "histo_{0}_{1}".format(15,x), 40,  0, 200), "Zpt","weight")
     histo[16][x] = dfzllgen.Histo1D(("histo_{0}_{1}".format(16,x), "histo_{0}_{1}".format(16,x), 50, 0., 5.0), "Zrap","weight")
     histo[17][x] = dfzllgen.Filter("ngood_GenJets == 0").Histo1D(("histo_{0}_{1}".format(17,x), "histo_{0}_{1}".format(17,x), 40,  0, 200), "Zpt","weight")
@@ -130,13 +150,16 @@ def analysis(df,count,category,weight,year,PDType,isData,histo_wwpt,nTheoryRepli
     histo[19][x] = dfzllgen.Filter("ngood_GenJets >= 2").Histo1D(("histo_{0}_{1}".format(19,x), "histo_{0}_{1}".format(19,x), 40,  0, 200), "Zpt","weight")
     histo2D[101][x] = dfzllgen.Histo2D(("histo2d_{0}_{1}".format(101,x),"histo2d_{0}_{1}".format(100,x),10, 0, 5, 40, 0, 101),"Zrap","Zpt","weight")
 
-    dfzllgen = (dfzllgen.Filter("Sum(genLep) == 3","genLep == 3")
-                        .Filter("abs(filter_GenDressedLepton_eta[2]) < 2.5 && filter_GenDressedLepton_pt[2] > 10","3rd lepton requirement")
-                        )
+    df3lgen = (dfzllgen.Filter("Sum(genLep) == 3","genLep == 3")
+                       .Filter("abs(filter_GenDressedLepton_eta[2]) < 2.5 && filter_GenDressedLepton_pt[2] > 10","3rd lepton requirement")
+                       )
 
-    startF = 380
-    for nv in range(0,114):
-        histo[startF+0+nv][x] = makeFinalVariable(dfzllgen,"weightForBTag",theCat,startF+0,x,BinXF,minXF,maxXF,nv)
+    histo[380][x] = df3lgen                               .Histo1D(("histo_{0}_{1}".format(380,x), "histo_{0}_{1}".format(380,x), 5, -0.5, 4.5), "nGenJet_bHadron","weight")
+    histo[381][x] = df3lgen                               .Histo1D(("histo_{0}_{1}".format(381,x), "histo_{0}_{1}".format(381,x), 5, -0.5, 4.5), "nGenJet_bParton","weight")
+    histo[382][x] = df3lgen.Filter("nGenJet_bParton == 0").Histo1D(("histo_{0}_{1}".format(382,x), "histo_{0}_{1}".format(382,x), 5, -0.5, 4.5), "nGenJet_bHadron","weight")
+    histo[383][x] = df3lgen.Filter("nGenJet_bHadron == 0").Histo1D(("histo_{0}_{1}".format(383,x), "histo_{0}_{1}".format(383,x), 5, -0.5, 4.5), "nGenJet_bParton","weight")
+    histo[384][x] = df3lgen.Filter("nGenJet_bParton >= 1").Histo1D(("histo_{0}_{1}".format(384,x), "histo_{0}_{1}".format(384,x), 5, -0.5, 4.5), "nGenJet_bHadron","weight")
+    histo[385][x] = df3lgen.Filter("nGenJet_bHadron >= 1").Histo1D(("histo_{0}_{1}".format(385,x), "histo_{0}_{1}".format(385,x), 5, -0.5, 4.5), "nGenJet_bParton","weight")
 
     dfwwxgen = (dfwwxgen.Define("ptl1Gen", "good_GenDressedLepton_pt[0]")
                         .Define("ptl2Gen", "good_GenDressedLepton_pt[1]")
@@ -209,13 +232,110 @@ def analysis(df,count,category,weight,year,PDType,isData,histo_wwpt,nTheoryRepli
     histo[138][x] = dfwwxgen.Histo1D(("histo_{0}_{1}".format(138,x), "histo_{0}_{1}".format(138,x),BinXF,minXF,maxXF),"theGenCat","theNNLOWeight3")
     histo[139][x] = dfwwxgen.Histo1D(("histo_{0}_{1}".format(139,x), "histo_{0}_{1}".format(139,x),BinXF,minXF,maxXF),"theGenCat","theNNLOWeight4")
 
+    dfvbswwgen = dfcat.Filter("ngood_GenDressedLeptons >= 2 && ngood_GenJets >=2", "ngood_GenDressedLeptons >= 2 && ngood_GenJets >=2")
+
+    dfvbswzgen = dfcat.Filter("ngood_GenDressedLeptons >= 3", "ngood_GenDressedLeptons >= 3")
+
+    dfvbswwgen = (dfvbswwgen.Define("theSelCat1" , "compute_vbs_gen_category(1,ngood_GenJets,good_GenJet_pt,good_GenJet_eta,good_GenJet_phi,good_GenJet_mass,ngood_GenDressedLeptons,good_GenDressedLepton_pdgId,good_GenDressedLepton_hasTauAnc,good_GenDressedLepton_pt,good_GenDressedLepton_eta,good_GenDressedLepton_phi,good_GenDressedLepton_mass,1)")
+                            .Filter("theSelCat1 > 0", "theSelCat1 > 0")
+                            .Define("theSelCat2" , "compute_vbs_gen_category(1,ngood_GenJets,good_GenJet_pt,good_GenJet_eta,good_GenJet_phi,good_GenJet_mass,ngood_GenDressedLeptons,good_GenDressedLepton_pdgId,good_GenDressedLepton_hasTauAnc,good_GenDressedLepton_pt,good_GenDressedLepton_eta,good_GenDressedLepton_phi,good_GenDressedLepton_mass,2)")
+                            .Filter("theSelCat2 > 0", "theSelCat2 > 0")
+                            .Define("theSelCat3" , "compute_vbs_gen_category(1,ngood_GenJets,good_GenJet_pt,good_GenJet_eta,good_GenJet_phi,good_GenJet_mass,ngood_GenDressedLeptons,good_GenDressedLepton_pdgId,good_GenDressedLepton_hasTauAnc,good_GenDressedLepton_pt,good_GenDressedLepton_eta,good_GenDressedLepton_phi,good_GenDressedLepton_mass,3)")
+                            .Filter("theSelCat3 > 0", "theSelCat3 > 0")
+                            .Define("theSelCat4" , "compute_vbs_gen_category(1,ngood_GenJets,good_GenJet_pt,good_GenJet_eta,good_GenJet_phi,good_GenJet_mass,ngood_GenDressedLeptons,good_GenDressedLepton_pdgId,good_GenDressedLepton_hasTauAnc,good_GenDressedLepton_pt,good_GenDressedLepton_eta,good_GenDressedLepton_phi,good_GenDressedLepton_mass,4)")
+                            .Filter("theSelCat4 > 0", "theSelCat4 > 0")
+                            .Define("theSelCat5" , "compute_vbs_gen_category(1,ngood_GenJets,good_GenJet_pt,good_GenJet_eta,good_GenJet_phi,good_GenJet_mass,ngood_GenDressedLeptons,good_GenDressedLepton_pdgId,good_GenDressedLepton_hasTauAnc,good_GenDressedLepton_pt,good_GenDressedLepton_eta,good_GenDressedLepton_phi,good_GenDressedLepton_mass,5)")
+                            .Filter("theSelCat5 > 0", "theSelCat5 > 0")
+                            .Define("theGenCat1" , "compute_vbs_gen_category(1,ngood_GenJets,good_GenJet_pt,good_GenJet_eta,good_GenJet_phi,good_GenJet_mass,ngood_GenDressedLeptons,good_GenDressedLepton_pdgId,good_GenDressedLepton_hasTauAnc,good_GenDressedLepton_pt,good_GenDressedLepton_eta,good_GenDressedLepton_phi,good_GenDressedLepton_mass,5)-1")
+                            .Define("theGenCat2" , "compute_vbs_gen_category(2,ngood_GenJets,good_GenJet_pt,good_GenJet_eta,good_GenJet_phi,good_GenJet_mass,ngood_GenDressedLeptons,good_GenDressedLepton_pdgId,good_GenDressedLepton_hasTauAnc,good_GenDressedLepton_pt,good_GenDressedLepton_eta,good_GenDressedLepton_phi,good_GenDressedLepton_mass,5)-1")
+                            .Define("theGenCat3" , "compute_vbs_gen_category(3,ngood_GenJets,good_GenJet_pt,good_GenJet_eta,good_GenJet_phi,good_GenJet_mass,ngood_GenDressedLeptons,good_GenDressedLepton_pdgId,good_GenDressedLepton_hasTauAnc,good_GenDressedLepton_pt,good_GenDressedLepton_eta,good_GenDressedLepton_phi,good_GenDressedLepton_mass,5)-1")
+                            .Define("theGenCat4" , "compute_vbs_gen_category(4,ngood_GenJets,good_GenJet_pt,good_GenJet_eta,good_GenJet_phi,good_GenJet_mass,ngood_GenDressedLeptons,good_GenDressedLepton_pdgId,good_GenDressedLepton_hasTauAnc,good_GenDressedLepton_pt,good_GenDressedLepton_eta,good_GenDressedLepton_phi,good_GenDressedLepton_mass,5)-1")
+                            .Define("theGenCat5" , "compute_vbs_gen_category(5,ngood_GenJets,good_GenJet_pt,good_GenJet_eta,good_GenJet_phi,good_GenJet_mass,ngood_GenDressedLeptons,good_GenDressedLepton_pdgId,good_GenDressedLepton_hasTauAnc,good_GenDressedLepton_pt,good_GenDressedLepton_eta,good_GenDressedLepton_phi,good_GenDressedLepton_mass,5)-1")
+                            )
+    dfvbswzgen = (dfvbswzgen.Define("theSelCat1", "compute_vbs_gen_category(1,ngood_GenJets,good_GenJet_pt,good_GenJet_eta,good_GenJet_phi,good_GenJet_mass,ngood_GenDressedLeptons,good_GenDressedLepton_pdgId,good_GenDressedLepton_hasTauAnc,good_GenDressedLepton_pt,good_GenDressedLepton_eta,good_GenDressedLepton_phi,good_GenDressedLepton_mass,11)")
+                            .Filter("theSelCat1 > 0", "theSelCat1 > 0")
+                            .Define("theSelCat2", "compute_vbs_gen_category(1,ngood_GenJets,good_GenJet_pt,good_GenJet_eta,good_GenJet_phi,good_GenJet_mass,ngood_GenDressedLeptons,good_GenDressedLepton_pdgId,good_GenDressedLepton_hasTauAnc,good_GenDressedLepton_pt,good_GenDressedLepton_eta,good_GenDressedLepton_phi,good_GenDressedLepton_mass,12)")
+                            .Filter("theSelCat2 > 0", "theSelCat2 > 0")
+                            .Define("theSelCat3", "compute_vbs_gen_category(1,ngood_GenJets,good_GenJet_pt,good_GenJet_eta,good_GenJet_phi,good_GenJet_mass,ngood_GenDressedLeptons,good_GenDressedLepton_pdgId,good_GenDressedLepton_hasTauAnc,good_GenDressedLepton_pt,good_GenDressedLepton_eta,good_GenDressedLepton_phi,good_GenDressedLepton_mass,13)")
+                            .Filter("theSelCat3 > 0", "theSelCat3 > 0")
+                            .Define("theSelCat4", "compute_vbs_gen_category(1,ngood_GenJets,good_GenJet_pt,good_GenJet_eta,good_GenJet_phi,good_GenJet_mass,ngood_GenDressedLeptons,good_GenDressedLepton_pdgId,good_GenDressedLepton_hasTauAnc,good_GenDressedLepton_pt,good_GenDressedLepton_eta,good_GenDressedLepton_phi,good_GenDressedLepton_mass,14)")
+                            .Filter("theSelCat4 > 0", "theSelCat4 > 0")
+                            .Define("theSelCat5", "compute_vbs_gen_category(1,ngood_GenJets,good_GenJet_pt,good_GenJet_eta,good_GenJet_phi,good_GenJet_mass,ngood_GenDressedLeptons,good_GenDressedLepton_pdgId,good_GenDressedLepton_hasTauAnc,good_GenDressedLepton_pt,good_GenDressedLepton_eta,good_GenDressedLepton_phi,good_GenDressedLepton_mass,15)")
+                            .Filter("theSelCat5 > 0", "theSelCat5 > 0")
+                            .Define("theGenCat",  "compute_vbs_gen_category(1,ngood_GenJets,good_GenJet_pt,good_GenJet_eta,good_GenJet_phi,good_GenJet_mass,ngood_GenDressedLeptons,good_GenDressedLepton_pdgId,good_GenDressedLepton_hasTauAnc,good_GenDressedLepton_pt,good_GenDressedLepton_eta,good_GenDressedLepton_phi,good_GenDressedLepton_mass,15)-1")
+                            .Define("mll",   "compute_mll_gen_category(0,good_GenDressedLepton_pdgId,good_GenDressedLepton_hasTauAnc,good_GenDressedLepton_pt,good_GenDressedLepton_eta,good_GenDressedLepton_phi,good_GenDressedLepton_mass)")
+                            .Define("mllSS", "compute_mll_gen_category(1,good_GenDressedLepton_pdgId,good_GenDressedLepton_hasTauAnc,good_GenDressedLepton_pt,good_GenDressedLepton_eta,good_GenDressedLepton_phi,good_GenDressedLepton_mass)")
+                            .Define("mllZ",  "compute_mll_gen_category(2,good_GenDressedLepton_pdgId,good_GenDressedLepton_hasTauAnc,good_GenDressedLepton_pt,good_GenDressedLepton_eta,good_GenDressedLepton_phi,good_GenDressedLepton_mass)")
+                            )
+
+
+    histo[524][x] = dfvbswwgen.Histo1D(("histo_{0}_{1}".format(524,x), "histo_{0}_{1}".format(524,x),4,-0.5, 3.5),"theGenCat1","weightNoEWKCorr")
+
+    histo[525][x] = dfvbswzgen.Histo1D(("histo_{0}_{1}".format(525,x), "histo_{0}_{1}".format(525,x),40,0,160),"mll","weight")
+    histo[526][x] = dfvbswzgen.Histo1D(("histo_{0}_{1}".format(526,x), "histo_{0}_{1}".format(526,x),40,0,160),"mllSS","weight")
+
+    dfvbswzgen = dfvbswzgen.Filter("mllZ < 15", "mllZ < 15")
+
+    histo[527][x] = dfvbswzgen.Histo1D(("histo_{0}_{1}".format(527,x), "histo_{0}_{1}".format(527,x),4,-0.5, 3.5),"theGenCat","weightNoEWKCorr")
+
+    BinXF = 4
+    minXF = -0.5
+    maxXF = 3.5
+    startF = 386
+    for nv in range(0,114):
+        histo[startF+nv][x] = makeFinalVariable(dfvbswzgen,"theGenCat",theCat,startF,x,BinXF,minXF,maxXF,nv)
+
+    BinXF = 4
+    minXF = -0.5
+    maxXF = 3.5
+    startF = 530
+    for nv in range(0,114):
+        histo[startF+nv][x] = makeFinalVariable(dfvbswwgen,"theGenCat1",theCat,startF,x,BinXF,minXF,maxXF,nv)
+
+    BinXF = 4
+    minXF = -0.5
+    maxXF = 3.5
+    startF = 650
+    for nv in range(0,114):
+        histo[startF+nv][x] = makeFinalVariable(dfvbswwgen,"theGenCat2",theCat,startF,x,BinXF,minXF,maxXF,nv)
+
+    BinXF = 2
+    minXF = -0.5
+    maxXF = 1.5
+    startF = 770
+    for nv in range(0,114):
+        histo[startF+nv][x] = makeFinalVariable(dfvbswwgen,"theGenCat3",theCat,startF,x,BinXF,minXF,maxXF,nv)
+
+    BinXF = 4
+    minXF = -0.5
+    maxXF = 3.5
+    startF = 890
+    for nv in range(0,114):
+        histo[startF+nv][x] = makeFinalVariable(dfvbswwgen,"theGenCat4",theCat,startF,x,BinXF,minXF,maxXF,nv)
+
+    BinXF = 4
+    minXF = -0.5
+    maxXF = 3.5
+    startF = 1010
+    for nv in range(0,114):
+        histo[startF+nv][x] = makeFinalVariable(dfvbswwgen,"theGenCat5",theCat,startF,x,BinXF,minXF,maxXF,nv)
+
     report0 = dfzllgen.Report()
     report1 = dfwwxgen.Report()
-    print("---------------- SUMMARY -------------")
+    report2 = dfvbswwgen.Report()
+    report3 = dfvbswzgen.Report()
+    print("---------------- SUMMARY ZLL -------------")
     report0.Print()
+    print("---------------- SUMMARY WW -------------")
     report1.Print()
-
-    myfile = ROOT.TFile("fillhisto_genAnalysis_sample{0}_year{1}_job-1.root".format(count,year),'RECREATE')
+    print("---------------- SUMMARY VBSWW -------------")
+    report2.Print()
+    print("---------------- SUMMARY VBSWZ -------------")
+    report3.Print()
+    
+    output_dir = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/GenXs/"
+    os.makedirs(output_dir, exist_ok=True)
+    myfile = ROOT.TFile("{0}/fillhisto_genAnalysis_sample{1}_year{2}_job-1.root".format(output_dir,count,year),'RECREATE')
     for nc in range(nCat):
         for j in range(nHisto):
             if(histo[j][nc] == 0): continue
@@ -248,7 +368,7 @@ def analysis(df,count,category,weight,year,PDType,isData,histo_wwpt,nTheoryRepli
 
     print("ending {0} / {1} / {2} / {3} / {4} / {5}".format(count,category,weight,year,PDType,isData))
 
-def readMCSample(sampleNOW, year, PDType, skimType, histo_wwpt):
+def readMCSample(sampleNOW, year, skimType, nSel, histo_wwpt, ewkCorrWeights):
 
     files = getMClist(sampleNOW, skimType)
     print("Total files: {0}".format(len(files)))
@@ -323,17 +443,21 @@ def readMCSample(sampleNOW, year, PDType, skimType, histo_wwpt):
     print("genEventSum({0}): {1} / Events(total/ntuple): {2} / {3}".format(runGetEntries,genEventSumWeight,genEventSumNoWeight,nevents))
     print("WeightExact/Approx %f / %f / Cross section: %f" %(weight, weightApprox, SwitchSample(sampleNOW, skimType)[1]))
 
-    analysis(df, sampleNOW, SwitchSample(sampleNOW,skimType)[2], weight, year, PDType, "false",histo_wwpt,nTheoryReplicas,genEventSumLHEScaleRenorm,genEventSumPSRenorm)
+    PDType = os.path.basename(SwitchSample(sampleNOW, skimType)[0]).split('+')[0]
+
+    analysis(df, sampleNOW, SwitchSample(sampleNOW,skimType)[2], weight, year, PDType, nSel, "false",histo_wwpt,ewkCorrWeights,nTheoryReplicas,genEventSumLHEScaleRenorm,genEventSumPSRenorm)
 
 if __name__ == "__main__":
 
-    year = 2022
-    process = 399
+    year = 20240
+    process = 592
     skimType = "2l"
+    nSel = "ww"
 
-    valid = ['year=', "process=", 'help']
+    valid = ['year=', "process=", "sel=", 'help']
     usage  =  "Usage: ana.py --year=<{0}>\n".format(year)
     usage +=  "              --process=<{0}>".format(process)
+    usage +=  "              --sel=<{0}>".format(nSel)
     try:
         opts, args = getopt.getopt(sys.argv[1:], "", valid)
     except getopt.GetoptError as ex:
@@ -345,10 +469,10 @@ if __name__ == "__main__":
         if opt == "--help":
             print(usage)
             sys.exit(1)
-        if opt == "--year":
-            year = int(arg)
         if opt == "--process":
             process = int(arg)
+        if opt == "--sel":
+            nSel = str(arg)
 
     histo_wwpt = []
     fPtwwWeightPath = ROOT.TFile("data/MyRatioWWpTHistogramAll.root")
@@ -361,7 +485,18 @@ if __name__ == "__main__":
         histo_wwpt[x].SetDirectory(0)
     fPtwwWeightPath.Close()
 
+    ewkCorrWeights = []
+    ewkCorrPath = "data/VV_NLO_LO_CMS_mjj.root"
+    fewkCorrFile = ROOT.TFile(ewkCorrPath)
+    ewkCorrWeights.append(fewkCorrFile.Get("hWW13p6_KF_CMS"))
+    ewkCorrWeights.append(fewkCorrFile.Get("hWZ13p0_KF_CMS"))
+    ewkCorrWeights.append(fewkCorrFile.Get("hWW13p6_KF_CMSUp"))
+    ewkCorrWeights.append(fewkCorrFile.Get("hWZ13p0_KF_CMSUp"))
+    for x in range(4):
+        ewkCorrWeights[x].SetDirectory(0)
+    fewkCorrFile.Close()
+
     try:
-        readMCSample(process,year,"All", skimType, histo_wwpt)
+        readMCSample(process,year, skimType, nSel, histo_wwpt, ewkCorrWeights)
     except Exception as e:
         print("FAILED {0}".format(e))

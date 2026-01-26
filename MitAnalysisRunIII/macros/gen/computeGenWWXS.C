@@ -12,7 +12,7 @@
 #include "TLegend.h"
 #include <iostream>
 
-void computeGenWWXS(TString input = "", int selectType = 0, TString output = "output.root"){
+void computeGenWWXS(TString input = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/GenXs/fillhisto_genAnalysis_sample192_year2027_job-1.root ", int selectType = 0, TString output = "output.root"){
 
   const int number_unc_PS       = 4;
   const int number_unc_QCDScale = 6;

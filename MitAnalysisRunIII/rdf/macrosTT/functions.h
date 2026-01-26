@@ -49,8 +49,6 @@ TH2D histoFakeEtaPt_mu[9];
 TH2D histoFakeEtaPt_el[9];
 TH2D histoLepSFEtaPt_mu;
 TH2D histoLepSFEtaPt_el;
-TH2D histoPromptRateEtaPt_el[4];
-TH2D histoPromptRateEtaPt_mu[4];
 TH2D histoTriggerSFEtaPt_0_0;
 TH2D histoTriggerSFEtaPt_0_1;
 TH2D histoTriggerSFEtaPt_0_2;
@@ -148,14 +146,6 @@ void initHisto2D(TH2D h, int nsel){
   else if(nsel == 57) histoTriggerMCEtaPt[7] = h;
   else if(nsel == 58) histoTriggerMCEtaPt[8] = h;
   else if(nsel == 59) histoTriggerMCEtaPt[9] = h;
-  else if(nsel == 60) histoPromptRateEtaPt_el[0] = h;
-  else if(nsel == 61) histoPromptRateEtaPt_el[1] = h;
-  else if(nsel == 62) histoPromptRateEtaPt_el[2] = h;
-  else if(nsel == 63) histoPromptRateEtaPt_el[3] = h;
-  else if(nsel == 64) histoPromptRateEtaPt_mu[0] = h;
-  else if(nsel == 65) histoPromptRateEtaPt_mu[1] = h;
-  else if(nsel == 66) histoPromptRateEtaPt_mu[2] = h;
-  else if(nsel == 67) histoPromptRateEtaPt_mu[3] = h;
 }
 
 void initHisto1D(TH1D h, int nsel){
@@ -346,6 +336,7 @@ float compute_JSON_MUO_SFs(std::string valType0S, std::string valType1S, std::st
     double sf2 = corrSFs.eval_muonISOSF(mu_eta[i],mu_pt[i]        ,"nominal"); if(valType2S != "nominal") sf2 = sf2 + type * sqrt(TMath::Power(corrSFs.eval_muonISOSF(mu_eta[i],mu_pt[i]        ,valType2),2)+TMath::Power(corrSFs.eval_muonISOSF(mu_eta[i],mu_pt[i]        ,"stat"),2));
     sfTot = sfTot*sf0*sf1*sf2;
     if(debug) printf("muoeff(%d-%s/%s/%s) %.3f %.3f %.3f %.3f %.3f %.3f %.3f %.3f\n",i,valType0,valType1,valType2,mu_pt[i],mu_eta[i],mu_p[i],sf0,sf1,sf2,sf0*sf1*sf2,sfTot);
+    if(sfTot <= 0) printf("muoeffPROBLEM(%d-%s/%s/%s) %.3f %.3f %.3f %.3f %.3f %.3f %.3f %.3f\n",i,valType0,valType1,valType2,mu_pt[i],mu_eta[i],mu_p[i],sf0,sf1,sf2,sf0*sf1*sf2,sfTot);
   }
 
   return sfTot;
@@ -365,14 +356,19 @@ float compute_JSON_ELE_SFs(std::string yearS, std::string valType0S, std::string
 
   for(unsigned int i=0;i<el_pt.size();i++) {
     char *recoNameAux = (char*)"RecoAbove75";
-    double pt_used = max(el_pt[i],20.001f);
+    double pt_used = max(el_pt[i],10.001f);
     if     (pt_used < 20) recoNameAux = (char*)"RecoBelow20";
     else if(pt_used < 75) recoNameAux = (char*)"Reco20to75";
     const char *recoName = recoNameAux;
     double sf0 = corrSFs.eval_electronTRKSF(year,valType0,    recoName,el_eta[i],pt_used,el_phi[i]);
-    double sf1 = corrSFs.eval_electronIDSF (year,valType1,workingPoint,el_eta[i],pt_used,el_phi[i]);
+    double sf1 = 1.0;
+    if     (strcmp(workingPoint,"mediumMVA") == 0) sf1 = corrSFs.eval_electronMVASF(year,valType1,"Medium",el_eta[i],pt_used,el_phi[i]);
+    else if(strcmp(workingPoint,"tightMVA") == 0)  sf1 = corrSFs.eval_electronMVASF(year,valType1, "Tight",el_eta[i],pt_used,el_phi[i]);
+    else                                           sf1 = corrSFs.eval_electronIDSF (year,valType1,workingPoint,el_eta[i],pt_used,el_phi[i]);
+    //double sf1 = corrSFs.eval_electronIDSF (year,valType1,workingPoint,el_eta[i],pt_used,el_phi[i]);
     sfTot = sfTot*sf0*sf1;
     if(debug) printf("eleff(%d-%s/%s) %.3f %.3f %.3f %.3f %.3f %.3f %.3f\n",i,valType0,valType1,el_pt[i],el_eta[i],el_phi[i],sf0,sf1,sf0*sf1,sfTot);
+    if(sfTot <= 0) printf("eleffPROBLEM(%d-%s/%s) %.3f %.3f %.3f %.3f %.3f %.3f %.3f\n",i,valType0,valType1,el_pt[i],el_eta[i],el_phi[i],sf0,sf1,sf0*sf1,sfTot);
   }
 
   return sfTot;
@@ -517,14 +513,15 @@ float compute_JSON_MET(const std::string pt_phiS, const std::string met_typeS, c
   else if(year == 20230) epoch = (char*)"2023";
   else if(year == 20231) epoch = (char*)"2023BPix";
   else if(year == 20240) epoch = (char*)"2023BPix";
+  else if(year == 20250) epoch = (char*)"2023BPix";
   const char *dtmc = dtmcS.c_str();
   const char *variation = variationS.c_str();
 
   float result = corrSFs.eval_met_corr(pt_phi, met_type, epoch, dtmc, variation, met_pt,met_phi,npvGood);
 
-  // NO CORRECTION APPLIED FOR 2024!!!
-  if     (year == 20240 && pt_phiS == "pt") result = met_pt;
-  else if(year == 20240 && pt_phiS == "phi") result = met_phi;
+  // NO CORRECTION APPLIED FOR >= 2024!!!
+  if     (year >= 20240 && pt_phiS == "pt") result = met_pt;
+  else if(year >= 20240 && pt_phiS == "phi") result = met_phi;
 
   bool debug = false;
   if(debug) printf("MET: %s / %s / %s / %s / %s / %.2f / %.2f / %.2f: %.2f\n",pt_phi,met_type,epoch,dtmc,variation,met_pt,met_phi,npvGood,result);
@@ -539,6 +536,7 @@ Vec_b cleaningJetVetoMapMask(const Vec_f& jet_eta, const Vec_f& jet_phi, int jet
   else if(jetTypeCorr == -1 && year == 20221) jetTypeCorr = 4;
   else if(jetTypeCorr == -1 && year == 20230) jetTypeCorr = 2;
   else if(jetTypeCorr == -1 && year == 20231) jetTypeCorr = 3;
+  else if(jetTypeCorr == -1 && year == 20240) jetTypeCorr = 0;
   else if(jetTypeCorr == -1) return jet_vetoMap_mask;
 
   bool debug = false;
@@ -638,35 +636,7 @@ Vec_f compute_ELEPT_Unc(const int year, const int type, const Vec_i& gain, const
   bool debug = false;
   if(debug) printf("eleEnergy: %lu %d\n",pt.size(),type);
 
-  const bool applySSEtDependent = true;
-
-  if(applySSEtDependent == false &&
-     (year == 20220 || year == 20221 || year == 20230 || year == 20231 || year == 20240)){
-    if    (type == 10) { // data
-      for(unsigned int i=0;i<pt.size();i++) {
-        new_pt[i] = pt[i]*corrSFs.eval_electronScale((char*)"total_correction", gain[i], (double)run, eta[i], r9[i], pt[i]);
-        if(debug) printf("eleSS(%d)-%d: %.3f %.3f\n",i,type,pt[i],new_pt[i]);
-      }
-    }
-    else if(type == 0) { // MC default
-      for(unsigned int i=0;i<pt.size();i++) {
-        double rho = corrSFs.eval_electronSmearing((char*)"rho", eta[i], r9[i]);
-        new_pt[i] = pt[i]*gRandom->Gaus(1.0,rho);
-        if(debug) printf("eleSS(%d)-%d: %.3f %.3f %.6f\n",i,type,pt[i],new_pt[i],rho);
-      }
-    }
-    else if(type == -1 || type == +1) { // MC smearing uncertainty
-      for(unsigned int i=0;i<pt.size();i++) {
-        double rho     = corrSFs.eval_electronSmearing((char*)"rho", eta[i], r9[i]);
-        double rho_unc = corrSFs.eval_electronSmearing((char*)"err_rho", eta[i], r9[i]);
-        double scale_unc = corrSFs.eval_electronScale((char*)"total_uncertainty", gain[i], 1.0, eta[i], r9[i], pt[i]);
-        new_pt[i] = pt[i]*gRandom->Gaus(1.0,rho+(double)type*(rho_unc+scale_unc));
-        if(debug) printf("eleSS(%d)-%d: %.3f %.3f %.6f %.6f %.6f\n",i,type,pt[i],new_pt[i],rho,rho_unc,scale_unc);
-      }
-    }
-  }
-  else if(applySSEtDependent == true &&
-     (year == 20220 || year == 20221 || year == 20230 || year == 20231 || year == 20240)){
+  if(year == 20220 || year == 20221 || year == 20230 || year == 20231 || year == 20240){
     if    (type == 10) { // data
       for(unsigned int i=0;i<pt.size();i++) {
         new_pt[i] = pt[i]*corrSFs.eval_electronEtDependentScale((char*)"scale", (double)run, eta[i], r9[i], pt[i], gain[i]);
@@ -815,6 +785,10 @@ float compute_WSSF(const int type,
         const TH2D& hcorr = histoWSEtaPtSF;
         sf = getValFromTH2(hcorr, std::min(fabs(el_eta[i]),2.4999f), std::min(el_pt[i],49.999f));
       }
+      if(sf <= 0) {
+	printf("PROBLEM IN WSSF %d (%d) %.3f %.3f %.3f %.3f\n",type,i,el_pt[i],el_eta[i],sf,sfTot);
+        sf = 1.0;
+      }
       sfTot = sfTot * sf;
       if(debug) printf("WSSF(%d) %.3f %.3f %.3f %.3f\n",i,el_pt[i],el_eta[i],sf,sfTot);
     }
@@ -832,8 +806,8 @@ float compute_EWKCorr(const int type, const TString theCat, const float mjjGen){
   if(mjjGen < 500) {
     sf = 1.0;
   }
-  else if(theCat.Contains("VBS-SSWW") || theCat.Contains("WWto2L2Nu-2Jets_OS_noTop_EW") || theCat.Contains("WWto2L2Nu-2Jets_SS_noTop_EW")
-                                      || theCat.Contains("WWJJto2L2Nu-OS-noTop-EWK")    || theCat.Contains("WWJJto2L2Nu-SS-noTop-EWK")) {
+  else if(theCat.Contains("VBS-SSWW") || theCat.Contains("WWto2L2Nu-2Jets_OS_noTop_EW_Tune") || theCat.Contains("WWto2L2Nu-2Jets_SS_noTop_EW_Tune")
+                                      || theCat.Contains("WWJJto2L2Nu-OS-noTop-EWK_Tune")    || theCat.Contains("WWJJto2L2Nu-SS-noTop-EWK_Tune")) {
     if(type == 0) {
       const TH1D& hcorr = hVV_KF_EWK[0];
       sf = getValFromTH1(hcorr, mjjGen);
@@ -927,189 +901,14 @@ float compute_fakeRate(const bool isData,
   return sfTot;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////
-
-float compute_matrixWeight(const bool isData,
-                           const Vec_f& mu_pt, const Vec_f& mu_eta, const Vec_i& tight_mu, const int mType,
-                           const Vec_f& el_pt, const Vec_f& el_eta, const Vec_i& tight_el, const int eType,
-                           const int whichAna, const int nummu, const int numel) {
-
-  if (isData == false) {
-    return 0; // No matrix weight for mc
-  }
-
-
- // double addSF[2] {1.0, 1.0};
- // if(whichAna == 1) { addSF[0] = 1.25; addSF[1] = 1.25; }
- 
- // if(mu_pt.size() != tight_mu.size() || el_pt.size() != tight_el.size()) {
- //   printf("PROBLEM in compute_matrixWeight (%zu/%zu) (%zu/%zu)!\n", mu_pt.size(), tight_mu.size(), el_pt.size(), tight_el.size());
- //   return 0;
- // }
- // if tight[i] == 1, then the lepton is tight, otherwise it is loose
-
-  double sfTot = 1.0;
-
-  for(unsigned int i=0;i<mu_pt.size();i++) {
-    if(tight_mu[i] == 1) {
-          const TH2D& hcorr = histoFakeEtaPt_mu[mType];
-          const TH2D& hcorr2 = histoPromptRateEtaPt_mu[nummu];
-          double sf1 = getValFromTH2(hcorr, fabs(mu_eta[i]),mu_pt[i]);
-          double delta1 = getValFromTH2(hcorr2, fabs(mu_eta[i]),mu_pt[i]);
-          std::cout << "Tight: sf1=" << sf1 << ", delta1=" << delta1 << std::endl;
-          sfTot *= ((1 - sf1) * (1 - delta1)) / (1 - sf1 - delta1);
-    }
-    else{
-      const TH2D& hcorr = histoFakeEtaPt_mu[mType];
-      const TH2D& hcorr2 = histoPromptRateEtaPt_mu[nummu];
-      double sf2 = getValFromTH2(hcorr, fabs(mu_eta[i]),mu_pt[i]);
-      double delta2 = getValFromTH2(hcorr2, fabs(mu_eta[i]),mu_pt[i]);
-      std::cout << "Fake: sf2=" << sf2 << ", delta2=" << delta2 << std::endl;
-      sfTot *= (-sf2*(1-delta2)) / (1 - sf2 - delta2);
-    }
-  }
-
-  for(unsigned int i=0;i<el_pt.size();i++) {
-    if(tight_el[i] == 1) {
-          const TH2D& hcorr = histoFakeEtaPt_el[eType];
-          const TH2D& hcorr2 = histoPromptRateEtaPt_el[numel];
-          double sf1 = getValFromTH2(hcorr, fabs(el_eta[i]),el_pt[i]);
-          double delta1 = getValFromTH2(hcorr2, fabs(el_eta[i]),el_pt[i]);
-          sfTot *= ((1 - sf1) * (1 - delta1)) / (1 - sf1 - delta1);
-    }
-    else{
-      const TH2D& hcorr = histoFakeEtaPt_el[eType];
-      const TH2D& hcorr2 = histoPromptRateEtaPt_el[numel];
-      double sf2 = getValFromTH2(hcorr, fabs(el_eta[i]),el_pt[i]);
-      double delta2 = getValFromTH2(hcorr2, fabs(el_eta[i]),el_pt[i]);
-      sfTot *= (-sf2*(1-delta2)) / (1 - sf2 - delta2);
-    }
-  }
-
-static int count_TT = 0, count_TF = 0, count_FT = 0, count_FF = 0;
-    static float sumW_TT = 0.0, sumW_TF = 0.0, sumW_FT = 0.0, sumW_FF = 0.0;
-    static double total_sfTot = 0.0;
-
-    // Check for available leptons
-    if (!tight_mu.empty() || !tight_el.empty()) {
-        // Muon-Muon pairs
-        for (size_t i = 0; i < tight_mu.size(); ++i) {
-            for (size_t j = i + 1; j < tight_mu.size(); ++j) { // Avoid self-pairs and duplicates
-                int mu1_tight = tight_mu[i];
-                int mu2_tight = tight_mu[j];
-                if (mu1_tight == 1 && mu2_tight == 1) {
-                    count_TT++;
-                    sumW_TT += sfTot;
-                } else if (mu1_tight == 1 && mu2_tight == 0) {
-                    count_TF++;
-                    sumW_TF += sfTot;
-                } else if (mu1_tight == 0 && mu2_tight == 1) {
-                    count_FT++;
-                    sumW_FT += sfTot;
-                } else if (mu1_tight == 0 && mu2_tight == 0) {
-                    count_FF++;
-                    sumW_FF += sfTot;
-                }
-            }
-        }
-
-        // Electron-Electron pairs
-        for (size_t i = 0; i < tight_el.size(); ++i) {
-            for (size_t j = i + 1; j < tight_el.size(); ++j) { // Avoid self-pairs and duplicates
-                int el1_tight = tight_el[i];
-                int el2_tight = tight_el[j];
-                if (el1_tight == 1 && el2_tight == 1) {
-                    count_TT++;
-                    sumW_TT += sfTot;
-                } else if (el1_tight == 1 && el2_tight == 0) {
-                    count_TF++;
-                    sumW_TF += sfTot;
-                } else if (el1_tight == 0 && el2_tight == 1) {
-                    count_FT++;
-                    sumW_FT += sfTot;
-                } else if (el1_tight == 0 && el2_tight == 0) {
-                    count_FF++;
-                    sumW_FF += sfTot;
-                }
-            }
-        }
-
-        // Muon-Electron pairs
-        for (size_t i = 0; i < tight_mu.size(); ++i) {
-            for (size_t j = 0; j < tight_el.size(); ++j) {
-                int mu_tight = tight_mu[i];
-                int el_tight = tight_el[j];
-                if (mu_tight == 1 && el_tight == 1) {
-                    count_TT++;
-                    sumW_TT += sfTot;
-                } else if (mu_tight == 1 && el_tight == 0) {
-                    count_TF++;
-                    sumW_TF += sfTot;
-                } else if (mu_tight == 0 && el_tight == 1) {
-                    count_FT++;
-                    sumW_FT += sfTot;
-                } else if (mu_tight == 0 && el_tight == 0) {
-                    count_FF++;
-                    sumW_FF += sfTot;
-                }
-            }
-        }
-    }
-    total_sfTot += sfTot;
-
-    std::cout << "[Counts & Weights] "
-              << "TT: " << count_TT << " (sumW=" << sumW_TT << "), "
-              << "TF: " << count_TF << " (sumW=" << sumW_TF << "), "
-              << "FT: " << count_FT << " (sumW=" << sumW_FT << "), "
-              << "FF: " << count_FF << " (sumW=" << sumW_FF << ")"
-              << std::endl;
-             
-              
-    std::cout << "Total sfTot: " << total_sfTot << std::endl;
-    
-
-  return sfTot;
-      }
-
-
-//////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////
-///////////finding the TT without fake weight////////
-float compute_TT(const bool isData,
-                const Vec_f& mu_pt, const Vec_f& mu_eta, const Vec_i& tight_mu, const int mType,
-                const Vec_f& el_pt, const Vec_f& el_eta, const Vec_i& tight_el, const int eType,
-                const int whichAna) {
-    // Count tight muons
-    int n_tight_mu = 0;
-    for (size_t i = 0; i < tight_mu.size(); i++) {
-        if (tight_mu[i]) n_tight_mu++;
-    }
-    // Count tight electrons
-    int n_tight_el = 0;
-    for (size_t i = 0; i < tight_el.size(); i++) {
-        if (tight_el[i]) n_tight_el++;
-    }
-    // Check if total tight leptons is exactly 2
-    if (n_tight_mu + n_tight_el == 2) {
-        return 1.0;
-    }
-    return 0.0;
-}
-
-
-///////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////
-
-
-float compute_MuonSF(const Vec_f& mu_pt, const Vec_f& mu_eta){
+float compute_MuonSF(const Vec_f& mu_pt, const Vec_f& mu_eta, const float sumError){
 
   bool debug = false;
-  if(debug) printf("mueff: %lu\n",mu_pt.size());
+  if(debug) printf("mueff: %lu %f\n",mu_pt.size(),sumError);
   double sfTot = 1.0;
   for(unsigned int i=0;i<mu_pt.size();i++) {
     const TH2D& hcorr = histoLepSFEtaPt_mu;
-    double sf = getValFromTH2(hcorr, fabs(mu_eta[i]),mu_pt[i]);
+    double sf = getValFromTH2(hcorr, mu_eta[i],mu_pt[i],sumError);
     sfTot = sfTot*sf;
     if(debug) printf("lepmu(%d) %.3f %.3f %.3f %.3f\n",i,mu_pt[i],mu_eta[i],sf,sfTot);
   }
@@ -1117,14 +916,14 @@ float compute_MuonSF(const Vec_f& mu_pt, const Vec_f& mu_eta){
   return sfTot;
 }
 
-float compute_ElectronSF(const Vec_f& el_pt, const Vec_f& el_eta){
+float compute_ElectronSF(const Vec_f& el_pt, const Vec_f& el_eta, const float sumError){
 
   bool debug = false;
-  if(debug) printf("eleff: %lu\n",el_pt.size());
+  if(debug) printf("eleff: %lu %f\n",el_pt.size(),sumError);
   double sfTot = 1.0;
   for(unsigned int i=0;i<el_pt.size();i++) {
     const TH2D& hcorr = histoLepSFEtaPt_el;
-    double sf = getValFromTH2(hcorr, fabs(el_eta[i]), el_pt[i]);
+    double sf = getValFromTH2(hcorr, el_eta[i], el_pt[i],sumError);
     sfTot = sfTot*sf;
     if(debug) printf("lepel(%d) %.3f %.3f %.3f %.3f\n",i,el_pt[i],el_eta[i],sf,sfTot);
   }
@@ -1279,12 +1078,20 @@ float compute_lumiFakeRate(const Vec_f& mu_pt, const Vec_f& el_pt, const int nTr
     lumiPrescalesE[2] = 27.6/27693.1;
   }
   else if(year == 20240){
-    lumiPrescalesM[0] =  12.3/108296.7;
-    lumiPrescalesM[1] = 333.2/108296.7;
-    lumiPrescalesM[2] = 333.2/108296.7;
-    lumiPrescalesE[0] =  12.0/108296.7;
-    lumiPrescalesE[1] =  69.9/108296.7;
-    lumiPrescalesE[2] =  69.9/108296.7;
+    lumiPrescalesM[0] =  12.4/109329.6;
+    lumiPrescalesM[1] = 336.4/109329.6;
+    lumiPrescalesM[2] = 336.4/109329.6;
+    lumiPrescalesE[0] =  12.1/109329.6;
+    lumiPrescalesE[1] =  70.5/109329.6;
+    lumiPrescalesE[2] =  70.5/109329.6;
+  }
+  else if(year == 20250){
+    lumiPrescalesM[0] =  13.7/60261.0;
+    lumiPrescalesM[1] = 369.7/60261.0;
+    lumiPrescalesM[2] = 369.7/60261.0;
+    lumiPrescalesE[0] =   6.6/60261.0;
+    lumiPrescalesE[1] =  30.2/60261.0;
+    lumiPrescalesE[2] =  30.2/60261.0;
   }
   else {
     printf("compute_lumiFakeRate error year (%d)\n",year);
@@ -1683,56 +1490,16 @@ float compute_jet_lepton_final_var(const float mjj, const float detajj, const fl
     return 0.0;
   }
   else if(var == 20){ // mjj
-    int typeSelAux = -1;
-    if     (mjj <  700) typeSelAux = 0;
-    else if(mjj <  900) typeSelAux = 1;
-    else if(mjj < 1100) typeSelAux = 2;
-    else if(mjj < 1300) typeSelAux = 3;
-    else if(mjj < 1600) typeSelAux = 4;
-    else if(mjj < 2000) typeSelAux = 5;
-    else if(mjj < 2700) typeSelAux = 6;
-    else                typeSelAux = 7;
-
-    return (float)(typeSelAux);
+    return mjj;
   }
   else if(var == 21){ // mll
-    float typeSelAux = -1;
-    if     (mll <  50) typeSelAux = 0;
-    else if(mll <  80) typeSelAux = 1;
-    else if(mll < 110) typeSelAux = 2;
-    else if(mll < 140) typeSelAux = 3;
-    else if(mll < 170) typeSelAux = 4;
-    else if(mll < 220) typeSelAux = 5;
-    else if(mll < 300) typeSelAux = 6;
-    else               typeSelAux = 7;
-
-    return (float)(typeSelAux);
+    return mll;
   }
   else if(var == 22){ // detajj
-    float typeSelAux = -1;
-    if     (detajj < 3.1) typeSelAux = 0;
-    else if(detajj < 3.6) typeSelAux = 1;
-    else if(detajj < 4.0) typeSelAux = 2;
-    else if(detajj < 4.5) typeSelAux = 3;
-    else if(detajj < 5.0) typeSelAux = 4;
-    else if(detajj < 5.5) typeSelAux = 5;
-    else if(detajj < 6.5) typeSelAux = 6;
-    else                  typeSelAux = 7;
-
-    return (float)(typeSelAux);
+    return detajj;
   }
   else if(var == 23){ // dphijj
-    float typeSelAux = -1;
-    if     (dphijj < 1.1) typeSelAux = 0;
-    else if(dphijj < 1.8) typeSelAux = 1;
-    else if(dphijj < 2.2) typeSelAux = 2;
-    else if(dphijj < 2.5) typeSelAux = 3;
-    else if(dphijj < 2.7) typeSelAux = 4;
-    else if(dphijj < 2.9) typeSelAux = 5;
-    else if(dphijj < 3.0) typeSelAux = 6;
-    else                  typeSelAux = 7;
-
-    return (float)(typeSelAux);
+    return dphijj;
   }
   else if(var == 10 || var == 11){
     int typeSelAux1 = -1;
@@ -1757,14 +1524,28 @@ float compute_jet_lepton_final_var(const float mjj, const float detajj, const fl
       return (float)(typeSelAux1);
     }
   }
-  else if(var == 12){ // VBS WZ SR MVA based
-    float bdtNew = std::min(std::max(bdt+1.0,0.001),1.999);
+  else if(var == 12){ // VBS WZ SR MVA based (2D)
+    float bdtNew = std::min(std::max(bdt+1.0,0.001),1.999)/2.0;
     float typeSelAux3 = -1;
     if     (zepvv >= 0.25) typeSelAux3 = 0;
     else                   typeSelAux3 = 1;
 
-    return (float)(bdtNew+2.0*typeSelAux3);
-    //return (float)(bdtNew);
+    return (float)(bdtNew+typeSelAux3);
+  }
+  else if(var == 13){ // VBS WZ SR MVA based (1D)
+    float bdtNew = std::min(std::max(bdt+1.0,0.001),1.999)/2.0;
+    return (float)(bdtNew);
+  }
+  else if(var == 14){ // VBS WZ SR MVA X mjj (2D)
+    int typeSelAux1 = -1;
+    if     (mjj <  900) typeSelAux1 = 0;
+    else if(mjj < 1300) typeSelAux1 = 1;
+    else if(mjj < 2000) typeSelAux1 = 2;
+    else                typeSelAux1 = 3;
+
+    float bdtNew = (std::min(std::max(bdt+1.0,0.001),1.999)/2.0)+typeSelAux1;
+
+    return (float)(bdtNew);
   }
   return 0.0;
 }
@@ -1855,6 +1636,8 @@ float compute_jet_var(Vec_f pt, Vec_f eta, Vec_f phi, Vec_f mass, unsigned int v
   else if(var == 5) theVar = p2.Pt();
   else if(var == 6) theVar = abs(p1.Eta());
   else if(var == 7) theVar = abs(p2.Eta());
+  else if(var == 8) theVar = p1.Phi();
+  else if(var == 9) theVar = p2.Phi();
   return theVar;
 }
 
@@ -1938,7 +1721,7 @@ float compute_ll_var(const Vec_f& mu_pt, const Vec_f& mu_eta, const Vec_f& mu_ph
 // Trilepton variables
 float compute_3l_var(const Vec_f& mu_pt, const Vec_f& mu_eta, const Vec_f& mu_phi, const Vec_f& mu_mass, const Vec_f& mu_charge,
                      const Vec_f& el_pt, const Vec_f& el_eta, const Vec_f& el_phi, const Vec_f& el_mass, const Vec_f& el_charge,
-		     const float met_pt, const float met_phi, unsigned int var)
+                     const float met_pt, const float met_phi, unsigned int var)
 {
    if(mu_pt.size() + el_pt.size() != 3) return 0;
 
@@ -2563,23 +2346,27 @@ int compute_vbs_gen_category(const int nSel, const int ngood_GenJets, const Vec_
     if(GenDressedLepton_pt[1] > GenDressedLepton_pt[0]) {printf("PROBLEM, ptl2 > ptl1 at gen level\n");}
     bool passTightGenSel = ngood_GenDressedLeptons == 2 && GenDressedLepton_pdgId[0] * GenDressedLepton_pdgId[1] > 0 &&
                            GenDressedLepton_pt[0] > 25 &&  GenDressedLepton_pt[1] > 20;
-    if(applyTightSel >= 2) passTightGenSel = passTightGenSel && GenDressedLepton_hasTauAnc[0] == 0 && GenDressedLepton_hasTauAnc[1] == 0;
-    if(applyTightSel >= 3) {
+    if(applyTightSel >= 2) {
       passTightGenSel = passTightGenSel && mllGen > 20;
     }
-    if(applyTightSel >= 4) {
+    if(applyTightSel >= 3) {
       passTightGenSel = passTightGenSel && mjjGen > 500 && detajjGen > 2.5;
     }
+    if(applyTightSel >= 4) passTightGenSel = passTightGenSel && good_GenJet_pt[0] > 50 && good_GenJet_pt[1] > 50;
+    if(applyTightSel >= 5) passTightGenSel = passTightGenSel && GenDressedLepton_hasTauAnc[0] == 0 && GenDressedLepton_hasTauAnc[1] == 0;
     if(passTightGenSel == false) return 0;
   }
   else if(applyTightSel >= 11 && applyTightSel <= 20) {
-    if(GenDressedLepton_pt[1] > GenDressedLepton_pt[0] || GenDressedLepton_pt[2] > GenDressedLepton_pt[1]) {printf("PROBLEM, ptl2 > ptl1 at gen level\n");}
-    bool passTightGenSel = ngood_GenDressedLeptons == 3 &&
-                           GenDressedLepton_pt[0] > 25 && GenDressedLepton_pt[1] > 20 && GenDressedLepton_pt[2] > 15;
-    if(applyTightSel >= 12) passTightGenSel = passTightGenSel && GenDressedLepton_hasTauAnc[0] == 0 && GenDressedLepton_hasTauAnc[1] == 0 && GenDressedLepton_hasTauAnc[2] == 0;
-    if(applyTightSel >= 13) {
-      passTightGenSel = passTightGenSel && mjjGen > 500 && detajjGen > 2.5;
+    bool passTightGenSel = mjjGen > 500 && detajjGen > 2.5;
+    if(applyTightSel >= 12) {
+      passTightGenSel = passTightGenSel && ngood_GenDressedLeptons == 3;
     }
+    if(applyTightSel >= 13) {
+      if(GenDressedLepton_pt[1] > GenDressedLepton_pt[0] || GenDressedLepton_pt[2] > GenDressedLepton_pt[1]) {printf("PROBLEM, ptl2 > ptl1 at gen level\n");}
+      passTightGenSel = passTightGenSel && GenDressedLepton_pt[0] > 20 && GenDressedLepton_pt[1] > 20 && GenDressedLepton_pt[2] > 20;
+    }
+    if(applyTightSel >= 14) passTightGenSel = passTightGenSel && good_GenJet_pt[0] > 50 && good_GenJet_pt[1] > 50;
+    if(applyTightSel >= 15) passTightGenSel = passTightGenSel && GenDressedLepton_hasTauAnc[0] == 0 && GenDressedLepton_hasTauAnc[1] == 0 && GenDressedLepton_hasTauAnc[2] == 0;
     if(passTightGenSel == false) return 0;
   }
 
@@ -2613,6 +2400,48 @@ int compute_vbs_gen_category(const int nSel, const int ngood_GenJets, const Vec_
   }
   
   return 0;
+}
+
+// compute mll gen category
+int compute_mll_gen_category(const int var, 
+                             const Vec_i& GenDressedLepton_pdgId, const Vec_b& GenDressedLepton_hasTauAnc,
+                             const Vec_f& GenDressedLepton_pt, const Vec_f& GenDressedLepton_eta,
+                             const Vec_f& GenDressedLepton_phi, const Vec_f& GenDressedLepton_mass){
+
+  if(GenDressedLepton_pdgId.size() <= 2) return 10000;
+  bool debug = false;
+  double mllZ = 10000; double mllSSZ = 10000;
+
+  for(int i=0; i<GenDressedLepton_pdgId.size(); i++){
+    for(int j=i+1; j<GenDressedLepton_pdgId.size(); j++){  
+      float mllGen = Minv2(GenDressedLepton_pt[i], GenDressedLepton_eta[i], GenDressedLepton_phi[i], GenDressedLepton_mass[i],
+                           GenDressedLepton_pt[j], GenDressedLepton_eta[j], GenDressedLepton_phi[j], GenDressedLepton_mass[j]).first;
+      if(GenDressedLepton_pdgId[i] * GenDressedLepton_pdgId[j] < 0 && abs(GenDressedLepton_pdgId[i]) == abs(GenDressedLepton_pdgId[j])){
+        if(fabs(mllGen-91.1876) < fabs(mllZ-91.1876)) {
+          mllZ = mllGen;
+        }
+      }
+      else {
+        if(fabs(mllGen-91.1876) < fabs(mllSSZ-91.1876)) {
+          mllSSZ = mllGen;
+        }
+      }
+    } // loop over j
+  } // loop over i
+
+  float theVar = 10000;
+  if     (var == 0) theVar = mllZ;
+  else if(var == 1) theVar = mllSSZ;
+  else if(var == 2) theVar = fabs(mllZ-91.1876);
+  else if(var == 3) theVar = fabs(mllSSZ-91.1876);
+
+  if(debug == true && var == 0) {
+    printf("%zu %5.1f %5.1f / %5.1f %5.1f / ",GenDressedLepton_pdgId.size(),mllZ,fabs(mllZ-91.1876),mllSSZ,fabs(mllSSZ-91.1876));
+    for(int i=0; i<GenDressedLepton_pdgId.size(); i++) printf(" %3d",GenDressedLepton_pdgId[i]);
+    printf("\n");
+  }
+
+  return theVar;
 }
 
 // compute vbs gen variables

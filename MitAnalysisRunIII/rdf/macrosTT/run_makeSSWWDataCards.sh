@@ -1,5 +1,5 @@
 #!/bin/sh
-
+# to run: ./run_makeSSWWDataCards.sh 1001 0
 if [ $# -lt 2 ]; then
    echo "TOO FEW PARAMETERS"
    exit
@@ -11,14 +11,14 @@ if [ $theOption -eq 0 ]; then
 
   export theAna=sswwAnalysis$1
 
-  for year in 20220 20221 20230 20231;
+  for year in 20220 20221 20230 20231 20240;
   do
 
   #for bin in 0 1 2 3 4 5;
   for bin in 0 1;
   do
 
-  root -l -q -b makeSSWWDataCards.C'(0,'${bin}',"anaZ","'${theAna}'",'${year}')';
+  root -l -q -b makeSSWWDataCards.C'(0,'${bin}',"/mnt/home/mghimiray/VBSStudies/Outputs_VBS/OriginalTT/1001/merge1/","'${theAna}'",'${year}')';
 
   done
   done
