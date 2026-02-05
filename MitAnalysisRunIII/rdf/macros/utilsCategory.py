@@ -28,6 +28,8 @@ def plotCategory(key):
     plotCategoryDict.update({"kPlotSignal4"   :[24]})
     plotCategoryDict.update({"kPlotSignal5"   :[25]})
     plotCategoryDict.update({"kPlotCategories":[26]})
+    plotCategoryDict.update({"kPlotEFTInt"    :[27]})
+    plotCategoryDict.update({"kPlotEFTQuad"   :[28]})
 
     try:
         return plotCategoryDict[key][0]

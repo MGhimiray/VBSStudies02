@@ -9,7 +9,7 @@ if __name__ == "__main__":
     base = f"/mnt/home/mghimiray/VBSStudies/Outputs_VBS/OriginalTT/{dir}/histo/fillhisto_sswwAnalysis"
     path = "fillhisto_sswwAnalysis"
     year = 20240
-    output = f"/mnt/home/mghimiray/VBSStudies/Outputs_VBS/OriginalTT/{dir}/merge1"
+    output = f"/mnt/home/mghimiray/VBSStudies/Outputs_VBS/EFT2026/{dir}/merge1"
     mkdir = output
     if not os.path.exists(mkdir):
         os.makedirs(mkdir)

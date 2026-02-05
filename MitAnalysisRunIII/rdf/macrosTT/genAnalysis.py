@@ -449,10 +449,11 @@ def readMCSample(sampleNOW, year, skimType, nSel, histo_wwpt, ewkCorrWeights):
 
 if __name__ == "__main__":
 
-    year = 20240
+    year = 2024
     process = 592
     skimType = "2l"
     nSel = "ww"
+    APPLY_EWK = False
 
     valid = ['year=', "process=", "sel=", 'help']
     usage  =  "Usage: ana.py --year=<{0}>\n".format(year)
@@ -485,16 +486,36 @@ if __name__ == "__main__":
         histo_wwpt[x].SetDirectory(0)
     fPtwwWeightPath.Close()
 
-    ewkCorrWeights = []
-    ewkCorrPath = "data/VV_NLO_LO_CMS_mjj.root"
-    fewkCorrFile = ROOT.TFile(ewkCorrPath)
-    ewkCorrWeights.append(fewkCorrFile.Get("hWW13p6_KF_CMS"))
-    ewkCorrWeights.append(fewkCorrFile.Get("hWZ13p0_KF_CMS"))
-    ewkCorrWeights.append(fewkCorrFile.Get("hWW13p6_KF_CMSUp"))
-    ewkCorrWeights.append(fewkCorrFile.Get("hWZ13p0_KF_CMSUp"))
-    for x in range(4):
-        ewkCorrWeights[x].SetDirectory(0)
-    fewkCorrFile.Close()
+    def make_unit_hist(name):
+        nbins = 200
+        xmin = 0.0
+        xmax = 10000.0
+        h = ROOT.TH1D(name, "", nbins, xmin, xmax)
+        for b in range(0, nbins + 2):
+            h.SetBinContent(b, 1.0)
+        h.SetDirectory(0)
+        return h
+
+
+    if APPLY_EWK:
+        ewkCorrWeights = []
+        ewkCorrPath = "data/VV_NLO_LO_CMS_mjj.root"
+        fewkCorrFile = ROOT.TFile.Open(ewkCorrPath)
+        ewkCorrWeights.append(fewkCorrFile.Get("hWW13p6_KF_CMS"))
+        ewkCorrWeights.append(fewkCorrFile.Get("hWZ13p0_KF_CMS"))
+        ewkCorrWeights.append(fewkCorrFile.Get("hWW13p6_KF_CMSUp"))
+        ewkCorrWeights.append(fewkCorrFile.Get("hWZ13p0_KF_CMSUp"))
+        for h in ewkCorrWeights:
+            h.SetDirectory(0)
+        fewkCorrFile.Close()
+    else:
+        ewkCorrWeights = [
+            make_unit_hist("hWW13p6_KF_CMS_unit"),
+            make_unit_hist("hWZ13p0_KF_CMS_unit"),
+            make_unit_hist("hWW13p6_KF_CMSUp_unit"),
+            make_unit_hist("hWZ13p0_KF_CMSUp_unit"),
+        ]
+
 
     try:
         readMCSample(process,year, skimType, nSel, histo_wwpt, ewkCorrWeights)

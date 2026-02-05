@@ -265,6 +265,22 @@ Vec_b cleaningJetSelMask(unsigned int sel, Vec_f jet_eta, Vec_f jet_chHEF, Vec_f
   return jet_Sel_mask;
 }
 
+
+TH1D* make_unit_hist(const char* name)
+{
+  int nbins = 200;
+  double xmin = 0.0;
+  double xmax = 10000.0;
+  auto* h = new TH1D(name, "", nbins, xmin, xmax);
+  for (int b = 0; b <= nbins + 1; ++b) {
+      h->SetBinContent(b, 1.0);
+  }
+    h->SetDirectory(nullptr);
+
+    return h;
+}
+
+
 float compute_JSON_PU_SF(double NumTrueInteractions, std::string type){
   bool debug = false;
   double sf = corrSFs.eval_puSF(std::min((float)NumTrueInteractions,74.999f),type);

@@ -4,15 +4,15 @@
 whichyear=$1
 if [ "$whichyear" = "2023" ]; then
     declare -A year_process_map
-    year_process_map["20230"]="392"
-    year_process_map["20231"]="492"
+    year_process_map["20230"]="392 395"
+    year_process_map["20231"]="492 495"
     which_job="-1"
 elif [ "$whichyear" = "2024" ]; then
-    year_process_map["20240"]="592"
+    year_process_map["20240"]="592 595"
     which_job="-1"
 elif [ "$whichyear" = "2022" ]; then
-    year_process_map["20220"]="192"
-    year_process_map["20221"]="292"
+    year_process_map["20220"]="192 195"
+    year_process_map["20221"]="292 295"
     which_job="-1"
 fi
 
