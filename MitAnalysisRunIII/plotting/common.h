@@ -29,6 +29,8 @@ enum plotCategory {
   kPlotSignal3   , //23
   kPlotSignal4   , //24
   kPlotSignal5   , //25
+  kPlotEFTInt    , //26
+  kPlotEFTQuad   , //27
   nPlotCategories
 };
 
@@ -58,7 +60,9 @@ std::map<int, TString> plotBaseNames={
   { kPlotSignal2   , "Signal2" },
   { kPlotSignal3   , "Signal3" },
   { kPlotSignal4   , "Signal4" },
-  { kPlotSignal5   , "Signal5" }
+  { kPlotSignal5   , "Signal5" },
+  { kPlotEFTInt    , "EFTInt" },
+  { kPlotEFTQuad   , "EFTQuad" }
 }; 
 
 std::map<int, int> plotColors={
@@ -87,7 +91,9 @@ std::map<int, int> plotColors={
   { kPlotSignal2   , kAzure+4},
   { kPlotSignal3   , kAzure+5},
   { kPlotSignal4   , kAzure+6},
-  { kPlotSignal5   , kAzure+7}
+  { kPlotSignal5   , kAzure+7},
+  { kPlotEFTInt    , kMagenta},
+  { kPlotEFTQuad   , kPink}
 }; 
 
 std::map<int, TString> plotNames={
@@ -116,5 +122,7 @@ std::map<int, TString> plotNames={
     { kPlotSignal2   , "Signal 2"},
     { kPlotSignal3   , "Signal 3"},
     { kPlotSignal4   , "Signal 4"},
-    { kPlotSignal5   , "Signal 5"}
+    { kPlotSignal5   , "Signal 5"},
+    { kPlotEFTInt    , "EFT Int"},
+    { kPlotEFTQuad   , "EFT Quad"}
 };

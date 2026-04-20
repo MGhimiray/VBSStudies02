@@ -12,7 +12,7 @@
 #include "TLegend.h"
 #include <iostream>
 
-void computeGenVBSVVXS(TString input = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/GenXs/fillhisto_genAnalysis_sample192_year2027_job-1.root", int selectType = 6){
+void computeGenVBSVVXS(TString input = "/mnt/home/mghimiray/VBSStudies/Outputs_VBS/GenXs/fillhisto_genAnalysis_sample192_year2027.root", int selectType = ){
 
   const int nBin4 = 4; const int nBin2 = 2;
   const Float_t xbinsWZMJJ       [nBin4+1] = {500, 900, 1300, 1900, 2500};

@@ -14,7 +14,7 @@ import tmva_helper_xml
 
 correctionString = "_correction"
 
-makeDataCards = 7 # 1 (mjj diff), 2 (mll diff), 3 (njets diff), 4 (detajj diff), 5 (dphijj diff), 6 (mjj), 7 (mll), 8 (detajj), 9 (dphijj)
+makeDataCards = 1 # 1 (mjj diff), 2 (mll diff), 3 (njets diff), 4 (detajj diff), 5 (dphijj diff), 6 (mjj), 7 (mll), 8 (detajj), 9 (dphijj)
 genVBSSel = makeDataCards
 if(genVBSSel == 6):
     genVBSSel = 1

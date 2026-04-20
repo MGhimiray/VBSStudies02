@@ -942,7 +942,7 @@ def selectionMCWeigths(df,year,PDType,weight,type,bTagSel,useBTaggingWeights,nTh
               .Define("weightWS", "compute_WSSF(1,fake_Electron_pt,fake_Electron_eta,fake_Electron_charge,fake_Electron_genPartIdx,GenPart_pdgId)")
 
               .Define("weightEWKCorr", "compute_EWKCorr(0,PDType,mjjGen)")
-
+              # PDType is eith singlemuon, double muon etc, for the category of MC samples from skinNow
               #.Define("weightPTWWCorr", "compute_PTWWCorr(0,PDType,ptww)")
               )
 
